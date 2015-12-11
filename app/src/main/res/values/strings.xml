@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="movie_poster_desc" translatable="false">Movie Poster</string>
+    <string name="title_activity_movie_detail">Movie Detail</string>
+    <string name="movie_release_date">Year:</string>
+    <string name="movie_rating">Rating:</string>
+    <string name="movie_vote_count">Votes:</string>
+    <string name="movie_overview">Overview:</string>
+    <string name="sort_by_popularity"> Sort by: Popularity</string>
+    <string name="sort_by_rating"> Sort by: Rating</string>
+</resources>

@@ -1,0 +1,70 @@
+package com.ampie_guillermo.popularmovies;
+
+import android.app.Activity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
+/**
+ * MovieAdapter: class to handle the display of the movie posters.
+ * The code is inspired by the android-custom-arrayadapter demo project referenced in
+ * the ---Popular Movies App Implementation Guide---
+ */
+public class MovieAdapter extends ArrayAdapter <Movie> {
+
+    private static final String LOG_TAG = MovieAdapter.class.getSimpleName ();
+
+    /**
+     * Custom constructor (it doesn't mirror a superclass constructor).
+     * The context is used to inflate the layout file, and the List is the data we want
+     * to populate into the lists
+     *
+     * @param context        The current context. Used to inflate the layout file.
+     * @param movieList      A List of Movie objects to display in the GridView.
+     */
+    public MovieAdapter (Activity context, List<Movie> movieList) {
+        // Here, we initialize the ArrayAdapter's internal storage for the context
+        // and the list.
+        // The second argument is used when the ArrayAdapter is populating a single
+        // TextView (the default case).
+        // Because this is a custom adapter with an  ImageView (and not a TextView),
+        // the adapter is not going to use this second argument, so it can be any
+        // value (here 0 does the job).
+        super(context, 0, movieList);
+    }
+
+    /**
+     * Provides a view for an AdapterView (a GridView in this case)
+     *
+     * @param position      The AdapterView position that is requesting a view
+     * @param convertView   The recycled view to populate.
+     * @param parent        The parent ViewGroup that is used for inflation.
+     * @return              The View for the position in the AdapterView.
+     */
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        // Gets the Movie object from the ArrayAdapter at the appropriate position
+        Movie currentMovie = getItem(position);
+
+        // Adapters recycle views to AdapterViews.
+        // If this is a new View object we're getting, then inflate the layout.
+        // If not, this view already has the layout inflated from a previous call to getView.
+        if (convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(
+                    R.layout.movie_poster_item, parent, false);
+        }
+
+        ImageView moviePosterView = (ImageView) convertView.findViewById(R.id.movie_poster_view);
+        Picasso.with(getContext())
+                .load(currentMovie.getMoviePosterCompleteUri())
+                .into(moviePosterView);
+
+        return convertView;
+    }
+}
