@@ -122,7 +122,7 @@ public class MainActivityFragment extends Fragment {
         private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
         /**
-         * Take the String representing the complete movies list in JSON format and
+         * Take the string representing the complete movies list in JSON format and
          * pull out the relevant data needed to construct the movie objects.
          */
         private Movie [] getMoviesDataFromJson (String moviesJsonStr)
@@ -184,7 +184,7 @@ public class MainActivityFragment extends Fragment {
 
                 /**
                  * Store only the movie release year.
-                 * The format from theMovieDB for release date: YYYY-MM-DD
+                 * The format from TheMovieDB for release date: YYYY-MM-DD
                  */
                 String movieReleaseYear = (movieReleaseDate.split("-")) [0];
 
@@ -207,7 +207,7 @@ public class MainActivityFragment extends Fragment {
 
         @Override
         protected Movie[] doInBackground(String... params) {
-
+            // TODO: Give feedback to user with Toast
             // Verify size of params.
             if (params.length == 0) {
                 Log.e (LOG_TAG, "Missing sorting method in https query");

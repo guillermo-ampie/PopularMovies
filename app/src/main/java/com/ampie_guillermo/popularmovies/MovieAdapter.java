@@ -18,6 +18,12 @@ import java.util.List;
  */
 public class MovieAdapter extends ArrayAdapter <Movie> {
 
+    // Only one ImageView but the View Holder Pattern can improve some performance.
+    // This caches the ImageView for the movie poster
+    private static class MovieViewHolder {
+        private ImageView mMoviePoster;
+    }
+
     private static final String LOG_TAG = MovieAdapter.class.getSimpleName ();
 
     /**
@@ -51,19 +57,32 @@ public class MovieAdapter extends ArrayAdapter <Movie> {
     public View getView(int position, View convertView, ViewGroup parent) {
         // Gets the Movie object from the ArrayAdapter at the appropriate position
         Movie currentMovie = getItem(position);
+        MovieViewHolder movieHolder;
 
         // Adapters recycle views to AdapterViews.
         // If this is a new View object we're getting, then inflate the layout.
         // If not, this view already has the layout inflated from a previous call to getView.
         if (convertView == null) {
+            //Inflate the layout
             convertView = LayoutInflater.from(getContext()).inflate(
                     R.layout.movie_poster_item, parent, false);
+
+            // Set up the view holder object
+            movieHolder = new MovieViewHolder();
+            movieHolder.mMoviePoster = (ImageView) convertView.findViewById(R.id.movie_poster_view);
+
+            // Attach the holder object with the view
+            convertView.setTag(movieHolder);
+        } else {
+            // We just get our view holder with the cached ImageView
+            movieHolder = (MovieViewHolder) convertView.getTag();
         }
 
-        ImageView moviePosterView = (ImageView) convertView.findViewById(R.id.movie_poster_view);
-        Picasso.with(getContext())
-                .load(currentMovie.getMoviePosterCompleteUri())
-                .into(moviePosterView);
+        if (currentMovie != null) {
+            Picasso.with(getContext())
+                    .load(currentMovie.getMoviePosterCompleteUri())
+                    .into(movieHolder.mMoviePoster);
+        }
 
         return convertView;
     }
