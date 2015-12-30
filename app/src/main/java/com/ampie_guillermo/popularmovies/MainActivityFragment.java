@@ -34,7 +34,7 @@ import java.util.ArrayList;
  * the ---Developing Android Apps - Fundamentals--- course
  *
  * NOTE: MovieDB API Key stored in "~/.gradle/gradle.properties"
- *       Using the mechanism specified for Sunshine-Version-2 with
+ *       Using the method specified for Sunshine-Version-2 with
  *       API key
  */
 public class MainActivityFragment extends Fragment {
@@ -207,7 +207,7 @@ public class MainActivityFragment extends Fragment {
 
         @Override
         protected Movie[] doInBackground(String... params) {
-            // TODO: Give feedback to user with Toast
+            // TODO: Give feedback to user with SnackBar
             // Verify size of params.
             if (params.length == 0) {
                 Log.e (LOG_TAG, "Missing sorting method in https query");
@@ -304,7 +304,6 @@ public class MainActivityFragment extends Fragment {
                 for(Movie currentMovie : result) {
                     movieAdapter.add(currentMovie);
                 }
-
             }
         }
     }
