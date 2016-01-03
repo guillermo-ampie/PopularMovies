@@ -6,6 +6,6 @@
     <string name="movie_rating">Rating:</string>
     <string name="movie_vote_count">Votes:</string>
     <string name="movie_overview">Overview:</string>
-    <string name="sort_by_popularity"> Sort by: Popularity</string>
-    <string name="sort_by_rating"> Sort by: Rating</string>
+    <string name="sort_by_popularity">Popularity</string>
+    <string name="sort_by_rating">Ranking</string>
 </resources>

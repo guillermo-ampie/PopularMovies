@@ -16,7 +16,7 @@ import java.util.List;
  * The code is inspired by the android-custom-arrayadapter demo project referenced in
  * the ---Popular Movies App Implementation Guide---
  */
-public class MovieAdapter extends ArrayAdapter <Movie> {
+class MovieAdapter extends ArrayAdapter <Movie> {
 
     // Only one ImageView but the View Holder Pattern can improve some performance.
     // This caches the ImageView for the movie poster

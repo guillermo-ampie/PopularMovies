@@ -4,9 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -25,14 +22,15 @@ import java.util.ArrayList;
  */
 public class MainActivityFragment extends Fragment {
 
-    private final String SORT_BY_POPULARITY = "popularity.desc";
-    private final String SORT_BY_RATING = "vote_average.desc";
+    private static final String LOG_TAG = MainActivityFragment.class.getSimpleName ();
 
     private MovieAdapter mMovieAdapter;
+    private String mSortingMethodParam;
 
     public MainActivityFragment() {
     }
 
+/*
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,27 +38,28 @@ public class MainActivityFragment extends Fragment {
         // Set up fragment to handle menu events.
         setHasOptionsMenu(true);
     }
-
-    @Override
+*/
+/*    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate menu with our sorting options
         inflater.inflate(R.menu.main_activity_fragment_menu, menu);
     }
-
+*/
+/*
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here.
         switch (item.getItemId()) {
             case R.id.action_sort_by_popularity:
-                getMovies(SORT_BY_POPULARITY);
+                getMovies();
                 return true;
             case R.id.action_sort_by_rating:
-                getMovies(SORT_BY_RATING);
+                getMovies();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
+*/
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
@@ -92,15 +91,18 @@ public class MainActivityFragment extends Fragment {
         return rootView;
     }
 
-    private void getMovies(String sortingMethod) {
+    public void setSortingMethodParam(String sortingMethodParam) {
+        mSortingMethodParam = sortingMethodParam;
+    }
+
+    private void getMovies() {
         FetchMovieTask movieTask = new FetchMovieTask(getActivity(), mMovieAdapter);
-        movieTask.execute(sortingMethod);
+        movieTask.execute(mSortingMethodParam);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        getMovies(SORT_BY_POPULARITY);
+        getMovies();
     }
-
 }

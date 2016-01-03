@@ -17,12 +17,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
+class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
 
     private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
-    private MovieAdapter mMovieAdapter;
-    private Context mContext;
+    private final MovieAdapter mMovieAdapter;
+    private final Context mContext;
 
     public FetchMovieTask(Context context, MovieAdapter movieAdapter) {
         this.mContext = context;
@@ -108,7 +108,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
                     movieVoteAverage,
                     movieVoteCount);
 
-            //Log.e (LOG_TAG, movieOriginalTitle);
+            Log.e (LOG_TAG, movieOriginalTitle);
         }
         return resultMovies;
     }
@@ -145,7 +145,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
                     .build();
 
             URL url = new URL(builtUri.toString());
-            //Log.e(LOG_TAG, builtUri.toString());
+            Log.e(LOG_TAG, builtUri.toString());
 
             // Create the request to TheMovieDB, and open the connection
             urlConnection = (HttpURLConnection) url.openConnection();
