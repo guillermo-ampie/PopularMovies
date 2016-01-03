@@ -24,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         /**
-         * We will have only TWO pages:
+         * We will have ONLY two pages, so it is OK to "preload" them for the sake of
+         * UI responsiveness:
          *   - 1st. Movies by Popularity
          *   - 2nd. Movies by Rating
          */

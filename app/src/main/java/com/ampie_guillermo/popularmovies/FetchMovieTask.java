@@ -116,8 +116,8 @@ class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
     @Override
     protected Movie[] doInBackground(String... params) {
         // TODO: Give feedback to user with SnackBar
-        // Verify size of params.
-        if (params.length == 0) {
+        // Verify size of params and that the sorting method is not null
+        if (params.length == 0 || params[0] == null) {
             Log.e(LOG_TAG, "Missing sorting method in https query");
             return null;
         }
