@@ -9,8 +9,7 @@ import android.support.v7.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String SORT_BY_POPULARITY = "popularity.desc";
-    private static final String SORT_BY_RATING = "vote_average.desc";
+    private static final String LOG_TAG = MainActivity.class.getSimpleName ();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +28,16 @@ public class MainActivity extends AppCompatActivity {
          *   - 1st. Movies by Popularity
          *   - 2nd. Movies by Rating
          */
-        MainActivityFragment fragmentPage1 = new MainActivityFragment();
-        fragmentPage1.setSortingMethodParam(SORT_BY_POPULARITY);
+        MovieListFragment.PopularMovieListFragment PopularMoviesPage
+                = new MovieListFragment.PopularMovieListFragment ();
 
-        MainActivityFragment fragmentPage2 = new MainActivityFragment();
-        fragmentPage2.setSortingMethodParam(SORT_BY_RATING);
+        MovieListFragment.RatedMovieListFragment RatedMoviesPage
+                = new MovieListFragment.RatedMovieListFragment();
 
-        viewPagerAdapter.addFragmentPage(fragmentPage1, getString (R.string.sort_by_popularity))
-                        .addFragmentPage(fragmentPage2, getString(R.string.sort_by_rating));
+        viewPagerAdapter.addFragmentPage(PopularMoviesPage,
+                                         getString(R.string.sort_by_popularity))
+                        .addFragmentPage(RatedMoviesPage,
+                                         getString(R.string.sort_by_rating));
 
         // Attach the adapter to the View Pager
         viewPager.setAdapter(viewPagerAdapter);

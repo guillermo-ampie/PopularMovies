@@ -20,14 +20,14 @@ import java.util.ArrayList;
  *       Using the method specified for Sunshine-Version-2 with
  *       API key
  */
-public class MainActivityFragment extends Fragment {
+public class MovieListFragment extends Fragment {
 
-    private static final String LOG_TAG = MainActivityFragment.class.getSimpleName ();
+    private static final String LOG_TAG = MovieListFragment.class.getSimpleName ();
 
     private MovieAdapter mMovieAdapter;
     private String mSortingMethodParam;
 
-    public MainActivityFragment() {
+    public MovieListFragment() {
     }
 
 /*
@@ -64,7 +64,6 @@ public class MainActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         /**
@@ -91,7 +90,7 @@ public class MainActivityFragment extends Fragment {
         return rootView;
     }
 
-    public void setSortingMethodParam(String sortingMethodParam) {
+    void setSortingMethodParam(String sortingMethodParam) {
         mSortingMethodParam = sortingMethodParam;
     }
 
@@ -104,5 +103,23 @@ public class MainActivityFragment extends Fragment {
     public void onStart() {
         super.onStart();
         getMovies();
+    }
+
+    public static class PopularMovieListFragment extends MovieListFragment {
+
+        private static final String SORT_BY_POPULARITY = "popularity.desc";
+
+        public PopularMovieListFragment() {
+            setSortingMethodParam(SORT_BY_POPULARITY);
+        }
+    }
+
+    public static class RatedMovieListFragment extends MovieListFragment {
+
+        private static final String SORT_BY_RATING = "vote_average.desc";
+
+        public RatedMovieListFragment() {
+            setSortingMethodParam(SORT_BY_RATING);
+        }
     }
 }
