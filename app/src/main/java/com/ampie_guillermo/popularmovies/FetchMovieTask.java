@@ -108,7 +108,7 @@ class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
                     movieVoteAverage,
                     movieVoteCount);
 
-            Log.e (LOG_TAG, movieOriginalTitle);
+            //Log.e (LOG_TAG, movieOriginalTitle);
         }
         return resultMovies;
     }
@@ -145,7 +145,7 @@ class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
                     .build();
 
             URL url = new URL(builtUri.toString());
-            Log.e(LOG_TAG, builtUri.toString());
+            //Log.e(LOG_TAG, builtUri.toString());
 
             // Create the request to TheMovieDB, and open the connection
             urlConnection = (HttpURLConnection) url.openConnection();
