@@ -6,7 +6,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 
 
 /**
@@ -63,14 +62,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Save all appropriate fragment state.
+     * Save all appropriate Activity state.
      *
      * @param outState the Bundle object to save the activity state 
      */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.e(LOG_TAG, "SAVE SELECTED_TAB: " + Integer.toString(tabLayout.getSelectedTabPosition()));
 
         // Save TabLayout state: selected tab
         outState.putInt(SELECTED_TAB, tabLayout.getSelectedTabPosition());
@@ -98,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        Log.e(LOG_TAG, "GET SELECTED_TAB: " + Integer.toString(savedInstanceState.getInt(SELECTED_TAB)));
 
         // Get & set TabLayout state: selected tab
         viewPager.setCurrentItem(savedInstanceState.getInt(SELECTED_TAB));
