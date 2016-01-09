@@ -133,7 +133,7 @@ public class MovieListFragment extends Fragment {
         /**
          * Let's connect to theMovieDB server only if the movie list is empty.
          * The movie list is getting filled up either when we connect to TheMovieDB server or
-         * when we restored it from a previous state (state saved in onSaveInstanceState)
+         * when we restore it from a previous state (state saved in onSaveInstanceState)
         */
         if (mMovieArrayList.isEmpty()) {
             getMovies();
