@@ -30,36 +30,6 @@ public class MovieListFragment extends Fragment {
     public MovieListFragment() {
     }
 
-/*
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // Set up fragment to handle menu events.
-        setHasOptionsMenu(true);
-    }
-*/
-/*    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Inflate menu with our sorting options
-        inflater.inflate(R.menu.main_activity_fragment_menu, menu);
-    }
-*/
-/*
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here.
-        switch (item.getItemId()) {
-            case R.id.action_sort_by_popularity:
-                getMovies();
-                return true;
-            case R.id.action_sort_by_rating:
-                getMovies();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-*/
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,

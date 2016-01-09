@@ -8,6 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+
+/**
+ * Tabs code reference:
+ * http://www.ekiras.com/2015/12/how-to-implement-material-design-tab-layout-in-android.html
+ */
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName ();
@@ -65,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.e(LOG_TAG, "SAVE SELECTED_TAB: " + Integer.toString(tabLayout.getSelectedTabPosition()));
+
+        // Save TabLayout state: selected tab
         outState.putInt(SELECTED_TAB, tabLayout.getSelectedTabPosition());
     }
 
@@ -91,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         Log.e(LOG_TAG, "GET SELECTED_TAB: " + Integer.toString(savedInstanceState.getInt(SELECTED_TAB)));
+
+        // Get & set TabLayout state: selected tab
         viewPager.setCurrentItem(savedInstanceState.getInt(SELECTED_TAB));
     }
 }
