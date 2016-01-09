@@ -25,8 +25,8 @@ class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
     private final Context mContext;
 
     public FetchMovieTask(Context context, MovieAdapter movieAdapter) {
-        this.mContext = context;
-        this.mMovieAdapter = movieAdapter;
+        mContext = context;
+        mMovieAdapter = movieAdapter;
     }
 
     /**
@@ -157,7 +157,7 @@ class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
             StringBuilder buffer = new StringBuilder();
             if (inputStream == null) {
                 // Oops, we got nothing.
-                Log.e(LOG_TAG, "Empty response from MovieDB server");
+                Log.e(LOG_TAG, "Empty response from TheMovieDB server");
                 return null;
             }
             reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -170,12 +170,12 @@ class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
 
             if (buffer.length() == 0) {
                 // Stream was empty.  Nothing to do!
-                Log.e(LOG_TAG, "Empty response from MovieDB server");
+                Log.e(LOG_TAG, "Empty response from TheMovieDB server");
                 return null;
             }
             movieJsonStr = buffer.toString();
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Error contacting MovieDB server", e);
+            Log.e(LOG_TAG, "Error contacting TheMovieDB server", e);
             // If we didn't successfully get the movie list, there's nothing to do
             return null;
         } finally {
@@ -199,7 +199,7 @@ class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
         }
 
         // This will only happen if there was an error getting or parsing the response.
-        Log.e(LOG_TAG, "Error contacting MovieDB server / parsing response");
+        Log.e(LOG_TAG, "Error contacting TheMovieDB server / parsing response");
         return null;
     }
 
