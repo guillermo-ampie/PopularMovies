@@ -7,6 +7,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.facebook.stetho.Stetho;
+
 
 /**
  * Tabs code reference:
@@ -24,6 +26,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /**
+         * Stetho: a sophisticated debug bridge for Android applications. When enabled,
+         * developers have access to the Chrome Developer Tools feature natively part
+         * of the Chrome desktop browser. Developers can also choose to enable the
+         * optional dumpapp tool which offers a powerful command-line interface to
+         * application internals.
+         * http://facebook.github.io/stetho/
+         */
+        /*Stetho.initialize(
+                Stetho.newInitializerBuilder(this)
+                        .enableDumpapp(
+                                Stetho.defaultDumperPluginsProvider(this))
+                        .enableWebKitInspector(
+                                Stetho.defaultInspectorModulesProvider(this))
+                        .build());
+*/
+        Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
