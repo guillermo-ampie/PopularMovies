@@ -3,6 +3,7 @@ package com.ampie_guillermo.popularmovies;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +12,20 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.GsonConverterFactory;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 /**
  * The fragment to display the movie's data.
  */
 public class MovieDetailFragment extends Fragment {
 
-    private final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
+    private static final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
+
+    private static final String MOVIEDB_TRAILER_BASE_URL = "https://api.themoviedb.org";
 
     public MovieDetailFragment() {
     }
@@ -56,6 +65,43 @@ public class MovieDetailFragment extends Fragment {
 
            tv = (TextView) rootView.findViewById(R.id.movie_overview_text);
            tv.setText(mSelectedMovie.getMovieOverview());
+
+           /**
+            * Get the movie trailers
+            */
+
+           // Create a simple REST adapter which points to theMovieDB.org API
+           Retrofit retrofit = new Retrofit.Builder()
+                                           .baseUrl(MOVIEDB_TRAILER_BASE_URL)
+                                           .addConverterFactory(GsonConverterFactory.create())
+                                           .build();
+
+           // Create an instance of our MovieTrailerService.
+           MovieTrailerService movieTrailerService = retrofit.create(MovieTrailerService.class);
+
+           // Create a call instance for looking up the movie's list of trailers
+           Call<MovieTrailerList> call = movieTrailerService.get(mSelectedMovie.getMovieID(),
+                                                                 BuildConfig.MOVIE_DB_API_KEY);
+
+           // Fetch the trailers
+           call.enqueue(new Callback<MovieTrailerList>() {
+               @Override
+               public void onResponse(Response<MovieTrailerList> response) {
+                   if (response.isSuccess()) {
+                       MovieTrailerList trailers = response.body();
+                       for (MovieTrailerList.MovieTrailer trailer: trailers.getTrailerList()) {
+                           Log.e(LOG_TAG, trailer.getName());
+                           Log.e(LOG_TAG, trailer.getKey());
+                       }
+                   }
+               }
+
+               @Override
+               public void onFailure(Throwable t) {
+
+
+               }
+           });
         }
 
         return rootView;
