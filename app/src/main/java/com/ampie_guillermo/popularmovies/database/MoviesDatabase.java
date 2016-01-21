@@ -1,6 +1,7 @@
 package com.ampie_guillermo.popularmovies.database;
 
 import net.simonvt.schematic.annotation.Database;
+import net.simonvt.schematic.annotation.IfNotExists;
 import net.simonvt.schematic.annotation.Table;
 
 /**
@@ -17,7 +18,7 @@ public final class MoviesDatabase {
     private MoviesDatabase() {
     }
 
-    @Table(MovieColumns.class)
+    @Table(MovieColumns.class) @IfNotExists
     public static final String MOVIES_DB = "moviesDB";
 
 }
