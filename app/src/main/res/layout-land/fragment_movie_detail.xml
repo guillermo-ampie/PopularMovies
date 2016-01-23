@@ -40,7 +40,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:paddingLeft="@dimen/abc_button_padding_vertical_material">
+            android:paddingRight="@dimen/abc_button_padding_horizontal_material"
+            android:paddingLeft="@dimen/abc_button_padding_horizontal_material">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -56,21 +57,37 @@
                 android:id="@+id/release_date_text"
                 android:layout_gravity="left"/>
 
-            <TextView
+             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/movie_rating"
                 android:layout_gravity="left"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/rating_text"
-                android:layout_gravity="left"/>
+             <LinearLayout
+                 android:orientation="horizontal"
+                 android:layout_width="wrap_content"
+                 android:layout_height="match_parent">
 
-            <TextView
+                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:id="@+id/rating_text"
+                    android:layout_gravity="bottom"
+                     />
+
+                 <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:textAppearance="?android:attr/textAppearanceMedium"
+                     android:id="@+id/textView"
+                     android:layout_gravity="bottom"
+                     android:text=" /10"/>
+
+             </LinearLayout>
+
+             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
@@ -91,8 +108,7 @@
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:layout_weight="2"
-             android:paddingLeft="@dimen/activity_horizontal_margin"
-             >
+             android:paddingLeft="@dimen/abc_button_padding_horizontal_material">
 
              <TextView
                 android:layout_width="wrap_content"

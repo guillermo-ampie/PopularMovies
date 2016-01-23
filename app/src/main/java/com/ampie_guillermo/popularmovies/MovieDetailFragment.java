@@ -57,7 +57,7 @@ public class MovieDetailFragment extends Fragment {
             tv.setText(selectedMovie.getMovieReleaseDate());
 
             String rating = String.valueOf(selectedMovie.getMovieVoteAverage());
-            rating += " / 10";
+
             tv = (TextView) rootView.findViewById(R.id.rating_text);
             tv.setText(rating);
 
