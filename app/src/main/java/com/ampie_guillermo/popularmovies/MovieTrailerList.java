@@ -24,6 +24,10 @@ public class MovieTrailerList {
         return mTrailerList;
     }
 
+    public String getMovieID() {
+        return mMovieID;
+    }
+
     public static class MovieTrailer {
 
         @SerializedName("key")
