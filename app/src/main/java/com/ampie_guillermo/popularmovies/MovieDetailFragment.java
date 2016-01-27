@@ -3,14 +3,14 @@ package com.ampie_guillermo.popularmovies;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,6 +28,8 @@ public class MovieDetailFragment extends Fragment {
     private static final String MOVIEDB_TRAILER_BASE_URL = "https://api.themoviedb.org";
 
     private MovieTrailerList mTrailers;
+    private RecyclerView mRecyclerView;
+    private FastItemAdapter <MovieTrailerItem> mTrailerAdapter;
 
     public MovieDetailFragment() {
     }
@@ -43,36 +45,48 @@ public class MovieDetailFragment extends Fragment {
         // Get the selected movie passed by Intent
         Movie selectedMovie = intent.getExtras().getParcelable("selected-movie");
         if (selectedMovie != null) {
-            // we will reuse -tv- variable for all the TextView objects in this fragment
+/*            // we will reuse -tv- variable for all the TextView objects in this fragment
             TextView tv = (TextView) rootView.findViewById(R.id.movie_title_text);
-            tv.setText(selectedMovie.getMovieOriginalTitle());
+            //tv.setText(selectedMovie.getMovieOriginalTitle());
 
             ImageView moviePosterView =
                     (ImageView) rootView.findViewById(R.id.movie_poster_detail_view);
-            Picasso.with(getContext())
-                   .load(selectedMovie.getMoviePosterCompleteUri())
-                   .into(moviePosterView);
+            //Picasso.with(getContext())
+            //       .load(selectedMovie.getMoviePosterCompleteUri())
+            //       .into(moviePosterView);
 
             tv = (TextView) rootView.findViewById(R.id.release_date_text);
-            tv.setText(selectedMovie.getMovieReleaseDate());
+            //tv.setText(selectedMovie.getMovieReleaseDate());
 
             String rating = String.valueOf(selectedMovie.getMovieVoteAverage());
 
             tv = (TextView) rootView.findViewById(R.id.rating_text);
-            tv.setText(rating);
+            //tv.setText(rating);
 
             String votes = String.valueOf(selectedMovie.getMovieVoteCount());
             tv = (TextView) rootView.findViewById(R.id.vote_count_text);
-            tv.setText(votes);
+            //tv.setText(votes);
 
             tv = (TextView) rootView.findViewById(R.id.movie_overview_text);
-            tv.setText(selectedMovie.getMovieOverview());
+            //tv.setText(selectedMovie.getMovieOverview());
+*/
+            // Get a reference to the RecyclerView
+            mRecyclerView = (RecyclerView) rootView.findViewById(R.id.trailer_list);
+
+            // We will show the movie trailers in just one column, so a LinearLayoutManager
+            // will do the job
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+            mTrailerAdapter = new FastItemAdapter<>();
+            // Attach the trailer adapter to the RecyclerView
+            mRecyclerView.setAdapter(mTrailerAdapter);
 
             /**
              * Get the movie trailers
              */
             fetchTrailers(selectedMovie);
-        }
+            }
+
         return rootView;
     }
 
@@ -96,17 +110,22 @@ public class MovieDetailFragment extends Fragment {
             @Override
             public void onResponse(Response<MovieTrailerList> response) {
                 if (response.isSuccess()) {
+                    // Here we get the movie trailer list!
                     mTrailers = response.body();
+                    mTrailerAdapter.clear();
                     for (MovieTrailerList.MovieTrailer trailer : mTrailers.getTrailerList()) {
+                        mTrailerAdapter.add(new MovieTrailerItem(trailer));
                         Log.e(LOG_TAG, "movie id: " + mTrailers.getMovieID());
                         Log.e(LOG_TAG, "trailer name: " + trailer.getName());
                         Log.e(LOG_TAG, "trailer key: " + trailer.getKey());
                     }
+                    Log.e(LOG_TAG, "Number of trailers: " + mTrailerAdapter.getAdapterItemCount());
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
+                //TODO: Impvove Callback´s error handling
                 Log.e(LOG_TAG, "Error contacting theMovieDB.org Server: " + t.getMessage());
             }
         });

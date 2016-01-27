@@ -12,5 +12,5 @@
         android:adjustViewBounds="true"
         android:maxWidth="@dimen/movie_poster_width"
         android:contentDescription="@string/movie_poster_desc"
-        />
+        android:src="@drawable/no_thumbnail"/>
 </FrameLayout>
