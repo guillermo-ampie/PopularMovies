@@ -1,10 +1,15 @@
-package com.ampie_guillermo.popularmovies;
+package com.ampie_guillermo.popularmovies.network;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.ampie_guillermo.popularmovies.BuildConfig;
+import com.ampie_guillermo.popularmovies.model.Movie;
+import com.ampie_guillermo.popularmovies.ui.MovieAdapter;
+import com.ampie_guillermo.popularmovies.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,7 +22,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
+public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
 
     private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 

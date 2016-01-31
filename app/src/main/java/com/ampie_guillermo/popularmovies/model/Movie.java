@@ -1,4 +1,4 @@
-package com.ampie_guillermo.popularmovies;
+package com.ampie_guillermo.popularmovies.model;
 
 import android.net.Uri;
 import android.os.Parcel;

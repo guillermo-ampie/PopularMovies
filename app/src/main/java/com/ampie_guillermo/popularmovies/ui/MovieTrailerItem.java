@@ -1,4 +1,4 @@
-package com.ampie_guillermo.popularmovies;
+package com.ampie_guillermo.popularmovies.ui;
 
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ampie_guillermo.popularmovies.R;
+import com.ampie_guillermo.popularmovies.model.MovieTrailerList;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.squareup.picasso.Picasso;
 

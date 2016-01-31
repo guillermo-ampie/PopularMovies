@@ -1,4 +1,4 @@
-package com.ampie_guillermo.popularmovies;
+package com.ampie_guillermo.popularmovies.ui;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
+import com.ampie_guillermo.popularmovies.R;
+import com.ampie_guillermo.popularmovies.model.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -16,7 +18,7 @@ import java.util.List;
  * The code is inspired by the android-custom-arrayadapter demo project referenced in
  * the ---Popular Movies App Implementation Guide---
  */
-class MovieAdapter extends ArrayAdapter <Movie> {
+public class MovieAdapter extends ArrayAdapter <Movie> {
 
     // Only one ImageView but the View Holder Pattern can improve some performance.
     // This caches the ImageView for the movie poster

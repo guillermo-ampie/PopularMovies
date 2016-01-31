@@ -1,4 +1,4 @@
-package com.ampie_guillermo.popularmovies;
+package com.ampie_guillermo.popularmovies.ui;
 
 
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.ampie_guillermo.popularmovies.R;
 import com.facebook.stetho.Stetho;
 
 

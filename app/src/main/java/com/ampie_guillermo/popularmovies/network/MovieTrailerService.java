@@ -1,4 +1,6 @@
-package com.ampie_guillermo.popularmovies;
+package com.ampie_guillermo.popularmovies.network;
+
+import com.ampie_guillermo.popularmovies.model.MovieTrailerList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

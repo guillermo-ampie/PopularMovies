@@ -1,4 +1,4 @@
-package com.ampie_guillermo.popularmovies;
+package com.ampie_guillermo.popularmovies.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ampie_guillermo.popularmovies.BuildConfig;
+import com.ampie_guillermo.popularmovies.R;
+import com.ampie_guillermo.popularmovies.network.MovieTrailerService;
+import com.ampie_guillermo.popularmovies.model.Movie;
+import com.ampie_guillermo.popularmovies.model.MovieTrailerList;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 
 import retrofit2.Call;

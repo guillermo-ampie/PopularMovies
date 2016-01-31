@@ -1,4 +1,4 @@
-package com.ampie_guillermo.popularmovies;
+package com.ampie_guillermo.popularmovies.model;
 
 import com.google.gson.annotations.SerializedName;
 
