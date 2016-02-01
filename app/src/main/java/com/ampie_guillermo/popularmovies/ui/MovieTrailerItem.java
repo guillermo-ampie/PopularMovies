@@ -23,7 +23,7 @@ public class MovieTrailerItem extends AbstractItem<MovieTrailerItem, MovieTraile
     private static final String THUMBNAIL_BASE_URL = "https://img.youtube.com/vi/";
     private static final String THUMBNAIL_IMAGE_TYPE = "/mqdefault.jpg";
 
-    private MovieTrailerList.MovieTrailer mMovieTrailer;
+    private final MovieTrailerList.MovieTrailer mMovieTrailer;
 
     public MovieTrailerItem(MovieTrailerList.MovieTrailer mMovieTrailer) {
         this.mMovieTrailer = mMovieTrailer;

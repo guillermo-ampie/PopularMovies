@@ -16,8 +16,8 @@ public class MovieTrailerList {
     private final ArrayList <MovieTrailer>  mTrailerList;
 
     public MovieTrailerList() {
+        mMovieID     = "";
         mTrailerList = new ArrayList<>();
-        mMovieID     = null;
     }
 
     public ArrayList<MovieTrailer> getTrailerList() {
