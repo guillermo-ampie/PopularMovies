@@ -1,6 +1,7 @@
 package com.ampie_guillermo.popularmovies.ui;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -35,6 +36,7 @@ public class MovieDetailFragment extends Fragment {
     // The BASE_URL is the same for trailers & reviews
     private static final String MOVIEDB_TRAILER_BASE_URL = "https://api.themoviedb.org";
 
+    private View rootView;
     private MovieTrailerList mTrailers;
     private MovieReviewList mReviews;
 
@@ -57,7 +59,7 @@ public class MovieDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
+        rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
         Intent intent = getActivity().getIntent();
 
         // Get the selected movie passed by Intent
@@ -142,6 +144,28 @@ public class MovieDetailFragment extends Fragment {
                 if (response.isSuccess()) {
                     // Here we get the movie trailer list!
                     mTrailers = response.body();
+
+                    if (!mTrailers.getTrailerList().isEmpty()) {
+                        ImageView trailerView =
+                                (ImageView) rootView.findViewById(R.id.trailer_thumbnail_view);
+                        final String THUMBNAIL_BASE_URL = "https://img.youtube.com/vi/";
+                        final String THUMBNAIL_IMAGE_TYPE = "/mqdefault.jpg";
+                        final MovieTrailerList.MovieTrailer trailer = mTrailers.getTrailerList()
+                                                                               .get(0);
+
+                        Uri thumbnailUri
+                                = Uri.withAppendedPath(Uri.parse(THUMBNAIL_BASE_URL),
+                                trailer.getKey() + THUMBNAIL_IMAGE_TYPE);
+
+                        // Show thumbnail image for first trailer
+                        Picasso.with(getContext())
+                               .load(thumbnailUri)
+                               .placeholder(R.drawable.no_thumbnail)
+                               .error(R.drawable.no_thumbnail)
+                               .fit()
+                               .into(trailerView);
+                    }
+
                     //mTrailerAdapter.clear();
                     for (MovieTrailerList.MovieTrailer trailer : mTrailers.getTrailerList()) {
                         //mTrailerAdapter.add(new MovieTrailerItem(trailer));

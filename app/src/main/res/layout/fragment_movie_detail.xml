@@ -134,6 +134,21 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/movie_trailers"
+                android:textStyle="bold"
+                android:paddingTop="@dimen/abc_button_padding_vertical_material"/>
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/trailer_thumbnail_view"
+                android:layout_gravity="left|center_vertical"
+                android:contentDescription="@string/movie_trailer_desc"/>
         </LinearLayout>
     </ScrollView>
 </FrameLayout>
