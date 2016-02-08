@@ -2,6 +2,7 @@ package com.ampie_guillermo.popularmovies.ui;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.ampie_guillermo.popularmovies.BuildConfig;
@@ -40,7 +42,16 @@ public class MovieDetailFragment extends Fragment {
     private MovieTrailerList mTrailers;
     private MovieReviewList mReviews;
 
-    private Retrofit retrofit;
+    /**
+     * Just avoid creating the retrofit object with every instantiation of the
+     * MovieDetailFragment object (singleton pattern: eager initialization)
+     */
+    private static final Retrofit retrofit
+            = new Retrofit.Builder()
+                          .baseUrl(MOVIEDB_TRAILER_BASE_URL)
+                          .addConverterFactory(GsonConverterFactory.create())
+                          .build();
+
     private Call<MovieTrailerList> mCallTrailers;
     private Call<MovieReviewList> mCallReviews;
 
@@ -48,11 +59,6 @@ public class MovieDetailFragment extends Fragment {
 //    private FastItemAdapter <MovieTrailerItem> mTrailerAdapter;
 
     public MovieDetailFragment() {
-        // Create a simple REST adapter which points to theMovieDB.org API
-        retrofit = new Retrofit.Builder()
-                               .baseUrl(MOVIEDB_TRAILER_BASE_URL)
-                               .addConverterFactory(GsonConverterFactory.create())
-                               .build();
     }
 
     @Override
@@ -60,6 +66,15 @@ public class MovieDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
+
+        // SDK_INT is available since "Donut"(API 4). Since we are using minSDK=16 we are OK to ask
+        // for SDK_INT
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // "ScrollIndicators" attribute is available since "Marshmallow (API 23)"
+            ScrollView sv = (ScrollView) rootView.findViewById(R.id.main_scroll_view);
+            sv.setScrollIndicators(View.SCROLL_INDICATOR_RIGHT);
+        }
+
         Intent intent = getActivity().getIntent();
 
         // Get the selected movie passed by Intent
@@ -124,7 +139,8 @@ public class MovieDetailFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        // Cancel the request if the HTTP scheduler did not executed it already...
+
+        // Cancel the request if the HTTP scheduler has not executed it already...
         mCallTrailers.cancel();
         mCallReviews.cancel();
     }
@@ -153,17 +169,32 @@ public class MovieDetailFragment extends Fragment {
                         final MovieTrailerList.MovieTrailer trailer = mTrailers.getTrailerList()
                                                                                .get(0);
 
-                        Uri thumbnailUri
+                        final Uri thumbnailUri
                                 = Uri.withAppendedPath(Uri.parse(THUMBNAIL_BASE_URL),
-                                trailer.getKey() + THUMBNAIL_IMAGE_TYPE);
+                                                       trailer.getKey() + THUMBNAIL_IMAGE_TYPE);
 
                         // Show thumbnail image for first trailer
                         Picasso.with(getContext())
-                               .load(thumbnailUri)
-                               .placeholder(R.drawable.no_thumbnail)
-                               .error(R.drawable.no_thumbnail)
-                               .fit()
-                               .into(trailerView);
+                                .load(thumbnailUri)
+                                .placeholder(R.drawable.no_thumbnail)
+                                .error(R.drawable.no_thumbnail)
+                                .fit()
+                                .into(trailerView);
+
+                        trailerView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?";
+                                final String VIDEO_PARAM = "v";
+                                final Uri trailerUri = Uri.parse(YOUTUBE_BASE_URL)
+                                                          .buildUpon()
+                                                          .appendQueryParameter(VIDEO_PARAM,
+                                                                                trailer.getKey())
+                                                          .build();
+                                // Play the movie trailer on youtube.com
+                                startActivity(new Intent(Intent.ACTION_VIEW, trailerUri));
+                            }
+                        });
                     }
 
                     //mTrailerAdapter.clear();

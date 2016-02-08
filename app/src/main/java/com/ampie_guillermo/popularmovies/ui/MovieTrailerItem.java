@@ -19,7 +19,7 @@ import com.squareup.picasso.Picasso;
 
 public class MovieTrailerItem extends AbstractItem<MovieTrailerItem, MovieTrailerItem.ViewHolder> {
 
-    private final String LOG_TAG = MovieTrailerItem.class.getSimpleName();
+    private static final String LOG_TAG = MovieTrailerItem.class.getSimpleName();
     private static final String THUMBNAIL_BASE_URL = "https://img.youtube.com/vi/";
     private static final String THUMBNAIL_IMAGE_TYPE = "/mqdefault.jpg";
 
