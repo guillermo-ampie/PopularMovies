@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -30,12 +31,15 @@ import retrofit2.Retrofit;
 
 /**
  * The fragment to display the movie's data.
+ *
+ * Reference code to add views dynamically into a ViewGroup
+ * http://www.myandroidsolutions.com/2013/02/10/android-add-views-into-view-dynamically/
  */
 public class MovieDetailFragment extends Fragment {
 
     private static final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
 
-    // The BASE_URL is the same for trailers & reviews
+    // The BASE URL is the same for trailers & reviews
     private static final String MOVIEDB_TRAILER_BASE_URL = "https://api.themoviedb.org";
 
     private View rootView;
@@ -67,8 +71,10 @@ public class MovieDetailFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
 
-        // SDK_INT is available since "Donut"(API 4). Since we are using minSDK=16 we are OK to ask
-        // for SDK_INT
+        /**
+         * SDK_INT is available since "Donut"(API 4). Since we are using minSDK=16 we
+         * are OK to ask for SDK_INT
+         */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // "ScrollIndicators" attribute is available since "Marshmallow (API 23)"
             ScrollView sv = (ScrollView) rootView.findViewById(R.id.main_scroll_view);
@@ -86,6 +92,7 @@ public class MovieDetailFragment extends Fragment {
 
             ImageView moviePosterView =
                     (ImageView) rootView.findViewById(R.id.movie_poster_detail_view);
+            // Show the movie poster
             Picasso.with(getContext())
                    .load(selectedMovie.getMoviePosterCompleteUri())
                    .placeholder(R.drawable.no_thumbnail)
@@ -162,49 +169,65 @@ public class MovieDetailFragment extends Fragment {
                     mTrailers = response.body();
 
                     if (!mTrailers.getTrailerList().isEmpty()) {
-                        ImageView trailerView =
-                                (ImageView) rootView.findViewById(R.id.trailer_thumbnail_view);
+
                         final String THUMBNAIL_BASE_URL = "https://img.youtube.com/vi/";
                         final String THUMBNAIL_IMAGE_TYPE = "/mqdefault.jpg";
-                        final MovieTrailerList.MovieTrailer trailer = mTrailers.getTrailerList()
-                                                                               .get(0);
 
-                        final Uri thumbnailUri
-                                = Uri.withAppendedPath(Uri.parse(THUMBNAIL_BASE_URL),
-                                                       trailer.getKey() + THUMBNAIL_IMAGE_TYPE);
+                        // Parent layout for the trailer thumbnail layout
+                        LinearLayout parentLayout =
+                                (LinearLayout) rootView.findViewById(R.id.trailer_linear_layout);
 
-                        // Show thumbnail image for first trailer
-                        Picasso.with(getContext())
-                                .load(thumbnailUri)
-                                .placeholder(R.drawable.no_thumbnail)
-                                .error(R.drawable.no_thumbnail)
-                                .fit()
-                                .into(trailerView);
+                        // Layout inflater to inflate the trailer thumbnail layout
+                        LayoutInflater layoutInflater = getLayoutInflater(null);
 
-                        trailerView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?";
-                                final String VIDEO_PARAM = "v";
-                                final Uri trailerUri = Uri.parse(YOUTUBE_BASE_URL)
-                                                          .buildUpon()
-                                                          .appendQueryParameter(VIDEO_PARAM,
-                                                                                trailer.getKey())
-                                                          .build();
-                                // Play the movie trailer on youtube.com
-                                startActivity(new Intent(Intent.ACTION_VIEW, trailerUri));
-                            }
-                        });
+                        for (final MovieTrailerList.MovieTrailer trailer : mTrailers.getTrailerList()) {
+
+                            // Add the thumbnail trailer layout to its parent layout
+                            View parentView
+                                    = layoutInflater.inflate(R.layout.trailer_thumbnail_layout,
+                                    parentLayout,
+                                    false);
+                            // Now we can get the trailer view
+                            ImageView trailerView
+                                    = (ImageView) parentView.findViewById(R.id.trailer_thumbnail_view);
+
+                            // Add the trailer view to its parent layout
+                            parentLayout.addView(trailerView);
+
+                            final Uri thumbnailUri
+                                    = Uri.withAppendedPath(Uri.parse(THUMBNAIL_BASE_URL),
+                                    trailer.getKey() + THUMBNAIL_IMAGE_TYPE);
+
+                            // Show trailer thumbnail image
+                            Picasso.with(getContext())
+                                    .load(thumbnailUri)
+                                    .placeholder(R.drawable.no_thumbnail)
+                                    .error(R.drawable.no_thumbnail)
+                                    .fit()
+                                    .into(trailerView);
+
+                            trailerView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?";
+                                    final String VIDEO_PARAM = "v";
+                                    final Uri trailerUri = Uri.parse(YOUTUBE_BASE_URL)
+                                            .buildUpon()
+                                            .appendQueryParameter(VIDEO_PARAM,
+                                                    trailer.getKey())
+                                            .build();
+                                    // Play the movie trailer on youtube.com
+                                    // TODO: Expand code to play trailer in youtube app if installed 
+                                    startActivity(new Intent(Intent.ACTION_VIEW, trailerUri));
+                                }
+                            });
+                            Log.e(LOG_TAG, "movie id: " + mTrailers.getMovieID());
+                            Log.e(LOG_TAG, "trailer name: " + trailer.getName());
+                            Log.e(LOG_TAG, "trailer key: " + trailer.getKey());
+
+                        }
                     }
 
-                    //mTrailerAdapter.clear();
-                    for (MovieTrailerList.MovieTrailer trailer : mTrailers.getTrailerList()) {
-                        //mTrailerAdapter.add(new MovieTrailerItem(trailer));
-                        Log.e(LOG_TAG, "movie id: " + mTrailers.getMovieID());
-                        Log.e(LOG_TAG, "trailer name: " + trailer.getName());
-                        Log.e(LOG_TAG, "trailer key: " + trailer.getKey());
-                    }
-                    //Log.e(LOG_TAG, "Number of trailers: " + mTrailerAdapter.getAdapterItemCount());
                 } else {
                     Log.e(LOG_TAG,
                             "Bad response from TheMovieDB.org server: " + response.message());
