@@ -30,6 +30,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.MainActivity"/>
         </activity>
+        <provider
+            android:authorities="com.ampie_guillermo.popularmovies.MoviesProvider"
+            android:name="com.ampie_guillermo.popularmovies.database.generated.MoviesProvider"
+         />
     </application>
 
 </manifest>
