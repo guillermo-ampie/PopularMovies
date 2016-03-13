@@ -35,7 +35,8 @@ public final class MoviesProvider {
         return builder.build();
     }
 
-    @TableEndpoint(table = MoviesDatabase.MOVIES_DB) public static class Movies {
+    @TableEndpoint(table = MoviesDatabase.MOVIES_TABLE)
+    public static class Movies {
 
         @ContentUri(path = Path.MOVIES,
                     type = "vnd.android.cursor.dir/movie")
