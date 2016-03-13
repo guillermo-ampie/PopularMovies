@@ -29,6 +29,7 @@ import retrofit2.GsonConverterFactory;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+
 /**
  * The fragment to display the movie's data.
  *
