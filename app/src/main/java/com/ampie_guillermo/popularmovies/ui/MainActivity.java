@@ -2,11 +2,14 @@ package com.ampie_guillermo.popularmovies.ui;
 
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
+import com.ampie_guillermo.popularmovies.BuildConfig;
 import com.ampie_guillermo.popularmovies.R;
 import com.facebook.stetho.Stetho;
 
@@ -28,23 +31,52 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /**
-         * Stetho: a sophisticated debug bridge for Android applications. When enabled,
-         * developers have access to the Chrome Developer Tools feature natively part
-         * of the Chrome desktop browser. Developers can also choose to enable the
-         * optional dumpapp tool which offers a powerful command-line interface to
-         * application internals.
-         * http://facebook.github.io/stetho/
-         */
-        /*Stetho.initialize(
-                Stetho.newInitializerBuilder(this)
+
+        if (BuildConfig.DEBUG) {
+            Log.e(LOG_TAG, "BUILD: ** DEBUG **");
+
+            /**
+             * Enable: Stetho
+             */
+
+            /**
+             * Stetho: a sophisticated debug bridge for Android applications. When enabled,
+             * developers have access to the Chrome Developer Tools feature natively part
+             * of the Chrome desktop browser. Developers can also choose to enable the
+             * optional dumpapp tool which offers a powerful command-line interface to
+             * application internals.
+             * http://facebook.github.io/stetho/
+             */
+/*
+            Stetho.initialize(Stetho.newInitializerBuilder(this)
                         .enableDumpapp(
                                 Stetho.defaultDumperPluginsProvider(this))
                         .enableWebKitInspector(
                                 Stetho.defaultInspectorModulesProvider(this))
                         .build());
 */
-        Stetho.initializeWithDefaults(this);
+            Stetho.initializeWithDefaults(this);
+
+
+            /**
+             * Enable StrictMode
+             */
+            // Detect for blocking the UI thread
+            StrictMode.setThreadPolicy(
+                    new StrictMode.ThreadPolicy.Builder()
+                            .detectAll()
+                            .penaltyLog()
+                            .build());
+
+            // Detect for memory leaks...
+            StrictMode.setVmPolicy(
+                    new StrictMode.VmPolicy.Builder()
+                            .detectAll()
+                            .penaltyLog()
+                            .penaltyDeath()
+                            .build());
+        }
+
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -54,10 +86,11 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         /**
-         * We will have ONLY two pages, so it is OK to "preload" them for the sake of
+         * We will have THREE TABS, in this case it semms OK to "preload" them for the sake of
          * UI responsiveness:
          *   - 1st. Movies by Popularity
          *   - 2nd. Movies by Rating
+         *   - 3rd. Favorites movies
          */
         MovieListFragment.PopularMovieListFragment PopularMoviesPage
                 = new MovieListFragment.PopularMovieListFragment ();
@@ -76,7 +109,9 @@ public class MainActivity extends AppCompatActivity {
         // Get the TabLayout and attach the ViewPager to it
         tabLayout = (TabLayout) findViewById(R.id.tabs);
 
-        tabLayout.setupWithViewPager(viewPager);
+        if (tabLayout != null) {
+            tabLayout.setupWithViewPager(viewPager);
+        }
 
         //tabLayout.setTabTextColors(ContextCompat.getColorStateList(this, R.color.tab_selector));
         //tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, R.color.indicator));
