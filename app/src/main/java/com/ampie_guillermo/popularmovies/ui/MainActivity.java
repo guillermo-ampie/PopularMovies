@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         /**
-         * We will have THREE TABS, in this case it semms OK to "preload" them for the sake of
+         * We will have THREE TABS, in this case it seems OK to "preload" them for the sake of
          * UI responsiveness:
          *   - 1st. Movies by Popularity
          *   - 2nd. Movies by Rating
@@ -98,10 +98,12 @@ public class MainActivity extends AppCompatActivity {
         MovieListFragment.RatedMovieListFragment RatedMoviesPage
                 = new MovieListFragment.RatedMovieListFragment();
 
-        viewPagerAdapter.addFragmentPage(PopularMoviesPage,
-                                         getString(R.string.sort_by_popularity))
-                        .addFragmentPage(RatedMoviesPage,
-                                         getString(R.string.sort_by_rating));
+        MovieListFragment.FavoriteMovieListFragment FavoriteMoviesPage
+                = new MovieListFragment.FavoriteMovieListFragment();
+
+        viewPagerAdapter.addFragmentPage(PopularMoviesPage, getString(R.string.sort_by_popularity))
+                        .addFragmentPage(RatedMoviesPage, getString(R.string.sort_by_rating))
+                        .addFragmentPage(FavoriteMoviesPage, getString(R.string.favorite_movies));
 
         // Attach the adapter to the View Pager
         viewPager.setAdapter(viewPagerAdapter);

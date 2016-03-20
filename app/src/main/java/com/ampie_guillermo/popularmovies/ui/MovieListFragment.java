@@ -125,7 +125,7 @@ public class MovieListFragment extends Fragment {
         mSortingMethodParam = sortingMethodParam;
     }
 
-    private void getMovies() {
+    protected void getMovies() {
         FetchMovieTask movieTask = new FetchMovieTask(getActivity(), mMovieAdapter);
         movieTask.execute(mSortingMethodParam);
     }
@@ -135,10 +135,11 @@ public class MovieListFragment extends Fragment {
         super.onStart();
 
         /**
-         * Let's connect to theMovieDB server only if the movie list is empty.
-         * The movie list is getting filled up either when we connect to TheMovieDB server or
-         * when we restore it from a previous state (state saved in onSaveInstanceState)
-        */
+         * Let's connect to theMovieDB server/read from database --only-- if the movie list
+         * is empty. The movie list is getting filled up either when we connect to TheMovieDB
+         * server/read from the database or when we restore it from a previous state (state saved
+         * in onSaveInstanceState)
+         */
         if (mMovieArrayList.isEmpty()) {
             getMovies();
         }
@@ -159,6 +160,30 @@ public class MovieListFragment extends Fragment {
 
         public RatedMovieListFragment() {
             setSortingMethodParam(SORT_BY_RATING);
+        }
+    }
+
+    public static class FavoriteMovieListFragment extends MovieListFragment {
+
+        public FavoriteMovieListFragment() {
+            /*
+            We do not need to call setSortingMethodParam (""). In this case,
+            we are going to read from the local database and not to connect to TheMovieDB server
+            */
+        }
+
+        @Override
+        protected void getMovies() {
+            /**
+             * READ FROM DATABASE AND POPULATE "mMovieArrayList":
+             * if (Database is empty) {
+             *   show "No favorite movies"
+             * }
+             * else {
+             * display all movies in the database (we are storing only the FAVORITES movies
+             * in the database
+             * }
+             */
         }
     }
 }
