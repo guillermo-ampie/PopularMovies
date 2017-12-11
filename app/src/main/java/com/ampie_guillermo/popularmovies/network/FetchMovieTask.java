@@ -7,9 +7,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.ampie_guillermo.popularmovies.BuildConfig;
+import com.ampie_guillermo.popularmovies.R;
 import com.ampie_guillermo.popularmovies.model.Movie;
 import com.ampie_guillermo.popularmovies.ui.MovieAdapter;
-import com.ampie_guillermo.popularmovies.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -64,6 +64,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
          * In the https request we need to use the nominal value stored in
          * "movie_poster_width", not the scaled value returned by
          * getDimension(), so we must -adjust back- by the screen density factor
+         *
          */
         MOVIE_POSTER_BASE_URI += String.valueOf(moviePosterWidthInPixels);
 
@@ -117,6 +118,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
         }
         return resultMovies;
     }
+
 
     @Override
     protected Movie[] doInBackground(String... params) {
