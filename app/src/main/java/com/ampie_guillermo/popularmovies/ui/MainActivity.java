@@ -1,6 +1,7 @@
 package com.ampie_guillermo.popularmovies.ui;
 
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.TabLayout;
@@ -21,7 +22,7 @@ import com.facebook.stetho.Stetho;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String LOG_TAG = MainActivity.class.getSimpleName ();
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final String SELECTED_TAB = "sel-tab";
 
     private ViewPager viewPager;
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (BuildConfig.DEBUG) {
-            Log.e(LOG_TAG, "BUILD: ** DEBUG **");
+            Log.v(LOG_TAG, "BUILD: ** DEBUG **");
 
             /**
              * Enable: Stetho
@@ -58,9 +59,10 @@ public class MainActivity extends AppCompatActivity {
             Stetho.initializeWithDefaults(this);
 
 
-            /**
+            /*
              * Enable StrictMode
              */
+
             // Detect for blocking the UI thread
             StrictMode.setThreadPolicy(
                     new StrictMode.ThreadPolicy.Builder()
@@ -68,13 +70,29 @@ public class MainActivity extends AppCompatActivity {
                             .penaltyLog()
                             .build());
 
-            // Detect for memory leaks...
-            StrictMode.setVmPolicy(
-                    new StrictMode.VmPolicy.Builder()
-                            .detectAll()
-                            .penaltyLog()
-                            .penaltyDeath()
-                            .build());
+            /*
+             * We intent to use detectAll() in the VmPolicy, but we are getting a
+             * policy violation with HttpURLConnection in Android Oreo if we use
+             * detectUntaggedSockets(). This is the reason for the ugly code in the VmPolicy
+             * As far of Dec, 11 2017 you will get the same result with OkHttp library:
+             * no solution or workaround has been provided yet!
+             */
+
+            // Detect for memory leaks
+            StrictMode.VmPolicy.Builder policyBuilder = new StrictMode.VmPolicy.Builder();
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                policyBuilder.detectAll();
+            } else {
+                // Android Oreo or higher
+                policyBuilder.detectActivityLeaks()
+                        .detectCleartextNetwork()
+                        .detectContentUriWithoutPermission()
+                        .detectFileUriExposure()
+                        .detectLeakedClosableObjects()
+                        .detectLeakedRegistrationObjects()
+                        .detectLeakedSqlLiteObjects();
+            }
+            StrictMode.setVmPolicy(policyBuilder.penaltyLog().penaltyDeath().build());
         }
 
         setContentView(R.layout.activity_main);
@@ -93,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
          *   - 3rd. Favorites movies
          */
         MovieListFragment.PopularMovieListFragment PopularMoviesPage
-                = new MovieListFragment.PopularMovieListFragment ();
+                = new MovieListFragment.PopularMovieListFragment();
 
         MovieListFragment.RatedMovieListFragment RatedMoviesPage
                 = new MovieListFragment.RatedMovieListFragment();
@@ -102,8 +120,8 @@ public class MainActivity extends AppCompatActivity {
                 = new MovieListFragment.FavoriteMovieListFragment();
 
         viewPagerAdapter.addFragmentPage(PopularMoviesPage, getString(R.string.sort_by_popularity))
-                        .addFragmentPage(RatedMoviesPage, getString(R.string.sort_by_rating))
-                        .addFragmentPage(FavoriteMoviesPage, getString(R.string.favorite_movies));
+                .addFragmentPage(RatedMoviesPage, getString(R.string.sort_by_rating))
+                .addFragmentPage(FavoriteMoviesPage, getString(R.string.favorite_movies));
 
         // Attach the adapter to the View Pager
         viewPager.setAdapter(viewPagerAdapter);
@@ -122,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Save all appropriate Activity state.
      *
-     * @param outState the Bundle object to save the activity state 
+     * @param outState the Bundle object to save the activity state
      */
     @Override
     protected void onSaveInstanceState(Bundle outState) {

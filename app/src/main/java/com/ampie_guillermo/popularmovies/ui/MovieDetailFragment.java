@@ -25,9 +25,9 @@ import com.squareup.picasso.Picasso;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.GsonConverterFactory;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
@@ -72,7 +72,7 @@ public class MovieDetailFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
 
-        /**
+        /*
          * SDK_INT is available since "Donut"(API 4). Since we are using minSDK=16 we
          * are OK to ask for SDK_INT
          */
@@ -127,11 +127,11 @@ public class MovieDetailFragment extends Fragment {
             // Attach the trailer adapter to the RecyclerView
             mRecyclerView.setAdapter(mTrailerAdapter);
 */
-            /**
+            /*
              * Get the movie trailers
              */
             fetchTrailers(selectedMovie);
-            /**
+            /*
              * Get the movie reviews
              */
             fetchReviews(selectedMovie);
@@ -164,8 +164,8 @@ public class MovieDetailFragment extends Fragment {
         // Fetch the trailers
         mCallTrailers.enqueue(new Callback<MovieTrailerList>() {
             @Override
-            public void onResponse(Response<MovieTrailerList> response) {
-                if (response.isSuccess()) {
+            public void onResponse(Call <MovieTrailerList> call, Response<MovieTrailerList> response) {
+                if (response.isSuccessful()) {
                     // Here we get the movie trailer list!
                     mTrailers = response.body();
 
@@ -179,7 +179,7 @@ public class MovieDetailFragment extends Fragment {
                                 (LinearLayout) rootView.findViewById(R.id.trailer_linear_layout);
 
                         // Layout inflater to inflate the trailer thumbnail layout
-                        LayoutInflater layoutInflater = getLayoutInflater(null);
+                        LayoutInflater layoutInflater = getLayoutInflater();
 
                         for (final MovieTrailerList.MovieTrailer trailer : mTrailers.getTrailerList()) {
 
@@ -236,7 +236,7 @@ public class MovieDetailFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call <MovieTrailerList> call, Throwable t) {
                 //TODO: Improve Callback´s error handling
                 Log.e(LOG_TAG, "Error contacting theMovieDB.org Server: " + t.getMessage());
             }
@@ -254,8 +254,8 @@ public class MovieDetailFragment extends Fragment {
         // Fetch the Reviews
         mCallReviews.enqueue(new Callback<MovieReviewList>() {
             @Override
-            public void onResponse(Response<MovieReviewList> response) {
-                if (response.isSuccess()) {
+            public void onResponse(Call <MovieReviewList> call, Response<MovieReviewList> response) {
+                if (response.isSuccessful()) {
                     // Here we get the movie review list!
                     mReviews = response.body();
                     for (MovieReviewList.MovieReview review : mReviews.getReviewList()) {
@@ -271,7 +271,7 @@ public class MovieDetailFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call <MovieReviewList> call, Throwable t) {
                 //TODO: Improve Callback´s error handling
                 Log.e(LOG_TAG, "Error contacting theMovieDB.org Server: " + t.getMessage());
             }

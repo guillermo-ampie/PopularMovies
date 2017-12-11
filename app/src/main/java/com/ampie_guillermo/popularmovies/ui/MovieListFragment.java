@@ -24,7 +24,7 @@ import java.util.ArrayList;
  *       Using the method specified for Sunshine-Version-2 with
  *       API key
  */
-public class MovieListFragment extends Fragment {
+public class    MovieListFragment extends Fragment {
 
     private static final String LOG_TAG = MovieListFragment.class.getSimpleName ();
     private static final String MOVIE_LIST = "movie-list";
@@ -97,7 +97,7 @@ public class MovieListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        /**
+        /*
          * The MovieAdapter will take data from a a JSON response from TheMovieDB.org
          * server and use it to populate the GridView it's attached to.
          */
@@ -134,7 +134,7 @@ public class MovieListFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        /**
+        /*
          * Let's connect to theMovieDB server/read from database --only-- if the movie list
          * is empty. The movie list is getting filled up either when we connect to TheMovieDB
          * server/read from the database or when we restore it from a previous state (state saved
@@ -174,14 +174,14 @@ public class MovieListFragment extends Fragment {
 
         @Override
         protected void getMovies() {
-            /**
+            /*
              * READ FROM DATABASE AND POPULATE "mMovieArrayList":
              * if (Database is empty) {
              *   show "No favorite movies"
              * }
              * else {
              * display all movies in the database (we are storing only the FAVORITES movies
-             * in the database
+             * in the database)
              * }
              */
         }
