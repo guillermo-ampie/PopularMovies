@@ -4,5 +4,5 @@
     android:id="@+id/trailer_thumbnail_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="left|center_vertical"
+    android:layout_gravity="start|center_vertical"
     android:contentDescription="@string/movie_trailer_desc"/>

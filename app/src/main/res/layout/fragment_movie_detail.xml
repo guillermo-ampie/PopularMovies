@@ -32,7 +32,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
+                android:layout_gravity="start"
                 android:orientation="horizontal"
                 android:paddingTop="@dimen/abc_button_padding_vertical_material">
 
@@ -40,7 +40,7 @@
                     android:id="@+id/movie_poster_detail_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left"
+                    android:layout_gravity="start"
                     android:layout_weight="1.5"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/movie_poster_desc"
@@ -49,15 +49,16 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
+                    android:layout_gravity="end"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:paddingLeft="@dimen/abc_button_padding_horizontal_material">
+                    android:paddingLeft="@dimen/abc_button_padding_horizontal_material"
+                    android:paddingStart="@dimen/abc_button_padding_horizontal_material">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="left"
+                        android:layout_gravity="start"
                         android:text="@string/movie_release_date"
                         android:textAppearance="?android:attr/textAppearanceSmall"/>
 
@@ -65,13 +66,13 @@
                         android:id="@+id/release_date_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="left"
+                        android:layout_gravity="start"
                         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="left"
+                        android:layout_gravity="start"
                         android:text="@string/movie_rating"
                         android:textAppearance="?android:attr/textAppearanceSmall"/>
 
@@ -100,7 +101,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="left"
+                        android:layout_gravity="start"
                         android:text="@string/movie_vote_count"
                         android:textAppearance="?android:attr/textAppearanceSmall"/>
 
@@ -108,7 +109,7 @@
                         android:id="@+id/vote_count_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="left"
+                        android:layout_gravity="start"
                         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
                 </LinearLayout>
@@ -127,7 +128,7 @@
                 android:id="@+id/movie_overview_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
+                android:layout_gravity="start"
                 android:textAppearance="?android:attr/textAppearanceSmall"/>
 
             <TextView
