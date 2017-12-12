@@ -26,8 +26,6 @@ public class MovieAdapter extends ArrayAdapter <Movie> {
         private ImageView mMoviePoster;
     }
 
-    private static final String LOG_TAG = MovieAdapter.class.getSimpleName ();
-
     /**
      * Custom constructor (it doesn't mirror a superclass constructor).
      * The context is used to inflate the layout file, and the List is the data we want
@@ -71,7 +69,7 @@ public class MovieAdapter extends ArrayAdapter <Movie> {
 
             // Set up the view holder object
             movieHolder = new MovieViewHolder();
-            movieHolder.mMoviePoster = (ImageView) convertView.findViewById(R.id.movie_poster_view);
+            movieHolder.mMoviePoster = convertView.findViewById(R.id.movie_poster_view);
 
             // Attach the holder object with the view
             convertView.setTag(movieHolder);

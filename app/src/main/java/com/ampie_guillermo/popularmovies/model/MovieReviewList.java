@@ -16,6 +16,7 @@ public class MovieReviewList {
     private final ArrayList<MovieReview> mReviewList;
 
     public MovieReviewList() {
+        // TODO: Check this assignment....
         mMovieID = "";
         mReviewList = new ArrayList<>();
     }

@@ -63,7 +63,7 @@ public class Movie implements Parcelable {
         return movieVoteCount;
     }
 
-    protected Movie(Parcel in) {
+    private Movie(Parcel in) {
         movieID = in.readString();
         movieOriginalTitle = in.readString();
         movieReleaseDate = in.readString();

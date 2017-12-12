@@ -78,7 +78,7 @@ public class MovieDetailFragment extends Fragment {
          */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // "ScrollIndicators" attribute is available since "Marshmallow (API 23)"
-            ScrollView sv = (ScrollView) rootView.findViewById(R.id.main_scroll_view);
+            ScrollView sv = rootView.findViewById(R.id.main_scroll_view);
             sv.setScrollIndicators(View.SCROLL_INDICATOR_RIGHT);
         }
 
@@ -88,11 +88,11 @@ public class MovieDetailFragment extends Fragment {
         Movie selectedMovie = intent.getExtras().getParcelable("selected-movie");
         if (selectedMovie != null) {
             // we will reuse -tv- variable for all the TextView objects in this fragment
-            TextView tv = (TextView) rootView.findViewById(R.id.movie_title_text);
+            TextView tv = rootView.findViewById(R.id.movie_title_text);
             tv.setText(selectedMovie.getMovieOriginalTitle());
 
             ImageView moviePosterView =
-                    (ImageView) rootView.findViewById(R.id.movie_poster_detail_view);
+                    rootView.findViewById(R.id.movie_poster_detail_view);
             // Show the movie poster
             Picasso.with(getContext())
                    .load(selectedMovie.getMoviePosterCompleteUri())
@@ -100,19 +100,19 @@ public class MovieDetailFragment extends Fragment {
                    .error(R.drawable.no_thumbnail)
                    .into(moviePosterView);
 
-            tv = (TextView) rootView.findViewById(R.id.release_date_text);
+            tv = rootView.findViewById(R.id.release_date_text);
             tv.setText(selectedMovie.getMovieReleaseDate());
 
             String rating = String.valueOf(selectedMovie.getMovieVoteAverage());
 
-            tv = (TextView) rootView.findViewById(R.id.rating_text);
+            tv = rootView.findViewById(R.id.rating_text);
             tv.setText(rating);
 
             String votes = String.valueOf(selectedMovie.getMovieVoteCount());
-            tv = (TextView) rootView.findViewById(R.id.vote_count_text);
+            tv = rootView.findViewById(R.id.vote_count_text);
             tv.setText(votes);
 
-            tv = (TextView) rootView.findViewById(R.id.movie_overview_text);
+            tv = rootView.findViewById(R.id.movie_overview_text);
             tv.setText(selectedMovie.getMovieOverview());
 
 /*
@@ -176,7 +176,7 @@ public class MovieDetailFragment extends Fragment {
 
                         // Parent layout for the trailer thumbnail layout
                         LinearLayout parentLayout =
-                                (LinearLayout) rootView.findViewById(R.id.trailer_linear_layout);
+                                rootView.findViewById(R.id.trailer_linear_layout);
 
                         // Layout inflater to inflate the trailer thumbnail layout
                         LayoutInflater layoutInflater = getLayoutInflater();
@@ -190,7 +190,7 @@ public class MovieDetailFragment extends Fragment {
                                     false);
                             // Now we can get the trailer view
                             ImageView trailerView
-                                    = (ImageView) parentView.findViewById(R.id.trailer_thumbnail_view);
+                                    = parentView.findViewById(R.id.trailer_thumbnail_view);
 
                             // Add the trailer view to its parent layout
                             parentLayout.addView(trailerView);

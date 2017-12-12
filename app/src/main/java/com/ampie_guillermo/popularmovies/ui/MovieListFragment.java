@@ -104,7 +104,7 @@ public class    MovieListFragment extends Fragment {
         mMovieAdapter = new MovieAdapter (getActivity(), mMovieArrayList);
 
         // Get a reference to the GridView, and attach the movie adapter to it.
-        GridView gridView = (GridView) rootView.findViewById(R.id.movie_grid);
+        GridView gridView = rootView.findViewById(R.id.movie_grid);
         gridView.setAdapter(mMovieAdapter);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

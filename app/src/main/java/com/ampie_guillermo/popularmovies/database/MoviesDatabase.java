@@ -18,9 +18,9 @@ import net.simonvt.schematic.annotation.Table;
 
 @Database(version = MoviesDatabase.VERSION)
 public final class MoviesDatabase {
-    public static final String LOG_TAG = MoviesDatabase.class.getSimpleName();
+    private static final String LOG_TAG = MoviesDatabase.class.getSimpleName();
 
-    public static final int VERSION = 1;
+    protected static final int VERSION = 1;
 
     private MoviesDatabase() {
     }
@@ -37,7 +37,7 @@ public final class MoviesDatabase {
                                  SQLiteDatabase db,
                                  int oldVersion,
                                  int newVersion) {
-        Log.w(LOG_TAG,
+        Log.i(LOG_TAG,
               "Upgrading database: current version: [" + oldVersion + "], new version: ["
               + newVersion + "]");
 

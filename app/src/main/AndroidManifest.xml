@@ -32,7 +32,8 @@
         </activity>
         <provider
             android:authorities="com.ampie_guillermo.popularmovies.MoviesProvider"
-            android:name="com.ampie_guillermo.popularmovies.database.generated.MoviesProvider">
+            android:name="com.ampie_guillermo.popularmovies.database.generated.MoviesProvider"
+            android:exported="false">
          </provider>
     </application>
 

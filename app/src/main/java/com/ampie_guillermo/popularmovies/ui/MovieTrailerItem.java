@@ -70,7 +70,7 @@ public class MovieTrailerItem extends AbstractItem<MovieTrailerItem, MovieTraile
 
         public ViewHolder(View view) {
             super(view);
-            mThumbnailView = (ImageView) view.findViewById(R.id.movie_trailer_thumbnail);
+            mThumbnailView = view.findViewById(R.id.movie_trailer_thumbnail);
             //mNameView      = (TextView) view.findViewById(R.id.movie_trailer_name);
         }
     }
