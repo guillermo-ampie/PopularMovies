@@ -9,7 +9,14 @@
     <string name="sort_by_popularity">Popularity</string>
     <string name="sort_by_rating">Ranking</string>
     <string name="movie_trailer_desc">Movie trailer image</string>
-    <string name="movie_trailers">Trailers</string>
+    <string name="movie_trailers">Trailers:</string>
     <string name="favorite_movies">Favorites</string>
     <string name="top_mark">/10</string>
+    <string name="sample_movie_name">The Wizard of Oz</string>
+    <string name="sample_movie_release_date">1939</string>
+    <string name="sample_movie_rating">8.1</string>
+    <string name="sample_movie_vote_count">320,720</string>
+    <string name="sample_movie_overview">Dorothy Gale is swept away from a farm in Kansas to a
+        magical land of Oz in a tornado and embarks on a quest with her new friends to see the
+        Wizard who can help her return home in Kansas and help her friends as well.</string>
 </resources>

@@ -23,14 +23,15 @@
             android:layout_height="wrap_content"
             android:background="@android:color/holo_red_dark"
             android:gravity="center_horizontal"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="@string/sample_movie_name"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/abc_button_padding_vertical_material">
+            android:paddingTop="@dimen/padding_vertical_material">
 
             <ImageView
                 android:id="@+id/movie_poster_detail_view"
@@ -48,10 +49,10 @@
                 android:layout_gravity="end"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:paddingEnd="@dimen/abc_button_padding_horizontal_material"
-                android:paddingLeft="@dimen/abc_button_padding_horizontal_material"
-                android:paddingRight="@dimen/abc_button_padding_horizontal_material"
-                android:paddingStart="@dimen/abc_button_padding_horizontal_material">
+                android:paddingEnd="@dimen/padding_horizontal_material"
+                android:paddingLeft="@dimen/padding_horizontal_material"
+                android:paddingRight="@dimen/padding_horizontal_material"
+                android:paddingStart="@dimen/padding_horizontal_material">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -65,7 +66,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    tools:text="@string/sample_movie_release_date" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -85,7 +87,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
-                        android:textAppearance="?android:attr/textAppearanceLarge" />
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        tools:text="@string/sample_movie_rating"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -108,7 +111,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    tools:text="@string/sample_movie_vote_count"/>
 
             </LinearLayout>
 
@@ -117,7 +121,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/abc_button_padding_vertical_material"
+            android:paddingTop="@dimen/padding_vertical_material"
             android:text="@string/movie_overview"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold" />
@@ -127,12 +131,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:text="@string/sample_movie_overview"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/abc_button_padding_vertical_material"
+            android:paddingTop="@dimen/padding_vertical_material"
             android:text="@string/movie_trailers"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold" />
