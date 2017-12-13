@@ -39,13 +39,13 @@ public final class MoviesDatabase {
                                  int newVersion) {
         Log.i(LOG_TAG,
               "Upgrading database: current version: [" + oldVersion + "], new version: ["
-              + newVersion + "]");
+              + newVersion + ']');
 
         // Drop the table
         db.execSQL("DROP TABLE IF EXISTS " + MOVIES_TABLE);
 
         // Reset the primary key field (SQLITE autoincrement)
-        db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + MOVIES_TABLE + "'");
+        db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + MOVIES_TABLE + '\'');
 
         // Re-build the database
         onCreate(context, db);

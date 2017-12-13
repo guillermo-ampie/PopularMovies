@@ -53,7 +53,9 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:paddingLeft="@dimen/abc_button_padding_horizontal_material"
-                    android:paddingStart="@dimen/abc_button_padding_horizontal_material">
+                    android:paddingRight="@dimen/abc_button_padding_horizontal_material"
+                    android:paddingStart="@dimen/abc_button_padding_horizontal_material"
+                    android:paddingEnd="@dimen/abc_button_padding_horizontal_material">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -93,7 +95,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
-                            android:text=" /10"
+                            android:text="@string/top_mark"
                             android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                     </LinearLayout>

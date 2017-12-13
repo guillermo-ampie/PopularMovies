@@ -10,29 +10,29 @@ import java.util.ArrayList;
 public class MovieReviewList {
 
     @SerializedName("id")
-    private final String mMovieID;
+    private final String mMovieId;
 
     @SerializedName("results")
-    private final ArrayList<MovieReview> mReviewList;
+    private final ArrayList<MovieReviewList.MovieReview> mReviewList;
 
     public MovieReviewList() {
         // TODO: Check this assignment....
-        mMovieID = "";
+        mMovieId = "";
         mReviewList = new ArrayList<>();
     }
 
-    public ArrayList<MovieReview> getReviewList() {
+    public ArrayList<MovieReviewList.MovieReview> getReviewList() {
         return mReviewList;
     }
 
-    public String getMovieID() {
-        return mMovieID;
+    public String getMovieId() {
+        return mMovieId;
     }
 
     public static class MovieReview {
 
         @SerializedName("id")
-        private final String mReviewID;
+        private final String mReviewId;
 
         @SerializedName("author")
         private final String mAuthor;
@@ -40,14 +40,14 @@ public class MovieReviewList {
         @SerializedName("content")
         private final String mContent;
 
-        public MovieReview(String reviewID, String author, String content) {
-            mReviewID = reviewID;
+        public MovieReview(String reviewId, String author, String content) {
+            mReviewId = reviewId;
             mAuthor   = author;
             mContent  = content;
         }
 
-        public String getID() {
-            return mReviewID;
+        public String getId() {
+            return mReviewId;
         }
 
         public String getAuthor() {

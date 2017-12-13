@@ -13,14 +13,14 @@ public class MovieTrailerList {
     private final String mMovieID;
 
     @SerializedName("results")
-    private final ArrayList <MovieTrailer>  mTrailerList;
+    private final ArrayList <MovieTrailerList.MovieTrailer>  mTrailerList;
 
     public MovieTrailerList() {
         mMovieID     = "";
         mTrailerList = new ArrayList<>();
     }
 
-    public ArrayList<MovieTrailer> getTrailerList() {
+    public ArrayList<MovieTrailerList.MovieTrailer> getTrailerList() {
         return mTrailerList;
     }
 
@@ -36,9 +36,9 @@ public class MovieTrailerList {
         @SerializedName("name")
         private final String mName;
 
-        public MovieTrailer(String mKey, String mName) {
-            this.mKey  = mKey;
-            this.mName = mName;
+        public MovieTrailer(String key, String name) {
+            mKey  = key;
+            mName = name;
         }
 
         public String getKey() {

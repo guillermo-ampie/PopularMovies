@@ -11,4 +11,5 @@
     <string name="movie_trailer_desc">Movie trailer image</string>
     <string name="movie_trailers">Trailers</string>
     <string name="favorite_movies">Favorites</string>
+    <string name="top_mark">/10</string>
 </resources>

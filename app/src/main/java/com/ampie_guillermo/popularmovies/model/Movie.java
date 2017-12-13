@@ -10,13 +10,13 @@ import android.os.Parcelable;
  */
 public class Movie implements Parcelable {
 
-    private final String movieID;
-    private final String movieOriginalTitle;
-    private final String movieReleaseDate;
-    private final String movieOverview;
-    private final Uri    moviePosterCompleteUri;
-    private final double movieVoteAverage;
-    private final int    movieVoteCount;
+    private final String mMovieId;
+    private final String mMovieOriginalTitle;
+    private final String mMovieReleaseDate;
+    private final String mMovieOverview;
+    private final Uri    mMoviePosterCompleteUri;
+    private final double mMovieVoteAverage;
+    private final int    mMovieVoteCount;
 
 
     public Movie(String movieID,
@@ -26,51 +26,51 @@ public class Movie implements Parcelable {
                  Uri moviePosterCompleteUri,
                  double movieVoteAverage,
                  int movieVoteCount) {
-        this.movieID = movieID;
-        this.movieOriginalTitle = movieOriginalTitle;
-        this.movieReleaseDate = movieReleaseDate;
-        this.movieOverview = movieOverview;
-        this.moviePosterCompleteUri = moviePosterCompleteUri;
-        this.movieVoteAverage = movieVoteAverage;
-        this.movieVoteCount = movieVoteCount;
+        mMovieId = movieID;
+        mMovieOriginalTitle = movieOriginalTitle;
+        mMovieReleaseDate = movieReleaseDate;
+        mMovieOverview = movieOverview;
+        mMoviePosterCompleteUri = moviePosterCompleteUri;
+        mMovieVoteAverage = movieVoteAverage;
+        mMovieVoteCount = movieVoteCount;
     }
 
-    public String getMovieID() {
-        return movieID;
+    public String getMovieId() {
+        return mMovieId;
     }
 
     public String getMovieOriginalTitle() {
-        return movieOriginalTitle;
+        return mMovieOriginalTitle;
     }
 
     public String getMovieReleaseDate() {
-        return movieReleaseDate;
+        return mMovieReleaseDate;
     }
 
     public String getMovieOverview() {
-        return movieOverview;
+        return mMovieOverview;
     }
 
     public Uri getMoviePosterCompleteUri() {
-        return moviePosterCompleteUri;
+        return mMoviePosterCompleteUri;
     }
 
     public double getMovieVoteAverage() {
-        return movieVoteAverage;
+        return mMovieVoteAverage;
     }
 
     public int getMovieVoteCount() {
-        return movieVoteCount;
+        return mMovieVoteCount;
     }
 
     private Movie(Parcel in) {
-        movieID = in.readString();
-        movieOriginalTitle = in.readString();
-        movieReleaseDate = in.readString();
-        movieOverview = in.readString();
-        moviePosterCompleteUri = (Uri) in.readValue(Uri.class.getClassLoader());
-        movieVoteAverage = in.readDouble();
-        movieVoteCount = in.readInt();
+        mMovieId = in.readString();
+        mMovieOriginalTitle = in.readString();
+        mMovieReleaseDate = in.readString();
+        mMovieOverview = in.readString();
+        mMoviePosterCompleteUri = (Uri) in.readValue(Uri.class.getClassLoader());
+        mMovieVoteAverage = in.readDouble();
+        mMovieVoteCount = in.readInt();
     }
 
     @Override
@@ -80,16 +80,15 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(movieID);
-        dest.writeString(movieOriginalTitle);
-        dest.writeString(movieReleaseDate);
-        dest.writeString(movieOverview);
-        dest.writeValue(moviePosterCompleteUri);
-        dest.writeDouble(movieVoteAverage);
-        dest.writeInt(movieVoteCount);
+        dest.writeString(mMovieId);
+        dest.writeString(mMovieOriginalTitle);
+        dest.writeString(mMovieReleaseDate);
+        dest.writeString(mMovieOverview);
+        dest.writeValue(mMoviePosterCompleteUri);
+        dest.writeDouble(mMovieVoteAverage);
+        dest.writeInt(mMovieVoteCount);
     }
 
-    @SuppressWarnings("unused")
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
         @Override
         public Movie createFromParcel(Parcel in) {

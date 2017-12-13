@@ -76,7 +76,7 @@ public class MovieDetailFragment extends Fragment {
          * SDK_INT is available since "Donut"(API 4). Since we are using minSDK=16 we
          * are OK to ask for SDK_INT
          */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION_CODES.M <= Build.VERSION.SDK_INT) {
             // "ScrollIndicators" attribute is available since "Marshmallow (API 23)"
             ScrollView sv = rootView.findViewById(R.id.main_scroll_view);
             sv.setScrollIndicators(View.SCROLL_INDICATOR_RIGHT);
@@ -158,7 +158,7 @@ public class MovieDetailFragment extends Fragment {
         MovieTrailerService movieTrailerService = retrofit.create(MovieTrailerService.class);
 
         // Create a call instance for looking up the movie's list of trailers
-        mCallTrailers = movieTrailerService.get(selectedMovie.getMovieID(),
+        mCallTrailers = movieTrailerService.get(selectedMovie.getMovieId(),
                                                 BuildConfig.MOVIE_DB_API_KEY);
 
         // Fetch the trailers
@@ -248,7 +248,7 @@ public class MovieDetailFragment extends Fragment {
         MovieReviewService movieReviewService = retrofit.create(MovieReviewService.class);
 
         // Create a call instance for looking up the movie's list of trailers
-        mCallReviews = movieReviewService.get(selectedMovie.getMovieID(),
+        mCallReviews = movieReviewService.get(selectedMovie.getMovieId(),
                                               BuildConfig.MOVIE_DB_API_KEY);
 
         // Fetch the Reviews
@@ -259,8 +259,8 @@ public class MovieDetailFragment extends Fragment {
                     // Here we get the movie review list!
                     mReviews = response.body();
                     for (MovieReviewList.MovieReview review : mReviews.getReviewList()) {
-                        Log.e(LOG_TAG, "movie id: " + mReviews.getMovieID());
-                        Log.e(LOG_TAG, "review id: " + review.getID());
+                        Log.e(LOG_TAG, "movie id: " + mReviews.getMovieId());
+                        Log.e(LOG_TAG, "review id: " + review.getId());
                         Log.e(LOG_TAG, "author: " + review.getAuthor());
                         Log.e(LOG_TAG, "content: " + review.getContent());
                     }

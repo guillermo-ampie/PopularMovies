@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 
 public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
@@ -27,7 +29,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
     private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
     private final MovieAdapter mMovieAdapter;
-    private Context mContext;
+    private final Context mContext;
 
     public FetchMovieTask(Context context, MovieAdapter movieAdapter) {
         mContext = context;
@@ -42,14 +44,6 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
             throws JSONException {
 
         // These are the names of the JSON objects we need to extract.
-        final String MOVIE_RESULTS = "results";
-        final String MOVIE_ID = "id";
-        final String MOVIE_ORIGINAL_TITLE = "original_title";
-        final String MOVIE_RELEASE_DATE = "release_date";
-        final String MOVIE_OVERVIEW = "overview";
-        final String MOVIE_POSTER_PATH = "poster_path";
-        final String MOVIE_VOTE_AVERAGE = "vote_average";
-        final String MOVIE_VOTE_COUNT = "vote_count";
         String MOVIE_POSTER_BASE_URI = "https://image.tmdb.org/t/p/w";
 
         Resources res = mContext.getResources();
@@ -69,32 +63,32 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
         MOVIE_POSTER_BASE_URI += String.valueOf(moviePosterWidthInPixels);
 
         JSONObject movieJson = new JSONObject(moviesJsonStr);
+        final String MOVIE_RESULTS = "results";
         JSONArray moviesArray = movieJson.getJSONArray(MOVIE_RESULTS);
 
         Movie[] resultMovies = new Movie[moviesArray.length()];
 
-        for (int i = 0; i < moviesArray.length(); i++) {
+        final String MOVIE_ID = "id";
+        final String MOVIE_ORIGINAL_TITLE = "original_title";
+        final String MOVIE_RELEASE_DATE = "release_date";
+        final String MOVIE_OVERVIEW = "overview";
+        final String MOVIE_POSTER_PATH = "poster_path";
+        final String MOVIE_VOTE_AVERAGE = "vote_average";
+        final String MOVIE_VOTE_COUNT = "vote_count";
+
+        final int moviesCount = moviesArray.length();
+        for (int i = 0; i < moviesCount; i++) {
 
             // Get the JSON object with the movie data
-            JSONObject currentMovieJson;
 
-            String movieID;
-            String movieOriginalTitle;
-            String movieReleaseDate;
-            String movieOverview;
-            String moviePosterRelativePath;
-            Uri moviePosterCompleteUri;
-            double movieVoteAverage;
-            int movieVoteCount;
-
-            currentMovieJson = moviesArray.getJSONObject(i);
-            movieID = Integer.toString(currentMovieJson.getInt(MOVIE_ID));
-            movieOriginalTitle = currentMovieJson.getString(MOVIE_ORIGINAL_TITLE);
-            movieReleaseDate = currentMovieJson.getString(MOVIE_RELEASE_DATE);
-            movieOverview = currentMovieJson.getString(MOVIE_OVERVIEW);
-            moviePosterRelativePath = currentMovieJson.getString(MOVIE_POSTER_PATH);
-            movieVoteAverage = currentMovieJson.getDouble(MOVIE_VOTE_AVERAGE);
-            movieVoteCount = currentMovieJson.getInt(MOVIE_VOTE_COUNT);
+            JSONObject currentMovieJson = moviesArray.getJSONObject(i);
+            String movieID = Integer.toString(currentMovieJson.getInt(MOVIE_ID));
+            String movieOriginalTitle = currentMovieJson.getString(MOVIE_ORIGINAL_TITLE);
+            String movieReleaseDate = currentMovieJson.getString(MOVIE_RELEASE_DATE);
+            String movieOverview = currentMovieJson.getString(MOVIE_OVERVIEW);
+            String moviePosterRelativePath = currentMovieJson.getString(MOVIE_POSTER_PATH);
+            double movieVoteAverage = currentMovieJson.getDouble(MOVIE_VOTE_AVERAGE);
+            int movieVoteCount = currentMovieJson.getInt(MOVIE_VOTE_COUNT);
 
             /**
              * Store only the movie release year.
@@ -102,7 +96,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
              */
             String movieReleaseYear = (movieReleaseDate.split("-"))[0];
 
-            moviePosterCompleteUri = Uri.withAppendedPath(
+            Uri moviePosterCompleteUri = Uri.withAppendedPath(
                     Uri.parse(MOVIE_POSTER_BASE_URI), moviePosterRelativePath);
 
             //Populate our array of movies
@@ -124,7 +118,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
     protected Movie[] doInBackground(String... params) {
         // TODO: Give feedback to user with SnackBar
         // Verify size of params and that the sorting method is not null
-        if (params.length == 0 || params[0] == null) {
+        if ((params.length == 0) || (params[0] == null)) {
             Log.e(LOG_TAG, "Missing sorting method in https query");
             return null;
         }
@@ -135,7 +129,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
         BufferedReader reader = null;
 
         // The raw JSON response as a string.
-        String movieJsonStr = null;
+        String movieJsonStr;
 
         try {
             // Construct the URL for TheMovieDB query
@@ -172,7 +166,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
             String line;
             while ((line = reader.readLine()) != null) {
                 // Append a newline for debugging purposes
-                buffer.append(line).append("\n");
+                buffer.append(line).append('\n');
             }
 
             if (buffer.length() == 0) {
@@ -181,6 +175,14 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
                 return null;
             }
             movieJsonStr = buffer.toString();
+        } catch (MalformedURLException e) {
+            Log.e(LOG_TAG, "Error contacting TheMovieDB server", e);
+            // If we didn't successfully get the movie list, there's nothing to do
+            return null;
+        } catch (ProtocolException e) {
+            Log.e(LOG_TAG, "Error contacting TheMovieDB server", e);
+            // If we didn't successfully get the movie list, there's nothing to do
+            return null;
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error contacting TheMovieDB server", e);
             // If we didn't successfully get the movie list, there's nothing to do
@@ -192,7 +194,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
             if (reader != null) {
                 try {
                     reader.close();
-                } catch (final IOException e) {
+                } catch (IOException e) {
                     Log.e(LOG_TAG, "Error closing stream", e);
                 }
             }
@@ -202,7 +204,6 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
             return getMoviesDataFromJson(movieJsonStr);
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
-            e.printStackTrace();
         }
 
         // This will only happen if there was an error getting or parsing the response.

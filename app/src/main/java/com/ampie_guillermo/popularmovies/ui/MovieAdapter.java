@@ -57,25 +57,27 @@ public class MovieAdapter extends ArrayAdapter <Movie> {
     public View getView(int position, View convertView, ViewGroup parent) {
         // Gets the Movie object from the ArrayAdapter at the appropriate position
         Movie currentMovie = getItem(position);
-        MovieViewHolder movieHolder;
+        MovieAdapter.MovieViewHolder movieHolder;
+        View view;
 
         // Adapters recycle views to AdapterViews.
         // If this is a new View object we're getting, then inflate the layout.
         // If not, this view already has the layout inflated from a previous call to getView.
         if (convertView == null) {
             //Inflate the layout
-            convertView = LayoutInflater.from(getContext()).inflate(
+            view = LayoutInflater.from(getContext()).inflate(
                     R.layout.movie_poster_item, parent, false);
 
             // Set up the view holder object
-            movieHolder = new MovieViewHolder();
-            movieHolder.mMoviePoster = convertView.findViewById(R.id.movie_poster_view);
+            movieHolder = new MovieAdapter.MovieViewHolder();
+            movieHolder.mMoviePoster = view.findViewById(R.id.movie_poster_view);
 
             // Attach the holder object with the view
-            convertView.setTag(movieHolder);
+            view.setTag(movieHolder);
         } else {
             // We just get our view holder with the cached ImageView
-            movieHolder = (MovieViewHolder) convertView.getTag();
+            movieHolder = (MovieAdapter.MovieViewHolder) convertView.getTag();
+            view = convertView;
         }
 
         if (currentMovie != null) {
@@ -84,6 +86,6 @@ public class MovieAdapter extends ArrayAdapter <Movie> {
                     .into(movieHolder.mMoviePoster);
         }
 
-        return convertView;
+        return view;
     }
 }

@@ -25,8 +25,8 @@ public class MovieTrailerItem extends AbstractItem<MovieTrailerItem, MovieTraile
 
     private final MovieTrailerList.MovieTrailer mMovieTrailer;
 
-    public MovieTrailerItem(MovieTrailerList.MovieTrailer mMovieTrailer) {
-        this.mMovieTrailer = mMovieTrailer;
+    public MovieTrailerItem(MovieTrailerList.MovieTrailer movieTrailer) {
+        mMovieTrailer = movieTrailer;
     }
 
     // The ID for the movie trailer item
@@ -42,7 +42,7 @@ public class MovieTrailerItem extends AbstractItem<MovieTrailerItem, MovieTraile
     }
 
     @Override
-    public void bindView(ViewHolder viewHolder) {
+    public void bindView(MovieTrailerItem.ViewHolder viewHolder) {
         super.bindView(viewHolder);
 
         Uri thumbnailUri

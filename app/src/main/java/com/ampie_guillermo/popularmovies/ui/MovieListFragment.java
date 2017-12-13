@@ -10,8 +10,8 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.ampie_guillermo.popularmovies.R;
-import com.ampie_guillermo.popularmovies.network.FetchMovieTask;
 import com.ampie_guillermo.popularmovies.model.Movie;
+import com.ampie_guillermo.popularmovies.network.FetchMovieTask;
 
 import java.util.ArrayList;
 
@@ -19,19 +19,19 @@ import java.util.ArrayList;
  * A fragment containing a GridView with all the movies' posters.
  * The code is inspired by the Sunshine-Version-2 demo project from
  * the ---Developing Android Apps - Fundamentals--- course
- *
+ * <p>
  * NOTE: MovieDB API Key stored in "~/.gradle/gradle.properties"
- *       Using the method specified for Sunshine-Version-2 with
- *       API key
+ * Using the method specified for Sunshine-Version-2 with
+ * API key
  */
-public class    MovieListFragment extends Fragment {
+public class MovieListFragment extends Fragment {
 
-    private static final String LOG_TAG = MovieListFragment.class.getSimpleName ();
+    private static final String LOG_TAG = MovieListFragment.class.getSimpleName();
     private static final String MOVIE_LIST = "movie-list";
 
     private MovieAdapter mMovieAdapter;
     private String mSortingMethodParam;
-    private ArrayList <Movie> mMovieArrayList;
+    private ArrayList<Movie> mMovieArrayList;
 
     public MovieListFragment() {
         mMovieArrayList = new ArrayList<>();
@@ -84,7 +84,7 @@ public class    MovieListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //TODO: Check: When the UP BUTTON is pressed the saved state is not retrieved...
-        if (savedInstanceState != null && savedInstanceState.containsKey(MOVIE_LIST)) {
+        if ((savedInstanceState != null) && savedInstanceState.containsKey(MOVIE_LIST)) {
             // Let's get the saved movie list array from a saved state
             mMovieArrayList = savedInstanceState.getParcelableArrayList(MOVIE_LIST);
             //Log.e(LOG_TAG, "State restored");
@@ -101,7 +101,7 @@ public class    MovieListFragment extends Fragment {
          * The MovieAdapter will take data from a a JSON response from TheMovieDB.org
          * server and use it to populate the GridView it's attached to.
          */
-        mMovieAdapter = new MovieAdapter (getActivity(), mMovieArrayList);
+        mMovieAdapter = new MovieAdapter(getActivity(), mMovieArrayList);
 
         // Get a reference to the GridView, and attach the movie adapter to it.
         GridView gridView = rootView.findViewById(R.id.movie_grid);
