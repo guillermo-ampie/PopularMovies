@@ -10,13 +10,13 @@ import java.util.ArrayList;
 public class MovieTrailerList {
 
     @SerializedName("id")
-    private final String mMovieID;
+    private final String mMovieId;
 
     @SerializedName("results")
     private final ArrayList <MovieTrailerList.MovieTrailer>  mTrailerList;
 
     public MovieTrailerList() {
-        mMovieID     = "";
+        mMovieId = "";
         mTrailerList = new ArrayList<>();
     }
 
@@ -24,8 +24,8 @@ public class MovieTrailerList {
         return mTrailerList;
     }
 
-    public String getMovieID() {
-        return mMovieID;
+    public String getMovieId() {
+        return mMovieId;
     }
 
     public static class MovieTrailer {

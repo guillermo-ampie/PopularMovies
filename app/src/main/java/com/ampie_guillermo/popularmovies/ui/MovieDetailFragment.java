@@ -222,7 +222,7 @@ public class MovieDetailFragment extends Fragment {
                                     startActivity(new Intent(Intent.ACTION_VIEW, trailerUri));
                                 }
                             });
-                            Log.e(LOG_TAG, "movie id: " + mTrailers.getMovieID());
+                            Log.e(LOG_TAG, "movie id: " + mTrailers.getMovieId());
                             Log.e(LOG_TAG, "trailer name: " + trailer.getName());
                             Log.e(LOG_TAG, "trailer key: " + trailer.getKey());
 
