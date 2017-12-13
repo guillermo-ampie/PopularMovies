@@ -19,14 +19,14 @@ public class Movie implements Parcelable {
     private final int    mMovieVoteCount;
 
 
-    public Movie(String movieID,
+    public Movie(String movieId,
                  String movieOriginalTitle,
                  String movieReleaseDate,
                  String movieOverview,
                  Uri moviePosterCompleteUri,
                  double movieVoteAverage,
                  int movieVoteCount) {
-        mMovieId = movieID;
+        mMovieId = movieId;
         mMovieOriginalTitle = movieOriginalTitle;
         mMovieReleaseDate = movieReleaseDate;
         mMovieOverview = movieOverview;
@@ -100,5 +100,18 @@ public class Movie implements Parcelable {
             return new Movie[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "mMovieId='" + mMovieId + '\'' +
+                ", mMovieOriginalTitle='" + mMovieOriginalTitle + '\'' +
+                ", mMovieReleaseDate='" + mMovieReleaseDate + '\'' +
+                ", mMovieOverview='" + mMovieOverview + '\'' +
+                ", mMoviePosterCompleteUri=" + mMoviePosterCompleteUri +
+                ", mMovieVoteAverage=" + mMovieVoteAverage +
+                ", mMovieVoteCount=" + mMovieVoteCount +
+                '}';
+    }
 }
 
