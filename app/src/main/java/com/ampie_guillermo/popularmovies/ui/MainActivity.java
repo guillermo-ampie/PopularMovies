@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Detect for memory leaks
             StrictMode.VmPolicy.Builder policyBuilder = new StrictMode.VmPolicy.Builder();
-            if (Build.VERSION_CODES.O > Build.VERSION.SDK_INT) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                 policyBuilder.detectAll();
             } else {
                 // Android Oreo or higher

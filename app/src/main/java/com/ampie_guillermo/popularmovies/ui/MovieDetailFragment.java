@@ -76,7 +76,7 @@ public class MovieDetailFragment extends Fragment {
          * SDK_INT is available since "Donut"(API 4). Since we are using minSDK=16 we
          * are OK to ask for SDK_INT
          */
-        if (Build.VERSION_CODES.M <= Build.VERSION.SDK_INT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // "ScrollIndicators" attribute is available since "Marshmallow (API 23)"
             ScrollView sv = rootView.findViewById(R.id.main_scroll_view);
             sv.setScrollIndicators(View.SCROLL_INDICATOR_RIGHT);
