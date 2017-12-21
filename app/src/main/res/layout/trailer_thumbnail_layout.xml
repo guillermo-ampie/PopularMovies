@@ -5,4 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="start|center_vertical"
+    android:paddingLeft="@dimen/padding_horizontal_material"
+    android:paddingStart="@dimen/padding_horizontal_material"
+    android:paddingRight="@dimen/padding_horizontal_material"
+    android:paddingEnd="@dimen/padding_horizontal_material"
     android:contentDescription="@string/movie_trailer_desc"/>
