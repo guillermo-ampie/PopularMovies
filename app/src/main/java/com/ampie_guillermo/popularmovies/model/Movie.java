@@ -28,7 +28,7 @@ public class Movie implements Parcelable {
     private final String mReleaseDate;
     private final String mOverview;
     private final Uri mPosterCompleteUri;
-    private final double mVoteAverage;
+    private final float mVoteAverage;
     private final int mVoteCount;
 
     Movie(String id,
@@ -36,7 +36,7 @@ public class Movie implements Parcelable {
           String releaseDate,
           String overview,
           Uri posterCompleteUri,
-          double voteAverage,
+          float voteAverage,
           int voteCount) {
         mId = id;
         mOriginalTitle = originalTitle;
@@ -53,7 +53,7 @@ public class Movie implements Parcelable {
         mReleaseDate = in.readString();
         mOverview = in.readString();
         mPosterCompleteUri = (Uri) in.readValue(Uri.class.getClassLoader());
-        mVoteAverage = in.readDouble();
+        mVoteAverage = (float) in.readDouble();
         mVoteCount = in.readInt();
     }
 
@@ -120,7 +120,7 @@ public class Movie implements Parcelable {
         private String mReleaseDate;
         private String mOverview;
         private Uri mPosterCompleteUri;
-        private double mVoteAverage;
+        private float mVoteAverage;
         private int mVoteCount;
 
         public MovieBuilder setId(String id) {
@@ -148,7 +148,7 @@ public class Movie implements Parcelable {
             return this;
         }
 
-        public MovieBuilder setVoteAverage(double voteAverage) {
+        public MovieBuilder setVoteAverage(float voteAverage) {
             mVoteAverage = voteAverage;
             return this;
         }

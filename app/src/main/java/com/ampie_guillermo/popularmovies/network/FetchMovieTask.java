@@ -87,7 +87,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
             String movieReleaseDate = currentMovieJson.getString(MOVIE_RELEASE_DATE);
             String movieOverview = currentMovieJson.getString(MOVIE_OVERVIEW);
             String moviePosterRelativePath = currentMovieJson.getString(MOVIE_POSTER_PATH);
-            double movieVoteAverage = currentMovieJson.getDouble(MOVIE_VOTE_AVERAGE);
+            float movieVoteAverage = (float) currentMovieJson.getDouble(MOVIE_VOTE_AVERAGE);
             int movieVoteCount = currentMovieJson.getInt(MOVIE_VOTE_COUNT);
 
             /**
