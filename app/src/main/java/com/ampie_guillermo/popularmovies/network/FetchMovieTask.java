@@ -100,13 +100,15 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
                     Uri.parse(MOVIE_POSTER_BASE_URI), moviePosterRelativePath);
 
             //Populate our array of movies
-            resultMovies[i] = new Movie(movieID,
-                    movieOriginalTitle,
-                    movieReleaseYear,
-                    movieOverview,
-                    moviePosterCompleteUri,
-                    movieVoteAverage,
-                    movieVoteCount);
+            resultMovies[i] = new Movie.MovieBuilder()
+                    .setId(movieID)
+                    .setOriginalTitle(movieOriginalTitle)
+                    .setReleaseDate(movieReleaseYear)
+                    .setOverview(movieOverview)
+                    .setPosterCompleteUri(moviePosterCompleteUri)
+                    .setVoteAverage(movieVoteAverage)
+                    .setVoteCount(movieVoteCount)
+                    .build();
 
             //Log.e (LOG_TAG, movieOriginalTitle);
         }

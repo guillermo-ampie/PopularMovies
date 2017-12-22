@@ -85,31 +85,31 @@ public class MovieDetailFragment extends Fragment {
         if (selectedMovie != null) {
             // we will reuse -tv- variable for all the TextView objects in this fragment
             TextView tv = rootView.findViewById(R.id.movie_title_text);
-            tv.setText(selectedMovie.getMovieOriginalTitle());
+            tv.setText(selectedMovie.getOriginalTitle());
 
             ImageView moviePosterView =
                     rootView.findViewById(R.id.movie_poster_detail_view);
             // Show the movie poster
             Picasso.with(getContext())
-                   .load(selectedMovie.getMoviePosterCompleteUri())
+                   .load(selectedMovie.getPosterCompleteUri())
                    .placeholder(R.drawable.no_thumbnail)
                    .error(R.drawable.no_thumbnail)
                    .into(moviePosterView);
 
             tv = rootView.findViewById(R.id.release_date_text);
-            tv.setText(selectedMovie.getMovieReleaseDate());
+            tv.setText(selectedMovie.getReleaseDate());
 
-            String rating = String.valueOf(selectedMovie.getMovieVoteAverage());
+            String rating = String.valueOf(selectedMovie.getVoteAverage());
 
             tv = rootView.findViewById(R.id.rating_text);
             tv.setText(rating);
 
-            String votes = String.valueOf(selectedMovie.getMovieVoteCount());
+            String votes = String.valueOf(selectedMovie.getVoteCount());
             tv = rootView.findViewById(R.id.vote_count_text);
             tv.setText(votes);
 
             tv = rootView.findViewById(R.id.movie_overview_text);
-            tv.setText(selectedMovie.getMovieOverview());
+            tv.setText(selectedMovie.getOverview());
 
 /*
             // Get a reference to the RecyclerView
@@ -154,7 +154,7 @@ public class MovieDetailFragment extends Fragment {
         MovieTrailerService movieTrailerService = retrofit.create(MovieTrailerService.class);
 
         // Create a call instance for looking up the movie's list of trailers
-        mCallTrailers = movieTrailerService.get(selectedMovie.getMovieId(),
+        mCallTrailers = movieTrailerService.get(selectedMovie.getId(),
                                                 BuildConfig.MOVIE_DB_API_KEY);
 
         // Fetch the trailers
@@ -244,7 +244,7 @@ public class MovieDetailFragment extends Fragment {
         MovieReviewService movieReviewService = retrofit.create(MovieReviewService.class);
 
         // Create a call instance for looking up the movie's list of trailers
-        mCallReviews = movieReviewService.get(selectedMovie.getMovieId(),
+        mCallReviews = movieReviewService.get(selectedMovie.getId(),
                                               BuildConfig.MOVIE_DB_API_KEY);
 
         // Fetch the Reviews

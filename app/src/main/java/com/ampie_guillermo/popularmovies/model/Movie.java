@@ -10,85 +10,7 @@ import android.os.Parcelable;
  */
 public class Movie implements Parcelable {
 
-    private final String mMovieId;
-    private final String mMovieOriginalTitle;
-    private final String mMovieReleaseDate;
-    private final String mMovieOverview;
-    private final Uri    mMoviePosterCompleteUri;
-    private final double mMovieVoteAverage;
-    private final int    mMovieVoteCount;
-
-
-    public Movie(String movieId,
-                 String movieOriginalTitle,
-                 String movieReleaseDate,
-                 String movieOverview,
-                 Uri moviePosterCompleteUri,
-                 double movieVoteAverage,
-                 int movieVoteCount) {
-        mMovieId = movieId;
-        mMovieOriginalTitle = movieOriginalTitle;
-        mMovieReleaseDate = movieReleaseDate;
-        mMovieOverview = movieOverview;
-        mMoviePosterCompleteUri = moviePosterCompleteUri;
-        mMovieVoteAverage = movieVoteAverage;
-        mMovieVoteCount = movieVoteCount;
-    }
-
-    public String getMovieId() {
-        return mMovieId;
-    }
-
-    public String getMovieOriginalTitle() {
-        return mMovieOriginalTitle;
-    }
-
-    public String getMovieReleaseDate() {
-        return mMovieReleaseDate;
-    }
-
-    public String getMovieOverview() {
-        return mMovieOverview;
-    }
-
-    public Uri getMoviePosterCompleteUri() {
-        return mMoviePosterCompleteUri;
-    }
-
-    public double getMovieVoteAverage() {
-        return mMovieVoteAverage;
-    }
-
-    public int getMovieVoteCount() {
-        return mMovieVoteCount;
-    }
-
-    private Movie(Parcel in) {
-        mMovieId = in.readString();
-        mMovieOriginalTitle = in.readString();
-        mMovieReleaseDate = in.readString();
-        mMovieOverview = in.readString();
-        mMoviePosterCompleteUri = (Uri) in.readValue(Uri.class.getClassLoader());
-        mMovieVoteAverage = in.readDouble();
-        mMovieVoteCount = in.readInt();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mMovieId);
-        dest.writeString(mMovieOriginalTitle);
-        dest.writeString(mMovieReleaseDate);
-        dest.writeString(mMovieOverview);
-        dest.writeValue(mMoviePosterCompleteUri);
-        dest.writeDouble(mMovieVoteAverage);
-        dest.writeInt(mMovieVoteCount);
-    }
-
+    @SuppressWarnings("unused")
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
         @Override
         public Movie createFromParcel(Parcel in) {
@@ -101,17 +23,149 @@ public class Movie implements Parcelable {
         }
     };
 
+    private final String mId;
+    private final String mOriginalTitle;
+    private final String mReleaseDate;
+    private final String mOverview;
+    private final Uri mPosterCompleteUri;
+    private final double mVoteAverage;
+    private final int mVoteCount;
+
+    Movie(String id,
+          String originalTitle,
+          String releaseDate,
+          String overview,
+          Uri posterCompleteUri,
+          double voteAverage,
+          int voteCount) {
+        mId = id;
+        mOriginalTitle = originalTitle;
+        mReleaseDate = releaseDate;
+        mOverview = overview;
+        mPosterCompleteUri = posterCompleteUri;
+        mVoteAverage = voteAverage;
+        mVoteCount = voteCount;
+    }
+
+    private Movie(Parcel in) {
+        mId = in.readString();
+        mOriginalTitle = in.readString();
+        mReleaseDate = in.readString();
+        mOverview = in.readString();
+        mPosterCompleteUri = (Uri) in.readValue(Uri.class.getClassLoader());
+        mVoteAverage = in.readDouble();
+        mVoteCount = in.readInt();
+    }
+
+    public String getId() {
+        return mId;
+    }
+
+    public String getOriginalTitle() {
+        return mOriginalTitle;
+    }
+
+    public String getReleaseDate() {
+        return mReleaseDate;
+    }
+
+    public String getOverview() {
+        return mOverview;
+    }
+
+    public Uri getPosterCompleteUri() {
+        return mPosterCompleteUri;
+    }
+
+    public double getVoteAverage() {
+        return mVoteAverage;
+    }
+
+    public int getVoteCount() {
+        return mVoteCount;
+    }
+
     @Override
     public String toString() {
         return "Movie{" +
-                "mMovieId='" + mMovieId + '\'' +
-                ", mMovieOriginalTitle='" + mMovieOriginalTitle + '\'' +
-                ", mMovieReleaseDate='" + mMovieReleaseDate + '\'' +
-                ", mMovieOverview='" + mMovieOverview + '\'' +
-                ", mMoviePosterCompleteUri=" + mMoviePosterCompleteUri +
-                ", mMovieVoteAverage=" + mMovieVoteAverage +
-                ", mMovieVoteCount=" + mMovieVoteCount +
+                "mId='" + mId + '\'' +
+                ", mOriginalTitle='" + mOriginalTitle + '\'' +
+                ", mReleaseDate='" + mReleaseDate + '\'' +
+                ", mOverview='" + mOverview + '\'' +
+                ", mPosterCompleteUri=" + mPosterCompleteUri +
+                ", mVoteAverage=" + mVoteAverage +
+                ", mVoteCount=" + mVoteCount +
                 '}';
     }
-}
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mId);
+        dest.writeString(mOriginalTitle);
+        dest.writeString(mReleaseDate);
+        dest.writeString(mOverview);
+        dest.writeValue(mPosterCompleteUri);
+        dest.writeDouble(mVoteAverage);
+        dest.writeInt(mVoteCount);
+    }
+
+    public static class MovieBuilder {
+        private String mId;
+        private String mOriginalTitle;
+        private String mReleaseDate;
+        private String mOverview;
+        private Uri mPosterCompleteUri;
+        private double mVoteAverage;
+        private int mVoteCount;
+
+        public MovieBuilder setId(String id) {
+            mId = id;
+            return this;
+        }
+
+        public MovieBuilder setOriginalTitle(String originalTitle) {
+            mOriginalTitle = originalTitle;
+            return this;
+        }
+
+        public MovieBuilder setReleaseDate(String releaseDate) {
+            mReleaseDate = releaseDate;
+            return this;
+        }
+
+        public MovieBuilder setOverview(String overview) {
+            mOverview = overview;
+            return this;
+        }
+
+        public MovieBuilder setPosterCompleteUri(Uri posterCompleteUri) {
+            mPosterCompleteUri = posterCompleteUri;
+            return this;
+        }
+
+        public MovieBuilder setVoteAverage(double voteAverage) {
+            mVoteAverage = voteAverage;
+            return this;
+        }
+
+        public MovieBuilder setVoteCount(int voteCount) {
+            mVoteCount = voteCount;
+            return this;
+        }
+
+        public Movie build() {
+            return new Movie(mId,
+                    mOriginalTitle,
+                    mReleaseDate,
+                    mOverview,
+                    mPosterCompleteUri,
+                    mVoteAverage,
+                    mVoteCount);
+        }
+    }
+}

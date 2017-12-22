@@ -82,7 +82,7 @@ public class MovieAdapter extends ArrayAdapter <Movie> {
 
         if (currentMovie != null) {
             Picasso.with(getContext())
-                    .load(currentMovie.getMoviePosterCompleteUri())
+                    .load(currentMovie.getPosterCompleteUri())
                     .into(movieHolder.mMoviePoster);
         }
 
