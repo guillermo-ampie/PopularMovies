@@ -43,9 +43,9 @@ public class MovieDetailFragment extends Fragment {
     // The BASE URL is the same for trailers & reviews
     private static final String MOVIEDB_TRAILER_BASE_URL = "https://api.themoviedb.org";
 
-    private View rootView;
-    private MovieTrailerList mTrailers;
-    private MovieReviewList mReviews;
+    View rootView;
+    static MovieTrailerList mTrailers;
+    static MovieReviewList mReviews;
 
     /**
      * Just avoid creating the retrofit object with every instantiation of the
@@ -72,10 +72,6 @@ public class MovieDetailFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
 
-        /*
-         * SDK_INT is available since "Donut"(API 4). Since we are using minSDK=16 we
-         * are OK to ask for SDK_INT
-         */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // "ScrollIndicators" attribute is available since "Marshmallow (API 23)"
             ScrollView sv = rootView.findViewById(R.id.main_scroll_view);
