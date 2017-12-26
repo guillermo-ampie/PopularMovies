@@ -110,18 +110,18 @@ public class MainActivity extends AppCompatActivity {
          *   - 2nd. Movies by Rating
          *   - 3rd. Favorites movies
          */
-        MovieListFragment.PopularMovieListFragment PopularMoviesPage
+        MovieListFragment.PopularMovieListFragment popularMoviesPage
                 = new MovieListFragment.PopularMovieListFragment();
 
-        MovieListFragment.RatedMovieListFragment RatedMoviesPage
+        MovieListFragment.RatedMovieListFragment ratedMoviesPage
                 = new MovieListFragment.RatedMovieListFragment();
 
-        MovieListFragment.FavoriteMovieListFragment FavoriteMoviesPage
+        MovieListFragment.FavoriteMovieListFragment favoriteMoviesPage
                 = new MovieListFragment.FavoriteMovieListFragment();
 
-        viewPagerAdapter.addFragmentPage(PopularMoviesPage, getString(R.string.sort_by_popularity))
-                .addFragmentPage(RatedMoviesPage, getString(R.string.sort_by_rating))
-                .addFragmentPage(FavoriteMoviesPage, getString(R.string.favorite_movies));
+        viewPagerAdapter.addFragmentPage(popularMoviesPage, getString(R.string.sort_by_popularity))
+                .addFragmentPage(ratedMoviesPage, getString(R.string.sort_by_rating))
+                .addFragmentPage(favoriteMoviesPage, getString(R.string.favorite_movies));
 
         // Attach the adapter to the View Pager
         viewPager.setAdapter(viewPagerAdapter);
