@@ -23,6 +23,8 @@ import com.ampie_guillermo.popularmovies.network.MovieReviewService;
 import com.ampie_guillermo.popularmovies.network.MovieTrailerService;
 import com.squareup.picasso.Picasso;
 
+import java.text.NumberFormat;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -99,12 +101,16 @@ public class MovieDetailFragment extends Fragment {
             tv = rootView.findViewById(R.id.release_date_text);
             tv.setText(selectedMovie.getReleaseDate());
 
-            String rating = String.valueOf(selectedMovie.getVoteAverage());
+            // Rating & Votes values will be formatted based on the current locale
+            NumberFormat numberFormat = NumberFormat.getNumberInstance();
+            numberFormat.setMaximumFractionDigits(1);
+            String rating = numberFormat.format(selectedMovie.getVoteAverage());
 
             tv = rootView.findViewById(R.id.rating_text);
             tv.setText(rating);
 
-            String votes = String.valueOf(selectedMovie.getVoteCount());
+            numberFormat.setGroupingUsed(true);
+            String votes = numberFormat.format(selectedMovie.getVoteCount());
             tv = rootView.findViewById(R.id.vote_count_text);
             tv.setText(votes);
 
@@ -234,6 +240,7 @@ public class MovieDetailFragment extends Fragment {
             @Override
             public void onFailure(Call <MovieTrailerList> call, Throwable t) {
                 //TODO: Improve Callback´s error handling
+
                 Log.e(LOG_TAG, "Error contacting theMovieDB.org Server: " + t.getMessage());
             }
         });
