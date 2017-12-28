@@ -25,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final String SELECTED_TAB = "sel-tab";
 
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
+    private ViewPager mViewPager;
+    private TabLayout mTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        viewPager = findViewById(R.id.viewpager);
+        mViewPager = findViewById(R.id.viewpager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         /**
@@ -124,17 +124,17 @@ public class MainActivity extends AppCompatActivity {
                 .addFragmentPage(favoriteMoviesPage, getString(R.string.favorite_movies));
 
         // Attach the adapter to the View Pager
-        viewPager.setAdapter(viewPagerAdapter);
+        mViewPager.setAdapter(viewPagerAdapter);
 
         // Get the TabLayout and attach the ViewPager to it
-        tabLayout = findViewById(R.id.tabs);
+        mTabLayout = findViewById(R.id.tabs);
 
-        if (tabLayout != null) {
-            tabLayout.setupWithViewPager(viewPager);
+        if (mTabLayout != null) {
+            mTabLayout.setupWithViewPager(mViewPager);
         }
 
-        //tabLayout.setTabTextColors(ContextCompat.getColorStateList(this, R.color.tab_selector));
-        //tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, R.color.indicator));
+        //mTabLayout.setTabTextColors(ContextCompat.getColorStateList(this, R.color.tab_selector));
+        //mTabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, R.color.indicator));
     }
 
     /**
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
 
         // Save TabLayout state: selected tab
-        outState.putInt(SELECTED_TAB, tabLayout.getSelectedTabPosition());
+        outState.putInt(SELECTED_TAB, mTabLayout.getSelectedTabPosition());
     }
 
     /**
@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
 
         // Get & set TabLayout state: selected tab
-        viewPager.setCurrentItem(savedInstanceState.getInt(SELECTED_TAB));
+        mViewPager.setCurrentItem(savedInstanceState.getInt(SELECTED_TAB));
     }
 }
 

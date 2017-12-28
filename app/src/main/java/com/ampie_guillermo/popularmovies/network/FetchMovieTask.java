@@ -26,7 +26,7 @@ import java.net.URL;
 
 public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
 
-    private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
+    private static final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
     private final MovieAdapter mMovieAdapter;
     private final Context mContext;

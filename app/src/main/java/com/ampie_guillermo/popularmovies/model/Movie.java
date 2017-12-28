@@ -53,7 +53,7 @@ public class Movie implements Parcelable {
         mReleaseDate = in.readString();
         mOverview = in.readString();
         mPosterCompleteUri = (Uri) in.readValue(Uri.class.getClassLoader());
-        mVoteAverage = (float) in.readDouble();
+        mVoteAverage = (float) in.readFloat();
         mVoteCount = in.readInt();
     }
 
@@ -77,7 +77,7 @@ public class Movie implements Parcelable {
         return mPosterCompleteUri;
     }
 
-    public double getVoteAverage() {
+    public float getVoteAverage() {
         return mVoteAverage;
     }
 
@@ -110,7 +110,7 @@ public class Movie implements Parcelable {
         dest.writeString(mReleaseDate);
         dest.writeString(mOverview);
         dest.writeValue(mPosterCompleteUri);
-        dest.writeDouble(mVoteAverage);
+        dest.writeFloat(mVoteAverage);
         dest.writeInt(mVoteCount);
     }
 

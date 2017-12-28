@@ -58,7 +58,7 @@ public class MovieDetailFragment extends Fragment {
             .build();
     MovieTrailerList mTrailers;
     MovieReviewList mReviews;
-    View rootView;
+    View mRootView;
     private Call<MovieTrailerList> mCallTrailers;
     private Call<MovieReviewList> mCallReviews;
 
@@ -72,11 +72,11 @@ public class MovieDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // "ScrollIndicators" attribute is available since "Marshmallow (API 23)"
-            ScrollView sv = rootView.findViewById(R.id.main_scroll_view);
+            ScrollView sv = mRootView.findViewById(R.id.main_scroll_view);
             sv.setScrollIndicators(View.SCROLL_INDICATOR_RIGHT);
         }
 
@@ -86,11 +86,11 @@ public class MovieDetailFragment extends Fragment {
         Movie selectedMovie = intent.getExtras().getParcelable("selected-movie");
         if (selectedMovie != null) {
             // we will reuse -tv- variable for all the TextView objects in this fragment
-            TextView tv = rootView.findViewById(R.id.movie_title_text);
+            TextView tv = mRootView.findViewById(R.id.movie_title_text);
             tv.setText(selectedMovie.getOriginalTitle());
 
             ImageView moviePosterView =
-                    rootView.findViewById(R.id.movie_poster_detail_view);
+                    mRootView.findViewById(R.id.movie_poster_detail_view);
             // Show the movie poster
             Picasso.with(getContext())
                     .load(selectedMovie.getPosterCompleteUri())
@@ -98,7 +98,7 @@ public class MovieDetailFragment extends Fragment {
                     .error(R.drawable.no_thumbnail)
                     .into(moviePosterView);
 
-            tv = rootView.findViewById(R.id.release_date_text);
+            tv = mRootView.findViewById(R.id.release_date_text);
             tv.setText(selectedMovie.getReleaseDate());
 
             // Rating & Votes values will be formatted based on the current locale
@@ -106,20 +106,20 @@ public class MovieDetailFragment extends Fragment {
             numberFormat.setMaximumFractionDigits(1);
             String rating = numberFormat.format(selectedMovie.getVoteAverage());
 
-            tv = rootView.findViewById(R.id.rating_text);
+            tv = mRootView.findViewById(R.id.rating_text);
             tv.setText(rating);
 
             numberFormat.setGroupingUsed(true);
             String votes = numberFormat.format(selectedMovie.getVoteCount());
-            tv = rootView.findViewById(R.id.vote_count_text);
+            tv = mRootView.findViewById(R.id.vote_count_text);
             tv.setText(votes);
 
-            tv = rootView.findViewById(R.id.movie_overview_text);
+            tv = mRootView.findViewById(R.id.movie_overview_text);
             tv.setText(selectedMovie.getOverview());
 
 /*
             // Get a reference to the RecyclerView
-            mRecyclerView = (RecyclerView) rootView.findViewById(R.id.trailer_list);
+            mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.trailer_list);
 
             // We will show the movie trailers in just one column, so a LinearLayoutManager
             // will do the job
@@ -138,7 +138,7 @@ public class MovieDetailFragment extends Fragment {
              */
             fetchReviews(selectedMovie);
         }
-        return rootView;
+        return mRootView;
     }
 
     /**
@@ -178,7 +178,7 @@ public class MovieDetailFragment extends Fragment {
 
                         // Parent layout for the trailer thumbnail layout
                         LinearLayout parentLayout =
-                                rootView.findViewById(R.id.trailer_linear_layout);
+                                mRootView.findViewById(R.id.trailer_linear_layout);
 
                         // Layout inflater to inflate the trailer thumbnail layout
                         LayoutInflater layoutInflater = getLayoutInflater();
