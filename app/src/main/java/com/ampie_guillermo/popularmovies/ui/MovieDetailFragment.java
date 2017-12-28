@@ -43,7 +43,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class MovieDetailFragment extends Fragment {
 
-    private static final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
+    static final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
 
     // The BASE URL is the same for trailers & reviews
     private static final String MOVIEDB_TRAILER_BASE_URL = "https://api.themoviedb.org";

@@ -47,13 +47,13 @@ public class Movie implements Parcelable {
         mVoteCount = voteCount;
     }
 
-    private Movie(Parcel in) {
+    Movie(Parcel in) {
         mId = in.readString();
         mOriginalTitle = in.readString();
         mReleaseDate = in.readString();
         mOverview = in.readString();
         mPosterCompleteUri = (Uri) in.readValue(Uri.class.getClassLoader());
-        mVoteAverage = (float) in.readFloat();
+        mVoteAverage = in.readFloat();
         mVoteCount = in.readInt();
     }
 
@@ -123,37 +123,37 @@ public class Movie implements Parcelable {
         private float mVoteAverage;
         private int mVoteCount;
 
-        public MovieBuilder setId(String id) {
+        public Movie.MovieBuilder setId(String id) {
             mId = id;
             return this;
         }
 
-        public MovieBuilder setOriginalTitle(String originalTitle) {
+        public Movie.MovieBuilder setOriginalTitle(String originalTitle) {
             mOriginalTitle = originalTitle;
             return this;
         }
 
-        public MovieBuilder setReleaseDate(String releaseDate) {
+        public Movie.MovieBuilder setReleaseDate(String releaseDate) {
             mReleaseDate = releaseDate;
             return this;
         }
 
-        public MovieBuilder setOverview(String overview) {
+        public Movie.MovieBuilder setOverview(String overview) {
             mOverview = overview;
             return this;
         }
 
-        public MovieBuilder setPosterCompleteUri(Uri posterCompleteUri) {
+        public Movie.MovieBuilder setPosterCompleteUri(Uri posterCompleteUri) {
             mPosterCompleteUri = posterCompleteUri;
             return this;
         }
 
-        public MovieBuilder setVoteAverage(float voteAverage) {
+        public Movie.MovieBuilder setVoteAverage(float voteAverage) {
             mVoteAverage = voteAverage;
             return this;
         }
 
-        public MovieBuilder setVoteCount(int voteCount) {
+        public Movie.MovieBuilder setVoteCount(int voteCount) {
             mVoteCount = voteCount;
             return this;
         }

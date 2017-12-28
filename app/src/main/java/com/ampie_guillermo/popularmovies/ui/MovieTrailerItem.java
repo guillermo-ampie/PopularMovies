@@ -66,7 +66,7 @@ public class MovieTrailerItem extends AbstractItem<MovieTrailerItem, MovieTraile
     // The viewHolder used for the movie trailer
     protected static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mNameView;
-        private ImageView mThumbnailView;
+        ImageView mThumbnailView;
 
         public ViewHolder(View view) {
             super(view);

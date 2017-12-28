@@ -29,7 +29,7 @@ public class MovieListFragment extends Fragment {
     private static final String LOG_TAG = MovieListFragment.class.getSimpleName();
     private static final String MOVIE_LIST = "movie-list";
 
-    private MovieAdapter mMovieAdapter;
+    MovieAdapter mMovieAdapter;
     private String mSortingMethodParam;
     private ArrayList<Movie> mMovieArrayList;
 

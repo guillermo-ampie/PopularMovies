@@ -27,7 +27,7 @@ public final class MoviesProvider {
         String MOVIES = "movies";
     }
 
-    private static Uri buildUri(String... paths) {
+    static Uri buildUri(String... paths) {
         Uri.Builder builder = BASE_CONTENT_URI.buildUpon();
         for (String path : paths) {
             builder.appendPath(path);
