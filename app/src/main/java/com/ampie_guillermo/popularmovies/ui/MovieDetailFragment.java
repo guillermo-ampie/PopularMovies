@@ -1,5 +1,6 @@
 package com.ampie_guillermo.popularmovies.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ampie_guillermo.popularmovies.BuildConfig;
 import com.ampie_guillermo.popularmovies.R;
@@ -23,6 +25,7 @@ import com.ampie_guillermo.popularmovies.network.MovieReviewService;
 import com.ampie_guillermo.popularmovies.network.MovieTrailerService;
 import com.squareup.picasso.Picasso;
 
+import java.text.MessageFormat;
 import java.text.NumberFormat;
 
 import retrofit2.Call;
@@ -34,7 +37,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * The fragment to display the movie's data.
- *
+ * <p>
  * Reference code to add views dynamically into a ViewGroup
  * http://www.myandroidsolutions.com/2013/02/10/android-add-views-into-view-dynamically/
  */
@@ -44,21 +47,18 @@ public class MovieDetailFragment extends Fragment {
 
     // The BASE URL is the same for trailers & reviews
     private static final String MOVIEDB_TRAILER_BASE_URL = "https://api.themoviedb.org";
-
-    View rootView;
-    static MovieTrailerList mTrailers;
-    static MovieReviewList mReviews;
-
     /**
      * Just avoid creating the retrofit object with every instantiation of the
      * MovieDetailFragment object (singleton pattern: eager initialization)
      */
     private static final Retrofit retrofit
             = new Retrofit.Builder()
-                          .baseUrl(MOVIEDB_TRAILER_BASE_URL)
-                          .addConverterFactory(GsonConverterFactory.create())
-                          .build();
-
+            .baseUrl(MOVIEDB_TRAILER_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+    static MovieTrailerList mTrailers;
+    static MovieReviewList mReviews;
+    View rootView;
     private Call<MovieTrailerList> mCallTrailers;
     private Call<MovieReviewList> mCallReviews;
 
@@ -93,10 +93,10 @@ public class MovieDetailFragment extends Fragment {
                     rootView.findViewById(R.id.movie_poster_detail_view);
             // Show the movie poster
             Picasso.with(getContext())
-                   .load(selectedMovie.getPosterCompleteUri())
-                   .placeholder(R.drawable.no_thumbnail)
-                   .error(R.drawable.no_thumbnail)
-                   .into(moviePosterView);
+                    .load(selectedMovie.getPosterCompleteUri())
+                    .placeholder(R.drawable.no_thumbnail)
+                    .error(R.drawable.no_thumbnail)
+                    .into(moviePosterView);
 
             tv = rootView.findViewById(R.id.release_date_text);
             tv.setText(selectedMovie.getReleaseDate());
@@ -161,12 +161,12 @@ public class MovieDetailFragment extends Fragment {
 
         // Create a call instance for looking up the movie's list of trailers
         mCallTrailers = movieTrailerService.get(selectedMovie.getId(),
-                                                BuildConfig.MOVIE_DB_API_KEY);
+                BuildConfig.MOVIE_DB_API_KEY);
 
         // Fetch the trailers
         mCallTrailers.enqueue(new Callback<MovieTrailerList>() {
             @Override
-            public void onResponse(Call <MovieTrailerList> call, Response<MovieTrailerList> response) {
+            public void onResponse(Call<MovieTrailerList> call, Response<MovieTrailerList> response) {
                 if (response.isSuccessful()) {
                     // Here we get the movie trailer list!
                     mTrailers = response.body();
@@ -174,7 +174,7 @@ public class MovieDetailFragment extends Fragment {
                     if (!mTrailers.getTrailerList().isEmpty()) {
 
                         final String THUMBNAIL_BASE_URL = "https://img.youtube.com/vi/";
-                        final String THUMBNAIL_IMAGE_TYPE = "/mqdefault.jpg";
+                        final String THUMBNAIL_IMAGE_TYPE = "/hqdefault.jpg";
 
                         // Parent layout for the trailer thumbnail layout
                         LinearLayout parentLayout =
@@ -230,18 +230,14 @@ public class MovieDetailFragment extends Fragment {
 
                         }
                     }
-
                 } else {
-                    Log.e(LOG_TAG,
-                            "Bad response from TheMovieDB.org server: " + response.message());
+                    showErrorMessage(getContext(), R.string.error_bad_response, response.message());
                 }
             }
 
             @Override
-            public void onFailure(Call <MovieTrailerList> call, Throwable t) {
-                //TODO: Improve Callback´s error handling
-
-                Log.e(LOG_TAG, "Error contacting theMovieDB.org Server: " + t.getMessage());
+            public void onFailure(Call<MovieTrailerList> call, Throwable t) {
+                showErrorMessage(getContext(), R.string.error_contacting_server, t.getMessage());
             }
         });
     }
@@ -252,12 +248,12 @@ public class MovieDetailFragment extends Fragment {
 
         // Create a call instance for looking up the movie's list of trailers
         mCallReviews = movieReviewService.get(selectedMovie.getId(),
-                                              BuildConfig.MOVIE_DB_API_KEY);
+                BuildConfig.MOVIE_DB_API_KEY);
 
         // Fetch the Reviews
         mCallReviews.enqueue(new Callback<MovieReviewList>() {
             @Override
-            public void onResponse(Call <MovieReviewList> call, Response<MovieReviewList> response) {
+            public void onResponse(Call<MovieReviewList> call, Response<MovieReviewList> response) {
                 if (response.isSuccessful()) {
                     // Here we get the movie review list!
                     mReviews = response.body();
@@ -268,16 +264,25 @@ public class MovieDetailFragment extends Fragment {
                         Log.e(LOG_TAG, "content: " + review.getContent());
                     }
                 } else {
-                    Log.e(LOG_TAG,
-                          "Bad response from TheMovieDB.org server: " + response.message());
+                    showErrorMessage(getContext(), R.string.error_bad_response, response.message());
                 }
             }
 
             @Override
-            public void onFailure(Call <MovieReviewList> call, Throwable t) {
-                //TODO: Improve Callback´s error handling
-                Log.e(LOG_TAG, "Error contacting theMovieDB.org Server: " + t.getMessage());
+            public void onFailure(Call<MovieReviewList> call, Throwable t) {
+                showErrorMessage(getContext(), R.string.error_contacting_server, t.getMessage());
             }
         });
+    }
+
+    void showErrorMessage(Context context, int errorResId, String errorCondition) {
+        String errorMessage = MessageFormat.format("{0}: {1}",
+                getString(errorResId),
+                errorCondition);
+
+        Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
+        if (BuildConfig.DEBUG) {
+            Log.e(LOG_TAG, errorMessage);
+        }
     }
 }
