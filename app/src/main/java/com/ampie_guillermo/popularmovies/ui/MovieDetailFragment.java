@@ -56,8 +56,8 @@ public class MovieDetailFragment extends Fragment {
             .baseUrl(MOVIEDB_TRAILER_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
-    static MovieTrailerList mTrailers;
-    static MovieReviewList mReviews;
+    MovieTrailerList mTrailers;
+    MovieReviewList mReviews;
     View rootView;
     private Call<MovieTrailerList> mCallTrailers;
     private Call<MovieReviewList> mCallReviews;
@@ -186,19 +186,19 @@ public class MovieDetailFragment extends Fragment {
                         for (final MovieTrailerList.MovieTrailer trailer : mTrailers.getTrailerList()) {
 
                             // Add the thumbnail trailer layout to its parent layout
-                            View parentView
-                                    = layoutInflater.inflate(R.layout.trailer_thumbnail_layout,
+                            View parentView =
+                                    layoutInflater.inflate(R.layout.trailer_thumbnail_layout,
                                     parentLayout,
                                     false);
                             // Now we can get the trailer view
-                            ImageView trailerView
-                                    = parentView.findViewById(R.id.trailer_thumbnail_view);
+                            ImageView trailerView =
+                                    parentView.findViewById(R.id.trailer_thumbnail_view);
 
                             // Add the trailer view to its parent layout
                             parentLayout.addView(trailerView);
 
-                            final Uri thumbnailUri
-                                    = Uri.withAppendedPath(Uri.parse(THUMBNAIL_BASE_URL),
+                            final Uri thumbnailUri =
+                                    Uri.withAppendedPath(Uri.parse(THUMBNAIL_BASE_URL),
                                     trailer.getKey() + THUMBNAIL_IMAGE_TYPE);
 
                             // Show trailer thumbnail image
