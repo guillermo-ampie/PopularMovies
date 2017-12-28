@@ -18,23 +18,17 @@ import java.util.List;
  * The code is inspired by the android-custom-arrayadapter demo project referenced in
  * the ---Popular Movies App Implementation Guide---
  */
-public class MovieAdapter extends ArrayAdapter <Movie> {
-
-    // Only one ImageView but the View Holder Pattern can improve some performance.
-    // This caches the ImageView for the movie poster
-    private static class MovieViewHolder {
-        private ImageView mMoviePoster;
-    }
+public class MovieAdapter extends ArrayAdapter<Movie> {
 
     /**
      * Custom constructor (it doesn't mirror a superclass constructor).
      * The context is used to inflate the layout file, and the List is the data we want
      * to populate into the lists
      *
-     * @param context        The current context. Used to inflate the layout file.
-     * @param movieList      A List of Movie objects to display in the GridView.
+     * @param context   The current context. Used to inflate the layout file.
+     * @param movieList A List of Movie objects to display in the GridView.
      */
-    public MovieAdapter (Activity context, List<Movie> movieList) {
+    public MovieAdapter(Activity context, List<Movie> movieList) {
         // Here, we initialize the ArrayAdapter's internal storage for the context
         // and the list.
         // The second argument is used when the ArrayAdapter is populating a single
@@ -48,10 +42,10 @@ public class MovieAdapter extends ArrayAdapter <Movie> {
     /**
      * Provides a view for an AdapterView (a GridView in this case)
      *
-     * @param position      The AdapterView position that is requesting a view
-     * @param convertView   The recycled view to populate.
-     * @param parent        The parent ViewGroup that is used for inflation.
-     * @return              The View for the position in the AdapterView.
+     * @param position    The AdapterView position that is requesting a view
+     * @param convertView The recycled view to populate.
+     * @param parent      The parent ViewGroup that is used for inflation.
+     * @return The View for the position in the AdapterView.
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -83,9 +77,17 @@ public class MovieAdapter extends ArrayAdapter <Movie> {
         if (currentMovie != null) {
             Picasso.with(getContext())
                     .load(currentMovie.getPosterCompleteUri())
+                    .placeholder(R.drawable.no_thumbnail)
+                    .error(R.drawable.no_thumbnail)
                     .into(movieHolder.mMoviePoster);
         }
 
         return view;
+    }
+
+    // Only one ImageView but the View Holder Pattern can improve some performance.
+    // This caches the ImageView for the movie poster
+    private static class MovieViewHolder {
+        ImageView mMoviePoster;
     }
 }
