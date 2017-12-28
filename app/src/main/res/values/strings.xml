@@ -19,4 +19,8 @@
     <string name="sample_movie_overview">Dorothy Gale is swept away from a farm in Kansas to a
         magical land of Oz in a tornado and embarks on a quest with her new friends to see the
         Wizard who can help her return home in Kansas and help her friends as well.</string>
+
+<!-- Error messages -->
+    <string name="error_contacting_server">Error contacting themoviedb.org server</string>
+    <string name="error_bad_response">Bad response from themoviedb.org server:</string>
 </resources>
