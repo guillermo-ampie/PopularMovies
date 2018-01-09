@@ -21,7 +21,7 @@ public class MovieTrailerItem extends AbstractItem<MovieTrailerItem, MovieTraile
 
     private static final String LOG_TAG = MovieTrailerItem.class.getSimpleName();
     private static final String THUMBNAIL_BASE_URL = "https://img.youtube.com/vi/";
-    private static final String THUMBNAIL_IMAGE_TYPE = "/mqdefault.jpg";
+    private static final String THUMBNAIL_IMAGE_TYPE = "/hqdefault.jpg";
 
     private final MovieTrailerList.MovieTrailer mMovieTrailer;
 
