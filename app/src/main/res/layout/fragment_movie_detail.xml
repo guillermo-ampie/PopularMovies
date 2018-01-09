@@ -1,5 +1,4 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_scroll_view"
     android:layout_width="match_parent"
@@ -24,7 +23,7 @@
             android:background="@android:color/holo_red_dark"
             android:gravity="center_horizontal"
             android:textStyle="bold"
-            tools:text="@string/sample_movie_name"/>
+            tools:text="@string/sample_movie_name" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -58,6 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
+                    android:paddingTop="@dimen/padding_vertical_material"
                     android:text="@string/movie_release_date"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -73,6 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
+                    android:paddingTop="@dimen/padding_vertical_material"
                     android:text="@string/movie_rating"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -88,7 +89,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        tools:text="@string/sample_movie_rating"/>
+                        tools:text="@string/sample_movie_rating" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -103,6 +104,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
+                    android:paddingTop="@dimen/padding_vertical_material"
                     android:text="@string/movie_vote_count"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -112,11 +114,14 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    tools:text="@string/sample_movie_vote_count"/>
+                    tools:text="@string/sample_movie_vote_count" />
 
             </LinearLayout>
 
         </LinearLayout>
+
+        <!-- A divider line -->
+        <View style="@style/DividerLineHorizontal" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -132,11 +137,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            tools:text="@string/sample_movie_overview"/>
+            tools:text="@string/sample_movie_overview" />
+
+        <!-- A divider line -->
+        <View style="@style/DividerLineHorizontal" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/padding_vertical_material"
             android:paddingTop="@dimen/padding_vertical_material"
             android:text="@string/movie_trailers"
             android:textAppearance="?android:attr/textAppearanceMedium"

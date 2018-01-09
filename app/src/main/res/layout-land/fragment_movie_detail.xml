@@ -25,7 +25,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:baselineAligned="false"
             android:orientation="horizontal"
             android:paddingTop="@dimen/padding_vertical_material">
 
@@ -113,7 +112,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.0"
+                android:layout_weight="1.5"
                 android:orientation="vertical"
                 android:paddingEnd="@dimen/padding_horizontal_material"
                 android:paddingLeft="@dimen/padding_horizontal_material"
@@ -140,11 +139,13 @@
 
         </LinearLayout>
 
+        <!-- A divider line -->
+        <View style="@style/DividerLineHorizontal" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:paddingTop="@dimen/padding_vertical_material"
             android:text="@string/movie_trailers"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold" />

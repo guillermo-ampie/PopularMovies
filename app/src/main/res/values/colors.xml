@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="indicator">#ecd95a</color>
+    <color name="gray600">#757575</color>
+    <color name="dividerColor">@color/gray600</color>
 </resources>

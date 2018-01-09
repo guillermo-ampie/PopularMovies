@@ -6,4 +6,5 @@
     <dimen name="padding_thin_horizontal_material">4dp</dimen>
     <dimen name="padding_vertical_material">4dp</dimen>
     <dimen name="movie_poster_width">185dp</dimen>
+    <dimen name="padding_vertical_divider">14dp</dimen>
 </resources>
