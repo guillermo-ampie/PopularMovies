@@ -17,7 +17,7 @@
             style="@android:style/TextAppearance.DeviceDefault.Widget.ActionMode.Title.Inverse"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/holo_red_dark"
+            android:background="@color/colorAccent"
             android:gravity="center_horizontal"
             android:textStyle="bold"
             tools:text="@string/sample_movie_name" />
