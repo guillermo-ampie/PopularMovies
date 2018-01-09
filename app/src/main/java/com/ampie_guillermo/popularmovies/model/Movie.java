@@ -31,13 +31,13 @@ public class Movie implements Parcelable {
     private final float mVoteAverage;
     private final int mVoteCount;
 
-    private Movie(String id,
-                  String originalTitle,
-                  String releaseDate,
-                  String overview,
-                  Uri posterCompleteUri,
-                  float voteAverage,
-                  int voteCount) {
+    Movie(String id,
+          String originalTitle,
+          String releaseDate,
+          String overview,
+          Uri posterCompleteUri,
+          float voteAverage,
+          int voteCount) {
         mId = id;
         mOriginalTitle = originalTitle;
         mReleaseDate = releaseDate;
@@ -47,7 +47,7 @@ public class Movie implements Parcelable {
         mVoteCount = voteCount;
     }
 
-    private Movie(Parcel in) {
+    Movie(Parcel in) {
         mId = in.readString();
         mOriginalTitle = in.readString();
         mReleaseDate = in.readString();
