@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:numColumns="auto_fit"
         android:verticalSpacing="@dimen/padding_vertical_material"
-        android:horizontalSpacing="@dimen/padding_horizontal_material"
+        android:horizontalSpacing="@dimen/padding_thin_horizontal_material"
         android:stretchMode="columnWidth"
         android:id="@+id/movie_grid">
     </GridView>
