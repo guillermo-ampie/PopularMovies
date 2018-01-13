@@ -23,7 +23,6 @@
     <inspection_tool class="AndroidLintAppLinksAutoVerifyWarning" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="AndroidLintNewerVersionAvailable" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="AndroidLintUseCompoundDrawables" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="Annotation" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="AnnotationClass" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="AnnotationNamingConvention" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_regex" value="[A-Z][A-Za-z\d]*" />
@@ -37,7 +36,6 @@
       <option name="m_limit" value="1" />
     </inspection_tool>
     <inspection_tool class="AnonymousClassVariableHidesContainingMethodVariable" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="AnonymousInnerClass" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="AnonymousInnerClassMayBeStatic" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ArrayEquality" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ArrayLengthInLoopCondition" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -130,10 +128,6 @@
     <inspection_tool class="CastToConcreteClass" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="CastToIncompatibleInterface" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ChainedEquality" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="ChainedMethodCall" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="m_ignoreFieldInitializations" value="true" />
-      <option name="m_ignoreThisSuperCalls" value="true" />
-    </inspection_tool>
     <inspection_tool class="ChannelResource" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="insideTryAllowed" value="false" />
     </inspection_tool>
@@ -150,15 +144,6 @@
       <option name="m_includeJavaClasses" value="false" />
       <option name="m_includeLibraryClasses" value="false" />
       <option name="m_limit" value="15" />
-    </inspection_tool>
-    <inspection_tool class="ClassHasNoToStringMethod" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="excludeClassNames" value="" />
-      <option name="excludeException" value="true" />
-      <option name="excludeDeprecated" value="true" />
-      <option name="excludeEnum" value="false" />
-      <option name="excludeAbstract" value="false" />
-      <option name="excludeTestCode" value="false" />
-      <option name="excludeInnerClasses" value="false" />
     </inspection_tool>
     <inspection_tool class="ClassIndependentOfModule" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ClassInheritanceDepth" enabled="true" level="WARNING" enabled_by_default="true">
@@ -400,9 +385,6 @@
       <option name="m_limit" value="3" />
     </inspection_tool>
     <inspection_tool class="IgnoredJUnitTest" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="ImplicitCallToSuper" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="m_ignoreForObjectSubclasses" value="false" />
-    </inspection_tool>
     <inspection_tool class="ImplicitDefaultCharsetUsage" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ImplicitNumericConversion" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoreWideningConversions" value="false" />
@@ -845,7 +827,6 @@
     <inspection_tool class="SimplifiableJUnitAssertion" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SimplifiedTestNGAssertion" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SingleCharacterStartsWith" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="SingleClassImport" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="Singleton" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SizeReplaceableByIsEmpty" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SleepWhileHoldingLock" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -1046,11 +1027,6 @@
     </inspection_tool>
     <inspection_tool class="UnqualifiedInnerClassAccess" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoreReferencesToLocalInnerClasses" value="false" />
-    </inspection_tool>
-    <inspection_tool class="UnqualifiedStaticUsage" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="m_ignoreStaticFieldAccesses" value="false" />
-      <option name="m_ignoreStaticMethodCalls" value="false" />
-      <option name="m_ignoreStaticAccessFromStaticContext" value="false" />
     </inspection_tool>
     <inspection_tool class="UnsecureRandomNumberGeneration" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnusedCatchParameter" enabled="true" level="WARNING" enabled_by_default="true">

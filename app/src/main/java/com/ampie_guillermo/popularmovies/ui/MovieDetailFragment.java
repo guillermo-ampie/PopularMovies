@@ -2,16 +2,16 @@ package com.ampie_guillermo.popularmovies.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,8 +62,8 @@ public class MovieDetailFragment extends Fragment {
     private Call<MovieTrailerList> mCallTrailers;
     private Call<MovieReviewList> mCallReviews;
 
-//    private RecyclerView mRecyclerView;
-//    private FastItemAdapter <MovieTrailerItem> mTrailerAdapter;
+    private RecyclerView mTrailersView;
+    private MovieTrailerAdapter mTrailerAdapter;
 
     public MovieDetailFragment() {
     }
@@ -117,22 +117,11 @@ public class MovieDetailFragment extends Fragment {
             tv = mRootView.findViewById(R.id.movie_overview_text);
             tv.setText(selectedMovie.getOverview());
 
-/*
-            // Get a reference to the RecyclerView
-            mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.trailer_list);
-
-            // We will show the movie trailers in just one column, so a LinearLayoutManager
-            // will do the job
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-            mTrailerAdapter = new FastItemAdapter<>();
-            // Attach the trailer adapter to the RecyclerView
-            mRecyclerView.setAdapter(mTrailerAdapter);
-*/
             /*
              * Get the movie trailers
              */
             fetchTrailers(selectedMovie);
+
             /*
              * Get the movie reviews
              */
@@ -173,41 +162,19 @@ public class MovieDetailFragment extends Fragment {
 
                     if (!mTrailers.getTrailerList().isEmpty()) {
 
-                        final String THUMBNAIL_BASE_URL = "https://img.youtube.com/vi/";
-                        final String THUMBNAIL_IMAGE_TYPE = "/hqdefault.jpg";
+                        // Get a reference to the RecyclerView
+                        mTrailersView = mRootView.findViewById(R.id.rv_trailers);
 
-                        // Parent layout for the trailer thumbnail layout
-                        LinearLayout parentLayout =
-                                mRootView.findViewById(R.id.trailer_linear_layout);
+                        // We will show the movie trailers in just one row
+                        mTrailersView.setLayoutManager(new LinearLayoutManager(getContext(),
+                                LinearLayoutManager.HORIZONTAL,
+                                false));
 
-                        // Layout inflater to inflate the trailer thumbnail layout
-                        LayoutInflater layoutInflater = getLayoutInflater();
+                        mTrailerAdapter = new MovieTrailerAdapter(mTrailers);
+                        // Attach the trailer adapter to the RecyclerView
+                        mTrailersView.setAdapter(mTrailerAdapter);
 
-                        for (final MovieTrailerList.MovieTrailer trailer : mTrailers.getTrailerList()) {
-
-                            // Add the thumbnail trailer layout to its parent layout
-                            View parentView =
-                                    layoutInflater.inflate(R.layout.trailer_thumbnail_layout,
-                                    parentLayout,
-                                    false);
-                            // Now we can get the trailer view
-                            ImageView trailerView =
-                                    parentView.findViewById(R.id.trailer_thumbnail_view);
-
-                            // Add the trailer view to its parent layout
-                            parentLayout.addView(trailerView);
-
-                            final Uri thumbnailUri =
-                                    Uri.withAppendedPath(Uri.parse(THUMBNAIL_BASE_URL),
-                                    trailer.getKey() + THUMBNAIL_IMAGE_TYPE);
-
-                            // Show trailer thumbnail image
-                            Picasso.with(getContext())
-                                    .load(thumbnailUri)
-                                    .placeholder(R.drawable.no_thumbnail)
-                                    .error(R.drawable.no_thumbnail)
-                                    .fit()
-                                    .into(trailerView);
+/*
 
                             trailerView.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -220,15 +187,12 @@ public class MovieDetailFragment extends Fragment {
                                                     trailer.getKey())
                                             .build();
                                     // Play the movie trailer on youtube.com
-                                    // TODO: Expand code to play trailer in youtube app if installed 
+                                    // TODO: Expand code to play trailer in youtube app if installed
                                     startActivity(new Intent(Intent.ACTION_VIEW, trailerUri));
                                 }
                             });
-                            Log.e(LOG_TAG, "movie id: " + mTrailers.getMovieId());
-                            Log.e(LOG_TAG, "trailer name: " + trailer.getName());
-                            Log.e(LOG_TAG, "trailer key: " + trailer.getKey());
 
-                        }
+ */
                     }
                 } else {
                     showErrorMessage(getContext(), R.string.error_bad_response, response.message());

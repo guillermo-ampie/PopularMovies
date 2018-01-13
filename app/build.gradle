@@ -37,8 +37,6 @@ dependencies {
     compile 'net.simonvt.schematic:schematic:0.7.0'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-    compile('com.mikepenz:fastadapter:1.2.4@aar') {
-        transitive = true
-    }
+    compile 'com.android.support:recyclerview-v7:27.0.2'
 }
 
