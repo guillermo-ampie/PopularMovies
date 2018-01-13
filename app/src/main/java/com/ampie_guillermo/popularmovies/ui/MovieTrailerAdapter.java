@@ -3,7 +3,6 @@ package com.ampie_guillermo.popularmovies.ui;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,15 +53,13 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapte
                 = Uri.withAppendedPath(Uri.parse(THUMBNAIL_BASE_URL),
                 mMovieTrailerList.getTrailerList().get(position).getKey() + THUMBNAIL_IMAGE_TYPE);
 
-        Log.e(LOG_TAG, thumbnailUri.toString());
+//        Log.i(LOG_TAG, thumbnailUri.toString());
 
         // Show trailer thumbnail image
         Picasso.with(holder.itemView.getContext()) // itemView is a member of class ViewHolder
                 .load(thumbnailUri)
                 .placeholder(R.drawable.no_thumbnail)
                 .error(R.drawable.no_thumbnail)
-                //.resize(320, 180)
-                //.centerInside()
                 .fit()
                 .into(holder.mTrailerThumbnailView);
     }
@@ -109,7 +106,7 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapte
 
 
     // The viewHolder used for each movie trailer
-     static class TrailerViewHolder extends RecyclerView.ViewHolder {
+    static class TrailerViewHolder extends RecyclerView.ViewHolder {
         ImageView mTrailerThumbnailView;
 
         TrailerViewHolder(View view) {
