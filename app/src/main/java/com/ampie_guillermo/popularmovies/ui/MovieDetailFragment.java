@@ -37,9 +37,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * The fragment to display the movie's data.
- * <p>
- * Reference code to add views dynamically into a ViewGroup
- * http://www.myandroidsolutions.com/2013/02/10/android-add-views-into-view-dynamically/
  */
 public class MovieDetailFragment extends Fragment {
 
