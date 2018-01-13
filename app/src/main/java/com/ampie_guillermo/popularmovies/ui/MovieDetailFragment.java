@@ -62,8 +62,8 @@ public class MovieDetailFragment extends Fragment {
     private Call<MovieTrailerList> mCallTrailers;
     private Call<MovieReviewList> mCallReviews;
 
-    private RecyclerView mTrailersView;
-    private MovieTrailerAdapter mTrailerAdapter;
+    RecyclerView mTrailersView;
+    MovieTrailerAdapter mTrailerAdapter;
 
     public MovieDetailFragment() {
     }
