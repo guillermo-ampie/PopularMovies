@@ -170,6 +170,7 @@ public class MovieDetailFragment extends Fragment {
                         mTrailerAdapter = new MovieTrailerAdapter(mTrailers);
                         // Attach the trailer adapter to the RecyclerView
                         mTrailersView.setAdapter(mTrailerAdapter);
+                        mTrailersView.setHasFixedSize(true);
 
 /*
 
