@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -228,10 +229,17 @@ public class MovieDetailFragment extends Fragment {
         mMovieReviewsView.setAdapter(mMovieReviewAdapter);
 
         // We will show the movie trailers in just one column
-        mMovieReviewsView.setLayoutManager(new LinearLayoutManager(getContext(),
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL,
-                false));
+                false);
+        mMovieReviewsView.setLayoutManager(layoutManager);
         //mMovieReviewsView.setHasFixedSize(true);
+
+        // Set a divider line
+        DividerItemDecoration dividerLine
+                = new DividerItemDecoration(mMovieReviewsView.getContext(),
+                layoutManager.getOrientation());
+        mMovieReviewsView.addItemDecoration(dividerLine);
 
         // Create an instance of our MovieReviewService.
         MovieReviewService movieReviewService = retrofit.create(MovieReviewService.class);
