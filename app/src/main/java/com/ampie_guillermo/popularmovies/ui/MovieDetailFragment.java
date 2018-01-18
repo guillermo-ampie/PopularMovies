@@ -53,14 +53,18 @@ public class MovieDetailFragment extends Fragment {
             .baseUrl(MOVIEDB_TRAILER_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
+
     MovieTrailerList mTrailers;
+    RecyclerView mTrailersView;
+    MovieTrailerAdapter mMovieTrailerAdapter;
+
     MovieReviewList mReviews;
-    View mRootView;
+    RecyclerView mMovieReviewsView;
+    MovieReviewAdapter mMovieReviewAdapter;
+
+    private View mRootView;
     private Call<MovieTrailerList> mCallTrailers;
     private Call<MovieReviewList> mCallReviews;
-
-    RecyclerView mTrailersView;
-    MovieTrailerAdapter mTrailerAdapter;
 
     public MovieDetailFragment() {
     }
@@ -137,11 +141,30 @@ public class MovieDetailFragment extends Fragment {
         super.onStop();
 
         // Cancel the request if the HTTP scheduler has not executed it already...
-        mCallTrailers.cancel();
-        mCallReviews.cancel();
+        if (mCallTrailers != null) {
+            mCallTrailers.cancel();
+        }
+
+        if (mCallReviews != null) {
+            mCallReviews.cancel();
+        }
     }
 
     private void fetchTrailers(Movie selectedMovie) {
+
+        // Get a reference to the Trailer's RecyclerView
+        mTrailersView = mRootView.findViewById(R.id.rv_trailers);
+
+        // Set an -empty- adapter because the trailers has not been fetched
+        mMovieTrailerAdapter = new MovieTrailerAdapter();
+        mTrailersView.setAdapter(mMovieTrailerAdapter);
+
+        // We will show the movie trailers in just one row
+        mTrailersView.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false));
+        mTrailersView.setHasFixedSize(true);
+
         // Create an instance of our MovieTrailerService.
         MovieTrailerService movieTrailerService = retrofit.create(MovieTrailerService.class);
 
@@ -159,19 +182,8 @@ public class MovieDetailFragment extends Fragment {
 
                     if (!mTrailers.getTrailerList().isEmpty()) {
 
-                        // Get a reference to the RecyclerView
-                        mTrailersView = mRootView.findViewById(R.id.rv_trailers);
-
-                        // We will show the movie trailers in just one row
-                        mTrailersView.setLayoutManager(new LinearLayoutManager(getContext(),
-                                LinearLayoutManager.HORIZONTAL,
-                                false));
-
-                        mTrailerAdapter = new MovieTrailerAdapter(mTrailers);
-                        // Attach the trailer adapter to the RecyclerView
-                        mTrailersView.setAdapter(mTrailerAdapter);
-                        mTrailersView.setHasFixedSize(true);
-
+                        // Set the data(trailers) we has just fetched
+                        mMovieTrailerAdapter.setMovieTrailerList(mTrailers);
 /*
 
                             trailerView.setOnClickListener(new View.OnClickListener() {
@@ -191,6 +203,8 @@ public class MovieDetailFragment extends Fragment {
                             });
 
  */
+                    } else {
+                        // TODO: Show a "No trailers available" text
                     }
                 } else {
                     showErrorMessage(getContext(), R.string.error_bad_response, response.message());
@@ -205,6 +219,20 @@ public class MovieDetailFragment extends Fragment {
     }
 
     private void fetchReviews(Movie selectedMovie) {
+
+        // Get a reference to the Trailer's RecyclerView
+        mMovieReviewsView = mRootView.findViewById(R.id.rv_reviews);
+
+        // Set an -empty- adapter because the reviews has not been fetched
+        mMovieReviewAdapter = new MovieReviewAdapter();
+        mMovieReviewsView.setAdapter(mMovieReviewAdapter);
+
+        // We will show the movie trailers in just one column
+        mMovieReviewsView.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false));
+        //mMovieReviewsView.setHasFixedSize(true);
+
         // Create an instance of our MovieReviewService.
         MovieReviewService movieReviewService = retrofit.create(MovieReviewService.class);
 
@@ -219,11 +247,13 @@ public class MovieDetailFragment extends Fragment {
                 if (response.isSuccessful()) {
                     // Here we get the movie review list!
                     mReviews = response.body();
-                    for (MovieReviewList.MovieReview review : mReviews.getReviewList()) {
-                        Log.e(LOG_TAG, "movie id: " + mReviews.getMovieId());
-                        Log.e(LOG_TAG, "review id: " + review.getId());
-                        Log.e(LOG_TAG, "author: " + review.getAuthor());
-                        Log.e(LOG_TAG, "content: " + review.getContent());
+
+                    if (!mReviews.getReviewList().isEmpty()) {
+
+                        // Set the data(reviews) we have just fetched
+                        mMovieReviewAdapter.setMovieReviewList(mReviews);
+                    } else {
+                        // TODO: Show a "No reviews yet!" text
                     }
                 } else {
                     showErrorMessage(getContext(), R.string.error_bad_response, response.message());
@@ -242,9 +272,9 @@ public class MovieDetailFragment extends Fragment {
                 getString(errorResId),
                 errorCondition);
 
+        // Show & log error message
         Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
-        if (BuildConfig.DEBUG) {
-            Log.e(LOG_TAG, errorMessage);
-        }
+        Log.e(LOG_TAG, errorMessage);
+
     }
 }

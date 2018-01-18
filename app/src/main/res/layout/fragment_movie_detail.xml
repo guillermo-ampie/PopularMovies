@@ -152,10 +152,9 @@
             android:textStyle="bold" />
 
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_trailers"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/rv_trailers">
-        </android.support.v7.widget.RecyclerView>
+            android:layout_height="wrap_content" />
 
         <!-- A divider line -->
         <View style="@style/DividerLineHorizontal" />
@@ -169,10 +168,9 @@
             android:textStyle="bold" />
 
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_reviews"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/rv_reviews">
-        </android.support.v7.widget.RecyclerView>
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 </ScrollView>

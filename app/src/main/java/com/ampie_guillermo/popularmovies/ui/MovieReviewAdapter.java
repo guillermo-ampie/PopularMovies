@@ -1,30 +1,25 @@
 package com.ampie_guillermo.popularmovies.ui;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.ampie_guillermo.popularmovies.R;
-import com.ampie_guillermo.popularmovies.model.MovieTrailerList;
-import com.squareup.picasso.Picasso;
+import com.ampie_guillermo.popularmovies.model.MovieReviewList;
 
 
-public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapter.TrailerViewHolder> {
+public class MovieReviewAdapter
+        extends RecyclerView.Adapter<MovieReviewAdapter.MovieReviewViewHolder> {
 
-    private static final String LOG_TAG = MovieTrailerAdapter.class.getSimpleName();
-    private static final String THUMBNAIL_BASE_URL = "https://img.youtube.com/vi/";
-    private static final String THUMBNAIL_IMAGE_TYPE = "/hqdefault.jpg";
+    private static final String LOG_TAG = MovieReviewAdapter.class.getSimpleName();
+    private MovieReviewList mMoviewReviewList;
 
-    private MovieTrailerList mMovieTrailerList;
-
-    public MovieTrailerAdapter() {
+    public MovieReviewAdapter() {
     }
-
 
     /**
      * Called by RecyclerView to display the data at the specified position. This method should
@@ -47,22 +42,16 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapte
      * @param position The position of the item within the adapter's data set.
      */
     @Override
-    public void onBindViewHolder(TrailerViewHolder holder, int position) {
-        Uri thumbnailUri
-                = Uri.withAppendedPath(Uri.parse(THUMBNAIL_BASE_URL),
-                mMovieTrailerList.getTrailerList()
-                        .get(position)
-                        .getKey() + THUMBNAIL_IMAGE_TYPE);
+    public void onBindViewHolder(MovieReviewAdapter.MovieReviewViewHolder holder, int position) {
+        String author = mMoviewReviewList.getReviewList()
+                .get(position)
+                .getAuthor();
+        holder.mAuthorView.setText(author);
 
-//        Log.i(LOG_TAG, thumbnailUri.toString());
-
-        // Show trailer thumbnail image
-        Picasso.with(holder.itemView.getContext()) // itemView is a member of class ViewHolder
-                .load(thumbnailUri)
-                .placeholder(R.drawable.no_thumbnail)
-                .error(R.drawable.no_thumbnail)
-                .fit()
-                .into(holder.mTrailerThumbnailView);
+        String reviewContent = mMoviewReviewList.getReviewList()
+                .get(position)
+                .getContent();
+        holder.mReviewContentView.setText(reviewContent);
     }
 
     /**
@@ -83,18 +72,16 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapte
      * @param viewType The view type of the new View.
      * @return A new ViewHolder that holds a View of the given view type.
      * @see #getItemViewType(int)
-     * see onBindViewHolder(ViewHolder, int)
+     * see #onBindViewHolder(ViewHolder, int)
      */
     @Override
-    public TrailerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
+    public MovieReviewViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.movie_trailer_thumbnail_item,
-                parent,
-                false);
+        View view = inflater.inflate(R.layout.movie_review_item, parent, false);
 
-        return new TrailerViewHolder(view);
+        return new MovieReviewViewHolder(view);
+
     }
 
     /**
@@ -104,22 +91,24 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapte
      */
     @Override
     public int getItemCount() {
-        return (mMovieTrailerList != null) ? mMovieTrailerList.getTrailerList().size() : 0;
+
+        return (mMoviewReviewList != null) ? mMoviewReviewList.getReviewList().size() : 0;
     }
 
-    void setMovieTrailerList(MovieTrailerList trailerList) {
+    void setMovieReviewList(MovieReviewList reviews) {
         // set the new data & update the UI
-        mMovieTrailerList = trailerList;
+        mMoviewReviewList = reviews;
         notifyDataSetChanged();
     }
 
-    // The viewHolder used for each movie trailer
-    static class TrailerViewHolder extends RecyclerView.ViewHolder {
-        ImageView mTrailerThumbnailView;
+    static class MovieReviewViewHolder extends RecyclerView.ViewHolder {
+        TextView mAuthorView;
+        TextView mReviewContentView;
 
-        TrailerViewHolder(View itemView) {
+        MovieReviewViewHolder(View itemView) {
             super(itemView);
-            mTrailerThumbnailView = itemView.findViewById(R.id.trailer_thumbnail_view);
+            mAuthorView = itemView.findViewById(R.id.review_author);
+            mReviewContentView = itemView.findViewById(R.id.review_content);
         }
     }
 }

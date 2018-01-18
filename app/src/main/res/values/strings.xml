@@ -16,13 +16,19 @@
     <string name="sample_movie_release_date" translatable="false">1939</string>
     <string name="sample_movie_rating" translatable="false">8.1</string>
     <string name="sample_movie_vote_count" translatable="false">320,720</string>
-    <string name="sample_movie_overview" translatable="false">Dorothy Gale is swept away from a farm in Kansas to a
-        magical land of Oz in a tornado and embarks on a quest with her new friends to see the
-        Wizard who can help her return home in Kansas and help her friends as well.</string>
+    <string name="sample_movie_overview" translatable="false">Dorothy Gale is swept away from
+        a farm in Kansas to a magical land of Oz in a tornado and embarks on a quest with her
+        new friends to see the Wizard who can help her return home in Kansas and help her friends
+        as well.</string>
     <string name="movie_reviews">Reviews:</string>
+    <string name="sample_review_author" translatable="false">The Oscar Critic</string>
+    <string name="sample_movie_review" translatable="false">From the Golden Age of Hollywood comes
+        one of the most acclaimed films in film history. With lovely performances from Judy
+        Garland and pals. An astonishing Technicolor masterpiece!</string>
 
 <!-- Error messages -->
     <string name="error_contacting_server">Error contacting themoviedb.org server</string>
     <string name="error_bad_response">Bad response from themoviedb.org server:</string>
+
 
 </resources>
