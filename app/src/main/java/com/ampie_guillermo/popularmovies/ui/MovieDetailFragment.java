@@ -228,7 +228,7 @@ public class MovieDetailFragment extends Fragment {
         mMovieReviewAdapter = new MovieReviewAdapter();
         mMovieReviewsView.setAdapter(mMovieReviewAdapter);
 
-        // We will show the movie trailers in just one column
+        // We will show the movie trailers in just one row
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL,
                 false);
