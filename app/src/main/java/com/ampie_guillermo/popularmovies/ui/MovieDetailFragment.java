@@ -46,10 +46,10 @@ public class MovieDetailFragment extends Fragment implements
   // The BASE URL is the same for trailers & reviews
   private static final String MOVIEDB_TRAILER_BASE_URL = "https://api.themoviedb.org";
   /**
-   * Just avoid creating the RETROFIT object with every instantiation of the
+   * Just avoid creating the retrofit object with every instantiation of the
    * MovieDetailFragment object (singleton pattern: eager initialization)
    */
-  private static final Retrofit RETROFIT
+  private static final Retrofit retrofit
       = new Retrofit.Builder()
       .baseUrl(MOVIEDB_TRAILER_BASE_URL)
       .addConverterFactory(GsonConverterFactory.create())
@@ -119,14 +119,10 @@ public class MovieDetailFragment extends Fragment implements
       tv = mRootView.findViewById(R.id.movie_overview_text);
       tv.setText(selectedMovie.getOverview());
 
-            /*
-             * Get the movie trailers
-             */
+      // Get the movie trailers
       fetchTrailers(selectedMovie);
 
-            /*
-             * Get the movie reviews
-             */
+      // Get the movie reviews
       fetchReviews(selectedMovie);
     }
     return mRootView;
@@ -167,7 +163,7 @@ public class MovieDetailFragment extends Fragment implements
     mTrailersView.setHasFixedSize(true);
 
     // Create an instance of our MovieTrailerService.
-    MovieTrailerService movieTrailerService = RETROFIT.create(MovieTrailerService.class);
+    MovieTrailerService movieTrailerService = retrofit.create(MovieTrailerService.class);
 
     // Create a call instance for looking up the movie's list of trailers
     mCallTrailers = movieTrailerService.get(selectedMovie.getId(), BuildConfig.MOVIE_DB_API_KEY);
@@ -222,7 +218,7 @@ public class MovieDetailFragment extends Fragment implements
     mMovieReviewsView.addItemDecoration(dividerLine);
 
     // Create an instance of our MovieReviewService.
-    MovieReviewService movieReviewService = RETROFIT.create(MovieReviewService.class);
+    MovieReviewService movieReviewService = retrofit.create(MovieReviewService.class);
 
     // Create a call instance for looking up the movie's list of trailers
     mCallReviews = movieReviewService.get(selectedMovie.getId(),
