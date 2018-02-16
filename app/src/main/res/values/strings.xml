@@ -23,12 +23,14 @@
     <string name="movie_reviews">Reviews:</string>
     <string name="sample_review_author" translatable="false">The Oscars Critic</string>
     <string name="sample_movie_review" translatable="false">From the Golden Age of Hollywood comes
-        one of the most acclaimed films in film history. With lovely performances from Judy
+        one of the most acclaimed movies in film history. With lovely performances from Judy
         Garland and pals. An astonishing Technicolor masterpiece!</string>
 
 <!-- Error messages -->
     <string name="error_contacting_server">Error contacting themoviedb.org server</string>
     <string name="error_bad_response">Bad response from themoviedb.org server:</string>
+    <string name="error_empty_response">Empty response from TheMovieDB server</string>
+    <string name="error_closing_stream">Error closing stream</string>
 
 
 </resources>
