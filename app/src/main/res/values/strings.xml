@@ -1,36 +1,37 @@
 <resources>
-    <string name="app_name">Popular Movies</string>
-    <string name="movie_poster_desc">Movie Poster</string>
-    <string name="title_activity_movie_detail">Movie Detail</string>
-    <string name="movie_release_date">Year:</string>
-    <string name="movie_rating">Rating:</string>
-    <string name="movie_vote_count">Votes:</string>
-    <string name="movie_overview">Overview:</string>
-    <string name="sort_by_popularity">Popularity</string>
-    <string name="sort_by_rating">Ranking</string>
-    <string name="movie_trailer_desc">Movie trailer image</string>
-    <string name="movie_trailers">Trailers:</string>
-    <string name="favorite_movies">Favorites</string>
-    <string name="top_mark" translatable="false">/10</string>
-    <string name="sample_movie_name" translatable="false">The Wizard of Oz</string>
-    <string name="sample_movie_release_date" translatable="false">1939</string>
-    <string name="sample_movie_rating" translatable="false">8.1</string>
-    <string name="sample_movie_vote_count" translatable="false">320,720</string>
-    <string name="sample_movie_overview" translatable="false">Dorothy Gale is swept away from
+  <string name="app_name">Popular Movies</string>
+  <string name="movie_poster_desc">Movie Poster</string>
+  <string name="title_activity_movie_detail">Movie Detail</string>
+  <string name="movie_release_date">Year:</string>
+  <string name="movie_rating">Rating:</string>
+  <string name="movie_vote_count">Votes:</string>
+  <string name="movie_overview">Overview:</string>
+  <string name="sort_by_popularity">Popularity</string>
+  <string name="sort_by_rating">Ranking</string>
+  <string name="movie_trailer_desc">Movie trailer image</string>
+  <string name="movie_trailers">Trailers:</string>
+  <string name="favorite_movies">Favorites</string>
+  <string name="top_mark" translatable="false">/10</string>
+  <string name="sample_movie_name" translatable="false">The Wizard of Oz</string>
+  <string name="sample_movie_release_date" translatable="false">1939</string>
+  <string name="sample_movie_rating" translatable="false">8.1</string>
+  <string name="sample_movie_vote_count" translatable="false">320,720</string>
+  <string name="sample_movie_overview" translatable="false">Dorothy Gale is swept away from
         a farm in Kansas to a magical land of Oz in a tornado and embarks on a quest with her
         new friends to see the Wizard who can help her return home in Kansas and help her friends
         as well.</string>
-    <string name="movie_reviews">Reviews:</string>
-    <string name="sample_review_author" translatable="false">The Oscars Critic</string>
-    <string name="sample_movie_review" translatable="false">From the Golden Age of Hollywood comes
+  <string name="movie_reviews">Reviews:</string>
+  <string name="sample_review_author" translatable="false">The Oscars Critic</string>
+  <string name="sample_movie_review" translatable="false">From the Golden Age of Hollywood comes
         one of the most acclaimed movies in film history. With lovely performances from Judy
         Garland and pals. An astonishing Technicolor masterpiece!</string>
 
-<!-- Error messages -->
-    <string name="error_contacting_server">Error contacting themoviedb.org server</string>
-    <string name="error_bad_response">Bad response from themoviedb.org server:</string>
-    <string name="error_empty_response">Empty response from TheMovieDB server</string>
-    <string name="error_closing_stream">Error closing stream</string>
+  <!-- Error messages -->
+  <string name="error_contacting_server">Error contacting themoviedb.org server</string>
+  <string name="error_bad_response">Bad response from themoviedb.org server:</string>
+  <string name="error_empty_response">Empty response from TheMovieDB server</string>
+  <string name="error_closing_stream">Error closing stream</string>
+  <string name="error_missing_sorting_method">Missing sorting method in https query</string>
 
 
 </resources>
