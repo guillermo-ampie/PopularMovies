@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                             .penaltyLog()
                             .build());
 
-            /*
+            /**
              * We intent to use detectAll() in the VmPolicy, but we are getting a
              * policy violation with HttpURLConnection in Android Oreo if we use
              * detectUntaggedSockets(). This is the reason for the ugly code in the VmPolicy
