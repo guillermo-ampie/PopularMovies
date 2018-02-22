@@ -88,10 +88,13 @@ public class MovieListFragment
   public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
 
-    // Save the movie list we got from TheMovieDB.org server
-    if (!mMovieList.isEmpty()) {
-      outState.putParcelableArrayList(MOVIE_LIST, mMovieList);
-    }
+    /**
+     * There is no need to use savedInstanceState because mCachedMovieList is managed by the
+     * AsyncTaskLoader on configuration changes
+     */
+//    if (!mCachedMovieList.isEmpty()) {
+//      outState.putParcelableArrayList(MOVIE_LIST, mCachedMovieList);
+//    }
   }
 
   /**
@@ -111,11 +114,15 @@ public class MovieListFragment
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    //TODO: Check: When the UP BUTTON is pressed the saved state is not retrieved...
-    if ((savedInstanceState != null) && savedInstanceState.containsKey(MOVIE_LIST)) {
-      // Let's get the saved movie list array from a saved state
-      mMovieList = savedInstanceState.getParcelableArrayList(MOVIE_LIST);
-    }
+
+    /**
+     * There is no need to use savedInstanceState because mCachedMovieList is managed by the
+     * AsyncTaskLoader on configuration changes
+     */
+//    if ((savedInstanceState != null) && savedInstanceState.containsKey(MOVIE_LIST)) {
+//      // Let's get the saved movie list array from a saved state
+//      mCachedMovieList = savedInstanceState.getParcelableArrayList(MOVIE_LIST);
+//    }
   }
 
   /**
@@ -290,7 +297,7 @@ public class MovieListFragment
     @Override
     protected void getMovies() {
             /*
-             * READ FROM DATABASE AND POPULATE "mMovieList":
+             * READ FROM DATABASE AND POPULATE "mCachedMovieList":
              * if (Database is empty) {
              *   show "No favorite movies"
              * }
@@ -305,7 +312,7 @@ public class MovieListFragment
   private static class MovieListLoader extends AsyncTaskLoader<ArrayList<Movie>> {
 
     private final Bundle mArgs;
-    private ArrayList<Movie> mMovieList;
+    private ArrayList<Movie> mCachedMovieList;
 
     MovieListLoader(Context context, Bundle args) {
       super(context);
@@ -422,12 +429,12 @@ public class MovieListFragment
         return;
       }
       // TODO: Show a progress bar
-      if (mMovieList == null) {
+      if (mCachedMovieList == null) {
         Log.v(LOG_TAG, "---------- Forcing a load");
         forceLoad();
       } else {
         Log.v(LOG_TAG, "++++++++++ Delivering a cached result");
-        deliverResult(mMovieList);
+        deliverResult(mCachedMovieList);
       }
     }
 
@@ -440,7 +447,7 @@ public class MovieListFragment
      */
     @Override
     public void deliverResult(@Nullable ArrayList<Movie> data) {
-      mMovieList = data;
+      mCachedMovieList = data;
       super.deliverResult(data);
     }
 
@@ -513,7 +520,7 @@ public class MovieListFragment
             .setVoteCount(movieVoteCount)
             .build();
 
-        //Log.e (LOG_TAG, movieOriginalTitle);
+//        Log.v (LOG_TAG, movieOriginalTitle);
       }
       return new ArrayList<>(Arrays.asList(movieList));
     }
