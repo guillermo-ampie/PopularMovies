@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,7 +54,6 @@ public class MovieListFragment
   public static final String MOVIE_SORTING_METHOD_EXTRA = "sorting-method";
 
   private static final String LOG_TAG = MovieListFragment.class.getSimpleName();
-  private static final String MOVIE_LIST = "movie-list";
   private static final int MOVIES_RESULT_SIZE = 20;
 
   MovieAdapter mMovieAdapter;
@@ -123,6 +123,7 @@ public class MovieListFragment
 //      // Let's get the saved movie list array from a saved state
 //      mCachedMovieList = savedInstanceState.getParcelableArrayList(MOVIE_LIST);
 //    }
+//    getLoaderManager().initLoader(MOVIE_LIST_LOADER_ID, null, this);
   }
 
   /**
@@ -141,12 +142,11 @@ public class MovieListFragment
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    getLoaderManager().initLoader(MOVIE_LIST_LOADER_ID, null, this);
+    getMovies();
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater,
-      ViewGroup container,
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
@@ -179,29 +179,20 @@ public class MovieListFragment
   }
 
   protected void getMovies() {
-//    FetchMovieTask movieTask = new FetchMovieTask(getContext(), mMovieAdapter);
-//    movieTask.execute(mSortingMethodParam);
-
     Bundle bundle = new Bundle();
     bundle.putString(MOVIE_SORTING_METHOD_EXTRA, mSortingMethodParam);
 
-    // restartLoader() will start a new or restart an existing loader
+//    LoaderManager lm = getLoaderManager();
+//    Loader<ArrayList<Movie>> loader = lm.getLoader(MOVIE_LIST_LOADER_ID);
+//    if (loader == null) {
+//      Log.d(LOG_TAG, "++++++++++ Initializing the loader");
+//      lm.initLoader(MOVIE_LIST_LOADER_ID, bundle, this);
+//    } else {
+//      // restartLoader() will start a new or restart an existing loader
+//      Log.d(LOG_TAG, "++++++++++ Restarting the loader");
+//      lm.restartLoader(MOVIE_LIST_LOADER_ID, bundle, this);
+//    }
     getLoaderManager().restartLoader(MOVIE_LIST_LOADER_ID, bundle, this);
-  }
-
-  @Override
-  public void onStart() {
-    super.onStart();
-
-        /*
-         * Let's connect to theMovieDB server/read from database --only-- if the movie list
-         * is empty. The movie list is getting filled up either when we connect to TheMovieDB
-         * server/read from the database or when we restore it from a previous state (state saved
-         * in onSaveInstanceState)
-         */
-    if (mMovieList.isEmpty()) {
-      getMovies();
-    }
   }
 
   /**
@@ -249,6 +240,7 @@ public class MovieListFragment
     if (data != null) {
       // New data from the server
       mMovieAdapter.clear();
+      Log.v(LOG_TAG, "++++++++++ Adding the new data fetched");
       for (Movie currentMovie : data) {
         mMovieAdapter.add(currentMovie);
       }
@@ -264,7 +256,7 @@ public class MovieListFragment
    */
   @Override
   public void onLoaderReset(Loader<ArrayList<Movie>> loader) {
-    mMovieAdapter.clear();
+//    mMovieAdapter.clear();
   }
 
   public static class PopularMovieListFragment extends MovieListFragment {
@@ -311,8 +303,8 @@ public class MovieListFragment
 
   private static class MovieListLoader extends AsyncTaskLoader<ArrayList<Movie>> {
 
+    private static ArrayList<Movie> mCachedMovieList;
     private final Bundle mArgs;
-    private ArrayList<Movie> mCachedMovieList;
 
     MovieListLoader(Context context, Bundle args) {
       super(context);
@@ -325,7 +317,7 @@ public class MovieListFragment
       Context context = getContext();
       String sortingMethod = mArgs.getString(MOVIE_SORTING_METHOD_EXTRA);
 
-      if ((sortingMethod == null) || sortingMethod.isEmpty()) {
+      if (TextUtils.isEmpty(sortingMethod)) {
         Log.e(LOG_TAG, getContext().getString(R.string.error_missing_sorting_method));
         return null;
       }
@@ -406,7 +398,7 @@ public class MovieListFragment
           }
         }
       }
-
+      Log.d(LOG_TAG, "++++++++++ in loadInBackground() ");
       try {
         return getMoviesDataFromJson(movieJsonStr);
       } catch (JSONException e) {
@@ -430,10 +422,10 @@ public class MovieListFragment
       }
       // TODO: Show a progress bar
       if (mCachedMovieList == null) {
-        Log.v(LOG_TAG, "---------- Forcing a load");
+        Log.d(LOG_TAG, "++++++++++ Forcing a load");
         forceLoad();
       } else {
-        Log.v(LOG_TAG, "++++++++++ Delivering a cached result");
+        Log.d(LOG_TAG, "++++++++++ Delivering a cached result");
         deliverResult(mCachedMovieList);
       }
     }
