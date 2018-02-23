@@ -116,14 +116,13 @@ public class MovieListFragment
     super.onCreate(savedInstanceState);
 
     /**
-     * There is no need to use savedInstanceState because mCachedMovieList is managed by the
-     * AsyncTaskLoader on configuration changes
+     * There is no need to use savedInstanceState() because the movie list fetched is persisted
+     * / cached by the AsyncTaskLoader's subclass MovieListLoader upon configuration changes
      */
 //    if ((savedInstanceState != null) && savedInstanceState.containsKey(MOVIE_LIST)) {
 //      // Let's get the saved movie list array from a saved state
 //      mCachedMovieList = savedInstanceState.getParcelableArrayList(MOVIE_LIST);
 //    }
-//    getLoaderManager().initLoader(MOVIE_LIST_LOADER_ID, null, this);
   }
 
   /**
@@ -165,8 +164,8 @@ public class MovieListFragment
       @Override
       public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
         Movie currentMovie = mMovieAdapter.getItem(position);
-        Intent intent = new Intent(getActivity(), MovieDetailActivity.class)
-            .putExtra("selected-movie", currentMovie);
+        Intent intent = new Intent(getActivity(),
+            MovieDetailActivity.class).putExtra("selected-movie", currentMovie);
 
         startActivity(intent);
       }
@@ -192,7 +191,15 @@ public class MovieListFragment
 //      Log.d(LOG_TAG, "++++++++++ Restarting the loader");
 //      lm.restartLoader(MOVIE_LIST_LOADER_ID, bundle, this);
 //    }
-    getLoaderManager().restartLoader(MOVIE_LIST_LOADER_ID, bundle, this);
+    /**
+     * In this App, we want to persist and cache the movie list fetched from the Internet upon
+     * configuration changes (rotation of device) and in onPause() / onResume(). The persistence
+     * seems appropriate here because the data(movies and its values) more or less is not
+     * "real-time" data. So we need to use initLoader() instead of restartLoader() because
+     * initLoader() will reuse the last created loader if a loader with the specified ID already
+     * exists or will trigger onCreateLoader() if a loader with the specified ID does not exist yet.
+     */
+    getLoaderManager().initLoader(MOVIE_LIST_LOADER_ID, bundle, this);
   }
 
   /**
@@ -303,8 +310,8 @@ public class MovieListFragment
 
   private static class MovieListLoader extends AsyncTaskLoader<ArrayList<Movie>> {
 
-    private static ArrayList<Movie> mCachedMovieList;
     private final Bundle mArgs;
+    private ArrayList<Movie> mCachedMovieList;
 
     MovieListLoader(Context context, Bundle args) {
       super(context);
