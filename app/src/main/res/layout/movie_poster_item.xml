@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+<ImageView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/movie_poster_view"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:paddingStart="@dimen/padding_thin_horizontal_material"
+  android:paddingEnd="@dimen/padding_thin_horizontal_material"
+  android:paddingLeft="@dimen/padding_thin_horizontal_material"
+  android:paddingRight="@dimen/padding_thin_horizontal_material"
+  android:paddingTop="@dimen/padding_thin_horizontal_material"
+  android:paddingBottom="@dimen/padding_thin_horizontal_material"
+  android:adjustViewBounds="true"
+  android:contentDescription="@string/movie_poster_desc"
+  android:src="@drawable/no_thumbnail"/>
+  <!--android:layout_gravity="start|center_vertical"-->
+  <!--android:maxWidth="@dimen/movie_poster_width"-->
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/movie_poster_view"
-        android:adjustViewBounds="true"
-        android:maxWidth="@dimen/movie_poster_width"
-        android:contentDescription="@string/movie_poster_desc"
-        android:src="@drawable/no_thumbnail"/>
-</FrameLayout>
+
+
+
+
+
+

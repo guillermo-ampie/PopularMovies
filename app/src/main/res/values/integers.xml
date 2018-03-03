@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <integer name="num_columns">2</integer>
+  <!-- This is a width that we need to specify in the URL to get the movie poster, it is not a
+  dimension that we need scaled -->
+  <integer name="movie_poster_width">185</integer>
+</resources>

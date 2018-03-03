@@ -3,7 +3,6 @@ package com.ampie_guillermo.popularmovies.ui;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,14 +11,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.CursorAdapter;
-import android.widget.GridView;
 import com.ampie_guillermo.popularmovies.BuildConfig;
 import com.ampie_guillermo.popularmovies.R;
 import com.ampie_guillermo.popularmovies.model.Movie;
@@ -49,7 +48,8 @@ import org.json.JSONObject;
  */
 public class MovieListFragment
     extends Fragment
-    implements LoaderManager.LoaderCallbacks<ArrayList<Movie>> {
+    implements LoaderManager.LoaderCallbacks<ArrayList<Movie>>,
+    MovieAdapter.MovieItemClickListener {
 
   public static final int MOVIE_LIST_LOADER_ID = 1000;
   public static final String MOVIE_SORTING_METHOD_EXTRA = "sorting-method";
@@ -126,6 +126,33 @@ public class MovieListFragment
 //    }
   }
 
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+    /**
+     * The MovieAdapter will take data from a a JSON response from TheMovieDB.org
+     * server and use it to populate the grid it is attached to.
+     */
+
+    // Get a reference to the RecyclerView (the movie grid), and attach the movie adapter to it.
+    RecyclerView movieGridView = rootView.findViewById(R.id.movie_grid_view);
+
+    // Al the items (movie posters) in the RecyclerView are the same size
+    movieGridView.setHasFixedSize(true);
+
+    // We will show the movie list in a grid with a parameterized number of columns
+    movieGridView.setLayoutManager(new GridLayoutManager(getContext(),
+        getResources().getInteger(R.integer.num_columns)));
+
+    // Set an empty adapter because the movies have not been fetched yet
+    mMovieAdapter = new MovieAdapter(this);
+    movieGridView.setAdapter(mMovieAdapter);
+
+    return rootView;
+  }
+
   /**
    * Called when the fragment's activity has been created and this
    * fragment's view hierarchy instantiated.  It can be used to do final
@@ -145,34 +172,7 @@ public class MovieListFragment
     getMovies();
   }
 
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-    View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        /*
-         * The MovieAdapter will take data from a a JSON response from TheMovieDB.org
-         * server and use it to populate the GridView it's attached to.
-         */
-    mMovieAdapter = new MovieAdapter(getActivity(), mMovieList);
-
-    // Get a reference to the GridView, and attach the movie adapter to it.
-    GridView gridView = rootView.findViewById(R.id.movie_grid);
-    gridView.setAdapter(mMovieAdapter);
-
-    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-      @Override
-      public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        Movie currentMovie = mMovieAdapter.getItem(position);
-        Intent intent = new Intent(getActivity(),
-            MovieDetailActivity.class).putExtra("selected-movie", currentMovie);
-
-        startActivity(intent);
-      }
-    });
-    return rootView;
-  }
 
   protected void setSortingMethodParam(String sortingMethodParam) {
     mSortingMethodParam = sortingMethodParam;
@@ -246,14 +246,9 @@ public class MovieListFragment
    */
   @Override
   public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> data) {
-    if (data != null) {
-      // New data from the server
-      mMovieAdapter.clear();
-      Log.v(LOG_TAG, "++++++++++ Adding the new data fetched");
-      for (Movie currentMovie : data) {
-        mMovieAdapter.add(currentMovie);
-      }
-    }
+    Log.v(LOG_TAG, "++++++++++ Adding the new data fetched");
+    mMovieList = data;
+    mMovieAdapter.setMovieList(mMovieList);
   }
 
   /**
@@ -266,6 +261,15 @@ public class MovieListFragment
   @Override
   public void onLoaderReset(Loader<ArrayList<Movie>> loader) {
 //    mMovieAdapter.clear();
+  }
+
+  @Override
+  public void onMovieItemClick(int clickedItemIndex) {
+    Movie currentMovie = mMovieList.get(clickedItemIndex);
+    Intent intent = new Intent(getActivity(),
+        MovieDetailActivity.class).putExtra("selected-movie", currentMovie);
+
+    startActivity(intent);
   }
 
   public static class PopularMovieListFragment extends MovieListFragment {
@@ -461,21 +465,23 @@ public class MovieListFragment
 
       String MOVIE_POSTER_BASE_URI = "https://image.tmdb.org/t/p/w";
 
-      Resources res = getContext().getResources();
-      int moviePosterWidthInPixels = (int) (res.getDimension(R.dimen.movie_poster_width)
-          / res.getDisplayMetrics().density);
+//      /**
+//       * We need to specify in the HTTPS request and the XML files
+//       * the --movie poster width--, so to avoid a manual
+//       * synchronization (so error prone!) of both files, we are using
+//       * "res/values/dimens:movie_poster_width" resource for this purpose.
+//       * In the https request we need to use the nominal value stored in
+//       * "movie_poster_width", not the scaled value returned by
+//       * getDimension(), so we must -adjust back- by the screen density factor
+//       *
+//       */
+//            Resources res = getContext().getResources();
+//      int moviePosterWidthInPixels = (int) (res.getDimension(R.dimen.movie_poster_width)
+//          / res.getDisplayMetrics().density);
 
-      /**
-       * We need to specify in the HTTPS request and the XML files
-       * the --movie poster width--, so to avoid a manual
-       * synchronization (so error prone!) of both files, we are using
-       * "res/values/dimens:movie_poster_width" resource for this purpose.
-       * In the https request we need to use the nominal value stored in
-       * "movie_poster_width", not the scaled value returned by
-       * getDimension(), so we must -adjust back- by the screen density factor
-       *
-       */
-      MOVIE_POSTER_BASE_URI += String.valueOf(moviePosterWidthInPixels);
+      int moviePosterWidth = getContext().getResources().getInteger(R.integer.movie_poster_width);
+
+      MOVIE_POSTER_BASE_URI += String.valueOf(moviePosterWidth);
 
       JSONObject movieJson = new JSONObject(moviesJsonStr);
       final String MOVIE_RESULTS = "results";
