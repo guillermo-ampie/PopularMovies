@@ -23,6 +23,7 @@ import android.widget.GridView;
 import com.ampie_guillermo.popularmovies.BuildConfig;
 import com.ampie_guillermo.popularmovies.R;
 import com.ampie_guillermo.popularmovies.model.Movie;
+import com.ampie_guillermo.popularmovies.utils.DisplayErrorUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -200,6 +201,7 @@ public class MovieListFragment
      * exists or will trigger onCreateLoader() if a loader with the specified ID does not exist yet.
      */
     getLoaderManager().initLoader(MOVIE_LIST_LOADER_ID, bundle, this);
+
   }
 
   /**
@@ -325,7 +327,9 @@ public class MovieListFragment
       String sortingMethod = mArgs.getString(MOVIE_SORTING_METHOD_EXTRA);
 
       if (TextUtils.isEmpty(sortingMethod)) {
-        Log.e(LOG_TAG, getContext().getString(R.string.error_missing_sorting_method));
+        DisplayErrorUtils.showErrorMessage(LOG_TAG,
+            getContext(),
+            R.string.error_missing_sorting_method);
         return null;
       }
 
@@ -352,7 +356,7 @@ public class MovieListFragment
             .build();
 
         URL url = new URL(builtUri.toString());
-        //Log.e(LOG_TAG, builtUri.toString());
+        //Log.v(LOG_TAG, builtUri.toString());
 
         // Create the request to TheMovieDB, and open the connection
         urlConnection = (HttpURLConnection) url.openConnection();
@@ -364,7 +368,9 @@ public class MovieListFragment
         StringBuilder buffer = new StringBuilder();
         if (inputStream == null) {
           // Oops, we got nothing.
-          Log.e(LOG_TAG, context.getString(R.string.error_empty_response));
+          DisplayErrorUtils.showErrorMessage(LOG_TAG,
+              context,
+              R.string.error_empty_response);
           return null;
         }
         reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -377,21 +383,21 @@ public class MovieListFragment
 
         if (buffer.length() == 0) {
           // Stream was empty.  Nothing to do!
-          Log.e(LOG_TAG, context.getString(R.string.error_empty_response));
+          DisplayErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_empty_response);
           return null;
         }
         movieJsonStr = buffer.toString();
       } catch (MalformedURLException e) {
-        Log.e(LOG_TAG, context.getString(R.string.error_contacting_server), e);
         // If we didn't successfully get the movie list, there's nothing to do
+        DisplayErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_contacting_server, e);
         return null;
       } catch (ProtocolException e) {
-        Log.e(LOG_TAG, context.getString(R.string.error_contacting_server), e);
         // If we didn't successfully get the movie list, there's nothing to do
+        DisplayErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_contacting_server, e);
         return null;
       } catch (IOException e) {
-        Log.e(LOG_TAG, context.getString(R.string.error_contacting_server), e);
         // If we didn't successfully get the movie list, there's nothing to do
+        DisplayErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_contacting_server, e);
         return null;
       } finally {
         if (urlConnection != null) {
@@ -401,7 +407,7 @@ public class MovieListFragment
           try {
             reader.close();
           } catch (IOException e) {
-            Log.e(LOG_TAG, context.getString(R.string.error_closing_stream), e);
+            DisplayErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_closing_stream, e);
           }
         }
       }
@@ -409,11 +415,12 @@ public class MovieListFragment
       try {
         return getMoviesDataFromJson(movieJsonStr);
       } catch (JSONException e) {
-        Log.e(LOG_TAG, e.getMessage(), e);
+        DisplayErrorUtils
+            .showErrorMessage(LOG_TAG, context, R.string.error_processing_json_response, e);
       }
 
       // This will only happen if there was an error getting or parsing the response.
-      Log.e(LOG_TAG, context.getString(R.string.error_contacting_server));
+      DisplayErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_contacting_server);
       return null;
     }
 

@@ -1,6 +1,5 @@
 package com.ampie_guillermo.popularmovies.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -9,14 +8,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.ampie_guillermo.popularmovies.BuildConfig;
 import com.ampie_guillermo.popularmovies.R;
 import com.ampie_guillermo.popularmovies.model.Movie;
@@ -25,14 +22,15 @@ import com.ampie_guillermo.popularmovies.model.MovieTrailerList;
 import com.ampie_guillermo.popularmovies.model.MovieTrailerList.MovieTrailer;
 import com.ampie_guillermo.popularmovies.network.MovieReviewService;
 import com.ampie_guillermo.popularmovies.network.MovieTrailerService;
+import com.ampie_guillermo.popularmovies.utils.DisplayErrorUtils;
 import com.squareup.picasso.Picasso;
-import java.text.MessageFormat;
 import java.text.NumberFormat;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
 
 
 /**
@@ -46,10 +44,10 @@ public class MovieDetailFragment extends Fragment implements
   // The BASE URL is the same for trailers & reviews
   private static final String MOVIEDB_TRAILER_BASE_URL = "https://api.themoviedb.org";
   /**
-   * Just avoid creating the retrofit object with every instantiation of the
+   * Just avoid creating the RETROFIT object with every instantiation of the
    * MovieDetailFragment object (singleton pattern: eager initialization)
    */
-  private static final Retrofit retrofit
+  private static final Retrofit RETROFIT
       = new Retrofit.Builder()
       .baseUrl(MOVIEDB_TRAILER_BASE_URL)
       .addConverterFactory(GsonConverterFactory.create())
@@ -163,7 +161,7 @@ public class MovieDetailFragment extends Fragment implements
     mTrailersView.setHasFixedSize(true);
 
     // Create an instance of our MovieTrailerService.
-    MovieTrailerService movieTrailerService = retrofit.create(MovieTrailerService.class);
+    MovieTrailerService movieTrailerService = RETROFIT.create(MovieTrailerService.class);
 
     // Create a call instance for looking up the movie's list of trailers
     mCallTrailers = movieTrailerService.get(selectedMovie.getId(), BuildConfig.MOVIE_DB_API_KEY);
@@ -184,13 +182,19 @@ public class MovieDetailFragment extends Fragment implements
             // TODO: Show a "No trailers available" text
           }
         } else {
-          showErrorMessage(getContext(), R.string.error_bad_response, response.message());
+          DisplayErrorUtils.showErrorMessage(LOG_TAG,
+              getContext(),
+              R.string.error_bad_response,
+              response.message());
         }
       }
 
       @Override
       public void onFailure(Call<MovieTrailerList> call, Throwable t) {
-        showErrorMessage(getContext(), R.string.error_contacting_server, t.getMessage());
+        DisplayErrorUtils.showErrorMessage(LOG_TAG,
+            getContext(),
+            R.string.error_contacting_server,
+            t.getMessage());
       }
     });
   }
@@ -218,7 +222,7 @@ public class MovieDetailFragment extends Fragment implements
     mMovieReviewsView.addItemDecoration(dividerLine);
 
     // Create an instance of our MovieReviewService.
-    MovieReviewService movieReviewService = retrofit.create(MovieReviewService.class);
+    MovieReviewService movieReviewService = RETROFIT.create(MovieReviewService.class);
 
     // Create a call instance for looking up the movie's list of trailers
     mCallReviews = movieReviewService.get(selectedMovie.getId(),
@@ -240,26 +244,21 @@ public class MovieDetailFragment extends Fragment implements
             // TODO: Show a "No reviews yet!" text
           }
         } else {
-          showErrorMessage(getContext(), R.string.error_bad_response, response.message());
+          DisplayErrorUtils.showErrorMessage(LOG_TAG,
+              getContext(),
+              R.string.error_bad_response,
+              response.message());
         }
       }
 
       @Override
       public void onFailure(Call<MovieReviewList> call, Throwable t) {
-        showErrorMessage(getContext(), R.string.error_contacting_server, t.getMessage());
+        DisplayErrorUtils.showErrorMessage(LOG_TAG,
+            getContext(),
+            R.string.error_contacting_server,
+            t.getMessage());
       }
     });
-  }
-
-  void showErrorMessage(Context context, int errorResId, String errorCondition) {
-    String errorMessage = MessageFormat.format("{0}: {1}",
-        getString(errorResId),
-        errorCondition);
-
-    // Show & log error message
-    Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
-    Log.e(LOG_TAG, errorMessage);
-
   }
 
   @Override

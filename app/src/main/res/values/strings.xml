@@ -32,6 +32,7 @@
   <string name="error_empty_response">Empty response from TheMovieDB server</string>
   <string name="error_closing_stream">Error closing stream</string>
   <string name="error_missing_sorting_method">Missing sorting method in https query</string>
+  <string name="error_processing_json_response">Error processing the JSON response</string>
 
 
 </resources>
