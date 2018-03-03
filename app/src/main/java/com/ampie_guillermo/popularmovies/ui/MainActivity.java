@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import com.ampie_guillermo.popularmovies.BuildConfig;
 import com.ampie_guillermo.popularmovies.R;
-import com.facebook.stetho.Stetho;
 
 
 /**
@@ -54,7 +53,9 @@ public class MainActivity extends AppCompatActivity {
                                 Stetho.defaultInspectorModulesProvider(this))
                         .build());
 */
-      Stetho.initializeWithDefaults(this);
+// TODO: Check out Stetho because is generating a LEAK in MainActivity....
+
+//      Stetho.initializeWithDefaults(this);
 
 
             /*
@@ -79,16 +80,16 @@ public class MainActivity extends AppCompatActivity {
       // Detect for memory leaks
       StrictMode.VmPolicy.Builder policyBuilder = new StrictMode.VmPolicy.Builder();
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-//                policyBuilder.detectAll();
+        policyBuilder.detectAll();
       } else {
         // Android Oreo or higher
-//                policyBuilder.detectActivityLeaks()
-//                        .detectCleartextNetwork()
-//                        .detectContentUriWithoutPermission()
-//                        .detectFileUriExposure()
-//                        .detectLeakedClosableObjects()
-//                        .detectLeakedRegistrationObjects()
-//                        .detectLeakedSqlLiteObjects();
+        policyBuilder.detectActivityLeaks()
+            .detectCleartextNetwork()
+            .detectContentUriWithoutPermission()
+            .detectFileUriExposure()
+            .detectLeakedClosableObjects()
+            .detectLeakedRegistrationObjects()
+            .detectLeakedSqlLiteObjects();
       }
       StrictMode.setVmPolicy(policyBuilder.penaltyLog().penaltyDeath().build());
     }
