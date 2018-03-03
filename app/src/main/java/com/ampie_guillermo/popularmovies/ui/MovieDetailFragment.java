@@ -36,8 +36,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * The fragment to display the movie's data.
  */
-public class MovieDetailFragment extends Fragment implements
-    MovieTrailerAdapter.MovieTrailerItemClickListener {
+public class MovieDetailFragment
+    extends Fragment
+    implements MovieTrailerAdapter.MovieTrailerItemClickListener {
 
   static final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
 
