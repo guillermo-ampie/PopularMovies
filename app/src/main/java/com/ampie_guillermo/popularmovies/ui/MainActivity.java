@@ -57,10 +57,9 @@ public class MainActivity extends AppCompatActivity {
 
 //      Stetho.initializeWithDefaults(this);
 
-
-            /*
-             * Enable StrictMode
-             */
+      /**
+       * Enable StrictMode
+       */
 
       // Detect for blocking the UI thread
       StrictMode.setThreadPolicy(
@@ -118,7 +117,8 @@ public class MainActivity extends AppCompatActivity {
     MovieListFragment.FavoriteMovieListFragment favoriteMoviesPage
         = new MovieListFragment.FavoriteMovieListFragment();
 
-    viewPagerAdapter.addFragmentPage(popularMoviesPage, getString(R.string.sort_by_popularity))
+    viewPagerAdapter
+        .addFragmentPage(popularMoviesPage, getString(R.string.sort_by_popularity))
         .addFragmentPage(ratedMoviesPage, getString(R.string.sort_by_rating))
         .addFragmentPage(favoriteMoviesPage, getString(R.string.favorite_movies));
 
