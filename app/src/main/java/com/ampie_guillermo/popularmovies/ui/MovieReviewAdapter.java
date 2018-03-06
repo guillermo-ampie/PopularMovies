@@ -46,12 +46,12 @@ public class MovieReviewAdapter
         String author = mMoviewReviewList.getReviewList()
                 .get(position)
                 .getAuthor();
-        holder.mAuthorView.setText(author);
+        holder.getAuthorView().setText(author);
 
         String reviewContent = mMoviewReviewList.getReviewList()
                 .get(position)
                 .getContent();
-        holder.mReviewContentView.setText(reviewContent);
+        holder.getmReviewContentView().setText(reviewContent);
     }
 
     /**
@@ -102,13 +102,21 @@ public class MovieReviewAdapter
     }
 
     static class MovieReviewViewHolder extends RecyclerView.ViewHolder {
-        TextView mAuthorView;
-        TextView mReviewContentView;
+        private final TextView mAuthorView;
+        private final TextView mReviewContentView;
 
         MovieReviewViewHolder(View itemView) {
             super(itemView);
             mAuthorView = itemView.findViewById(R.id.review_author);
             mReviewContentView = itemView.findViewById(R.id.review_content);
+        }
+
+        TextView getAuthorView() {
+            return mAuthorView;
+        }
+
+        TextView getmReviewContentView() {
+            return mReviewContentView;
         }
     }
 }
