@@ -47,7 +47,7 @@ public class MovieTrailerAdapter extends
    * @param position The position of the item within the adapter's data set.
    */
   @Override
-  public void onBindViewHolder(TrailerViewHolder holder, int position) {
+  public void onBindViewHolder(MovieTrailerAdapter.TrailerViewHolder holder, int position) {
     Uri thumbnailUri
         = Uri.withAppendedPath(Uri.parse(THUMBNAIL_BASE_URL),
         mMovieTrailerList.getTrailerList()
@@ -60,7 +60,7 @@ public class MovieTrailerAdapter extends
         .placeholder(R.drawable.no_thumbnail)
         .error(R.drawable.no_thumbnail)
         .fit()
-        .into(holder.mTrailerThumbnailView);
+        .into(holder.getTrailerThumbnailView());
   }
 
   /**
@@ -83,13 +83,13 @@ public class MovieTrailerAdapter extends
    * @see #getItemViewType(int) see onBindViewHolder(ViewHolder, int)
    */
   @Override
-  public TrailerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+  public MovieTrailerAdapter.TrailerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
     Context context = parent.getContext();
     LayoutInflater inflater = LayoutInflater.from(context);
     View view = inflater.inflate(R.layout.movie_trailer_thumbnail_item, parent, false);
 
-    return new TrailerViewHolder(view);
+    return new MovieTrailerAdapter.TrailerViewHolder(view);
   }
 
   /**
@@ -114,9 +114,10 @@ public class MovieTrailerAdapter extends
   }
 
   // The viewHolder used for each movie trailer
-  static class TrailerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+  static class TrailerViewHolder extends RecyclerView.ViewHolder
+      implements View.OnClickListener {
 
-    ImageView mTrailerThumbnailView;
+    private final ImageView mTrailerThumbnailView;
 
     TrailerViewHolder(View itemView) {
       super(itemView);
@@ -124,10 +125,15 @@ public class MovieTrailerAdapter extends
       itemView.setOnClickListener(this);
     }
 
+
     @Override
     public void onClick(View view) {
       // getAdapterPosition() gives us the the item that was clicked
-      sOnClickListener.onMovieTrailerItemClick(getAdapterPosition());
+      MovieTrailerAdapter.sOnClickListener.onMovieTrailerItemClick(getAdapterPosition());
+    }
+
+    ImageView getTrailerThumbnailView() {
+      return mTrailerThumbnailView;
     }
   }
 }
