@@ -15,11 +15,11 @@ import java.util.ArrayList;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
   private static final String LOG_TAG = MovieAdapter.class.getSimpleName();
-  static MovieItemClickListener sOnClickListener;
+  MovieItemClickListener mOnClickListener;
   private ArrayList<Movie> mMovieList;
 
   MovieAdapter(MovieItemClickListener onClickListener) {
-    sOnClickListener = onClickListener;
+    mOnClickListener = onClickListener;
   }
 
   /**
@@ -65,8 +65,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
   }
 
   void setMovieList(ArrayList<Movie> movieList) {
-    // set the new data & update the UI
-    mMovieList = movieList;
+    //Set the new data & update the UI
+    mMovieList = new ArrayList<>(movieList);
     notifyDataSetChanged();
   }
 
@@ -104,7 +104,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
   }
 
   // The View Holder used for each movie trailer
-  static class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+  class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     ImageView mMovieThumbnailView;
 
@@ -117,7 +117,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     @Override
     public void onClick(View view) {
       // getAdapterPosition() gives us the the item that was clicked
-      sOnClickListener.onMovieItemClick(getAdapterPosition());
+      mOnClickListener.onMovieItemClick(getAdapterPosition());
     }
   }
 }
