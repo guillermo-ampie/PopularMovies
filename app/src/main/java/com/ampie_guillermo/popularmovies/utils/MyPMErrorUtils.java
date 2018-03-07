@@ -3,16 +3,15 @@ package com.ampie_guillermo.popularmovies.utils;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
+import com.ampie_guillermo.popularmovies.BuildConfig;
 import java.text.MessageFormat;
 
 /**
- * DisplayErrorUtils: A few method to notify and register error conditions
+ * MyPMErrorUtils: A few method to check / notify / register error conditions
  */
 
-public class DisplayErrorUtils {
-
-  private DisplayErrorUtils() {
-  }
+public enum MyPMErrorUtils {
+  ;
 
   // TODO: 3/3/18: Check that these functions are called from UI thread
   public static void showErrorMessage(String LOG_TAG, Context context, int errorResId,
@@ -47,5 +46,14 @@ public class DisplayErrorUtils {
     Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
     Log.e(LOG_TAG, errorMessage);
 
+  }
+
+  public static void validateIndexInCollection(int index, int size) {
+    // The collection must contain at least one element
+    if (BuildConfig.DEBUG) {
+      if (!((size >= 1) && ((index >= 0) && (index <= (size - 1))))) {
+        throw new AssertionError();
+      }
+    }
   }
 }
