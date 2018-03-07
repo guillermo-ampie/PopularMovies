@@ -22,7 +22,7 @@ import android.widget.CursorAdapter;
 import com.ampie_guillermo.popularmovies.BuildConfig;
 import com.ampie_guillermo.popularmovies.R;
 import com.ampie_guillermo.popularmovies.model.Movie;
-import com.ampie_guillermo.popularmovies.utils.DisplayErrorUtils;
+import com.ampie_guillermo.popularmovies.utils.MyPMErrorUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,14 +51,12 @@ public class MovieListFragment
     implements LoaderManager.LoaderCallbacks<ArrayList<Movie>>,
     MovieAdapter.MovieItemClickListener {
 
-  public static final int MOVIE_LIST_LOADER_ID = 1000;
-  public static final String MOVIE_SORTING_METHOD_EXTRA = "sorting-method";
-
+  private static final int MOVIE_LIST_LOADER_ID = 1000;
+  private static final String MOVIE_SORTING_METHOD_EXTRA = "sorting-method";
   private static final String LOG_TAG = MovieListFragment.class.getSimpleName();
   private static final int MOVIES_RESULT_SIZE = 20;
 
-  MovieAdapter mMovieAdapter;
-
+  private MovieAdapter mMovieAdapter;
   private String mSortingMethodParam;
   private ArrayList<Movie> mMovieList;
 
@@ -139,7 +137,7 @@ public class MovieListFragment
     // Get a reference to the RecyclerView (the movie grid), and attach the movie adapter to it.
     RecyclerView movieGridView = rootView.findViewById(R.id.movie_grid_view);
 
-    // Al the items (movie posters) in the RecyclerView are the same size
+    // Al the items (all are movie posters) in the RecyclerView are the same size
     movieGridView.setHasFixedSize(true);
 
     // We will show the movie list in a grid with a parameterized number of columns
@@ -171,8 +169,6 @@ public class MovieListFragment
     super.onActivityCreated(savedInstanceState);
     getMovies();
   }
-
-
 
   protected void setSortingMethodParam(String sortingMethodParam) {
     mSortingMethodParam = sortingMethodParam;
@@ -247,8 +243,8 @@ public class MovieListFragment
   @Override
   public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> data) {
     Log.v(LOG_TAG, "++++++++++ Adding the new data fetched");
-    mMovieList = data;
-    mMovieAdapter.setMovieList(mMovieList);
+    mMovieList = new ArrayList<>(data);
+    mMovieAdapter.setMovieList(data);
   }
 
   /**
@@ -260,14 +256,15 @@ public class MovieListFragment
    */
   @Override
   public void onLoaderReset(Loader<ArrayList<Movie>> loader) {
-//    mMovieAdapter.clear();
+//    mMovieAdapter.;
   }
 
   @Override
   public void onMovieItemClick(int clickedItemIndex) {
+    MyPMErrorUtils.validateIndexInCollection(clickedItemIndex, mMovieList.size());
     Movie currentMovie = mMovieList.get(clickedItemIndex);
     Intent intent = new Intent(getActivity(),
-        MovieDetailActivity.class).putExtra("selected-movie", currentMovie);
+        MovieDetailActivity.class).putExtra(getString(R.string.selected_movie), currentMovie);
 
     startActivity(intent);
   }
@@ -322,6 +319,7 @@ public class MovieListFragment
     MovieListLoader(Context context, Bundle args) {
       super(context);
       mArgs = args;
+      mCachedMovieList = new ArrayList<>(MOVIES_RESULT_SIZE);
     }
 
     @Nullable
@@ -331,7 +329,7 @@ public class MovieListFragment
       String sortingMethod = mArgs.getString(MOVIE_SORTING_METHOD_EXTRA);
 
       if (TextUtils.isEmpty(sortingMethod)) {
-        DisplayErrorUtils.showErrorMessage(LOG_TAG,
+        MyPMErrorUtils.showErrorMessage(LOG_TAG,
             getContext(),
             R.string.error_missing_sorting_method);
         return null;
@@ -372,7 +370,7 @@ public class MovieListFragment
         StringBuilder buffer = new StringBuilder();
         if (inputStream == null) {
           // Oops, we got nothing.
-          DisplayErrorUtils.showErrorMessage(LOG_TAG,
+          MyPMErrorUtils.showErrorMessage(LOG_TAG,
               context,
               R.string.error_empty_response);
           return null;
@@ -387,21 +385,21 @@ public class MovieListFragment
 
         if (buffer.length() == 0) {
           // Stream was empty.  Nothing to do!
-          DisplayErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_empty_response);
+          MyPMErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_empty_response);
           return null;
         }
         movieJsonStr = buffer.toString();
       } catch (MalformedURLException e) {
         // If we didn't successfully get the movie list, there's nothing to do
-        DisplayErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_contacting_server, e);
+        MyPMErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_contacting_server, e);
         return null;
       } catch (ProtocolException e) {
         // If we didn't successfully get the movie list, there's nothing to do
-        DisplayErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_contacting_server, e);
+        MyPMErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_contacting_server, e);
         return null;
       } catch (IOException e) {
         // If we didn't successfully get the movie list, there's nothing to do
-        DisplayErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_contacting_server, e);
+        MyPMErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_contacting_server, e);
         return null;
       } finally {
         if (urlConnection != null) {
@@ -411,7 +409,7 @@ public class MovieListFragment
           try {
             reader.close();
           } catch (IOException e) {
-            DisplayErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_closing_stream, e);
+            MyPMErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_closing_stream, e);
           }
         }
       }
@@ -419,12 +417,12 @@ public class MovieListFragment
       try {
         return getMoviesDataFromJson(movieJsonStr);
       } catch (JSONException e) {
-        DisplayErrorUtils
+        MyPMErrorUtils
             .showErrorMessage(LOG_TAG, context, R.string.error_processing_json_response, e);
       }
 
       // This will only happen if there was an error getting or parsing the response.
-      DisplayErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_contacting_server);
+      MyPMErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_contacting_server);
       return null;
     }
 
@@ -439,7 +437,7 @@ public class MovieListFragment
         return;
       }
       // TODO: Show a progress bar
-      if (mCachedMovieList == null) {
+      if (mCachedMovieList.isEmpty()) {
         Log.d(LOG_TAG, "++++++++++ Forcing a load");
         forceLoad();
       } else {
@@ -457,7 +455,9 @@ public class MovieListFragment
      */
     @Override
     public void deliverResult(@Nullable ArrayList<Movie> data) {
-      mCachedMovieList = data;
+      if (data != null) {
+        mCachedMovieList = new ArrayList<>(data);
+      }
       super.deliverResult(data);
     }
 
@@ -465,7 +465,7 @@ public class MovieListFragment
 
       String MOVIE_POSTER_BASE_URI = "https://image.tmdb.org/t/p/w";
 
-//      /**
+//      /** Obsolete code!:
 //       * We need to specify in the HTTPS request and the XML files
 //       * the --movie poster width--, so to avoid a manual
 //       * synchronization (so error prone!) of both files, we are using

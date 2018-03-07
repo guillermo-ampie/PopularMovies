@@ -22,7 +22,7 @@ import com.ampie_guillermo.popularmovies.model.MovieTrailerList;
 import com.ampie_guillermo.popularmovies.model.MovieTrailerList.MovieTrailer;
 import com.ampie_guillermo.popularmovies.network.MovieReviewService;
 import com.ampie_guillermo.popularmovies.network.MovieTrailerService;
-import com.ampie_guillermo.popularmovies.utils.DisplayErrorUtils;
+import com.ampie_guillermo.popularmovies.utils.MyPMErrorUtils;
 import com.squareup.picasso.Picasso;
 import java.text.NumberFormat;
 import retrofit2.Call;
@@ -84,7 +84,7 @@ public class MovieDetailFragment
     Intent intent = getActivity().getIntent();
 
     // Get the selected movie passed by Intent
-    Movie selectedMovie = intent.getExtras().getParcelable("selected-movie");
+    Movie selectedMovie = intent.getExtras().getParcelable(getString(R.string.selected_movie));
     if (selectedMovie != null) {
       // we will reuse -tv- variable for all the TextView objects in this fragment
       TextView tv = mRootView.findViewById(R.id.movie_title_text);
@@ -183,7 +183,7 @@ public class MovieDetailFragment
             // TODO: Show a "No trailers available" text
           }
         } else {
-          DisplayErrorUtils.showErrorMessage(LOG_TAG,
+          MyPMErrorUtils.showErrorMessage(LOG_TAG,
               getContext(),
               R.string.error_bad_response,
               response.message());
@@ -192,7 +192,7 @@ public class MovieDetailFragment
 
       @Override
       public void onFailure(Call<MovieTrailerList> call, Throwable t) {
-        DisplayErrorUtils.showErrorMessage(LOG_TAG,
+        MyPMErrorUtils.showErrorMessage(LOG_TAG,
             getContext(),
             R.string.error_contacting_server,
             t.getMessage());
@@ -245,7 +245,7 @@ public class MovieDetailFragment
             // TODO: Show a "No reviews yet!" text
           }
         } else {
-          DisplayErrorUtils.showErrorMessage(LOG_TAG,
+          MyPMErrorUtils.showErrorMessage(LOG_TAG,
               getContext(),
               R.string.error_bad_response,
               response.message());
@@ -254,7 +254,7 @@ public class MovieDetailFragment
 
       @Override
       public void onFailure(Call<MovieReviewList> call, Throwable t) {
-        DisplayErrorUtils.showErrorMessage(LOG_TAG,
+        MyPMErrorUtils.showErrorMessage(LOG_TAG,
             getContext(),
             R.string.error_contacting_server,
             t.getMessage());

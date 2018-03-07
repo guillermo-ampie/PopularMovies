@@ -26,6 +26,9 @@
         one of the most acclaimed movies in film history. With lovely performances from Judy
         Garland and pals. An astonishing Technicolor masterpiece!</string>
 
+  <!--Non UI constant strings-->
+  <string name="selected_movie">selected-movie</string>
+
   <!-- Error messages -->
   <string name="error_contacting_server">Error contacting themoviedb.org server</string>
   <string name="error_bad_response">Bad response from themoviedb.org server:</string>
@@ -33,6 +36,7 @@
   <string name="error_closing_stream">Error closing stream</string>
   <string name="error_missing_sorting_method">Missing sorting method in https query</string>
   <string name="error_processing_json_response">Error processing the JSON response</string>
+  <string name="error_internal_program_error">Internal Program Error!</string>
 
 
 </resources>
