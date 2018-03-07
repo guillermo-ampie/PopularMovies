@@ -25,12 +25,12 @@ import com.ampie_guillermo.popularmovies.network.MovieTrailerService;
 import com.ampie_guillermo.popularmovies.utils.MyPMErrorUtils;
 import com.squareup.picasso.Picasso;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
 
 
 /**
@@ -267,8 +267,10 @@ public class MovieDetailFragment
 
     final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?";
     final String VIDEO_PARAM = "v";
+    final ArrayList<MovieTrailer> trailerList = mTrailers.getTrailerList();
 
-    final MovieTrailer trailer = mTrailers.getTrailerList().get(clickedItemIndex);
+    MyPMErrorUtils.validateIndexInCollection(clickedItemIndex, trailerList.size());
+    final MovieTrailer trailer = trailerList.get(clickedItemIndex);
     final Uri trailerUri = Uri.parse(YOUTUBE_BASE_URL)
         .buildUpon()
         .appendQueryParameter(VIDEO_PARAM, trailer.getKey())
