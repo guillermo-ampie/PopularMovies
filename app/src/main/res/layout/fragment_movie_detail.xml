@@ -175,8 +175,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:text="@string/movie_reviews"
-        android:drawableLeft="@drawable/ic_comment_black_36dp"
-        android:drawableStart="@drawable/ic_comment_black_36dp"
+        android:drawableLeft="@drawable/ic_forum_black_36dp"
+        android:drawableStart="@drawable/ic_forum_black_36dp"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
     <android.support.v7.widget.RecyclerView
       android:id="@+id/rv_reviews"
