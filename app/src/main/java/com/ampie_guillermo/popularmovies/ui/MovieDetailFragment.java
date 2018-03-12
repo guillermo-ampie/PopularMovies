@@ -102,7 +102,7 @@ public class MovieDetailFragment
       tv = mRootView.findViewById(R.id.release_date_text);
       tv.setText(selectedMovie.getReleaseDate());
 
-      // Rating & Votes values will be formatted based on the current locale
+      // Rating & Votes values will be formatted based on the current locale's properties
       NumberFormat numberFormat = NumberFormat.getNumberInstance();
       numberFormat.setMaximumFractionDigits(1);
       String rating = numberFormat.format(selectedMovie.getVoteAverage());
@@ -110,6 +110,7 @@ public class MovieDetailFragment
       tv = mRootView.findViewById(R.id.rating_text);
       tv.setText(rating);
 
+      // Format the number using the current's locale grouping
       numberFormat.setGroupingUsed(true);
       String votes = numberFormat.format(selectedMovie.getVoteCount());
       tv = mRootView.findViewById(R.id.vote_count_text);
@@ -175,12 +176,12 @@ public class MovieDetailFragment
           // Here we get the movie trailer list!
           mTrailers = response.body();
 
-          if (!mTrailers.getTrailerList().isEmpty()) {
+          if (mTrailers.getTrailerList().isEmpty()) {
+            // TODO: Show a "No trailers available" text
+          } else {
 
             // Set the data(trailers) we have just fetched
             mMovieTrailerAdapter.setMovieTrailerList(mTrailers);
-          } else {
-            // TODO: Show a "No trailers available" text
           }
         } else {
           MyPMErrorUtils.showErrorMessage(LOG_TAG,
@@ -237,12 +238,11 @@ public class MovieDetailFragment
           // Here we get the movie review list!
           mReviews = response.body();
 
-          if (!mReviews.getReviewList().isEmpty()) {
-
+          if (mReviews.getReviewList().isEmpty()) {
+            // TODO: Show a "No reviews yet!" text
+          } else {
             // Set the data(reviews) we have just fetched
             mMovieReviewAdapter.setMovieReviewList(mReviews);
-          } else {
-            // TODO: Show a "No reviews yet!" text
           }
         } else {
           MyPMErrorUtils.showErrorMessage(LOG_TAG,
