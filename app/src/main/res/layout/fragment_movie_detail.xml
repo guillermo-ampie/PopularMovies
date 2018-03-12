@@ -1,4 +1,5 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/main_scroll_view"
   android:layout_width="match_parent"
@@ -129,6 +130,8 @@
       android:layout_height="wrap_content"
       android:paddingTop="@dimen/padding_vertical_material"
       android:text="@string/movie_overview"
+      android:drawableLeft="@drawable/ic_message_black_36dp"
+      android:drawableStart="@drawable/ic_message_black_36dp"
       android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <TextView
@@ -153,6 +156,8 @@
       android:paddingTop="@dimen/padding_vertical_material"
       android:paddingBottom="@dimen/padding_vertical_material"
       android:text="@string/movie_trailers"
+      android:drawableLeft="@drawable/ic_video_library_black_36dp"
+      android:drawableStart="@drawable/ic_video_library_black_36dp"
       android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <android.support.v7.widget.RecyclerView
@@ -164,15 +169,15 @@
 
     <!-- A divider line -->
     <View style="@style/DividerLineHorizontal"/>
-
-    <TextView
-      android:textStyle="bold"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="start"
-      android:text="@string/movie_reviews"
-      android:textAppearance="?android:attr/textAppearanceMedium"/>
-
+      <TextView
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/movie_reviews"
+        android:drawableLeft="@drawable/ic_comment_black_36dp"
+        android:drawableStart="@drawable/ic_comment_black_36dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
     <android.support.v7.widget.RecyclerView
       android:id="@+id/rv_reviews"
       android:layout_width="wrap_content"
