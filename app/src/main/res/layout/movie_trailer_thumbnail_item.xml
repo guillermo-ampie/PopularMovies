@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ImageView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/apk/res-auto"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content">
+  <ImageView
     android:id="@+id/trailer_thumbnail_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="start|center_vertical"
+    android:paddingStart="@dimen/padding_thin_horizontal_material"
+    android:paddingEnd="@dimen/padding_thin_horizontal_material"
+    android:paddingLeft="@dimen/padding_thin_horizontal_material"
+    android:paddingRight="@dimen/padding_thin_horizontal_material"
+    android:contentDescription="@string/movie_trailer_desc"/>
+  <ImageView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="start|center_vertical"
-    android:paddingLeft="@dimen/padding_thin_horizontal_material"
-    android:paddingStart="@dimen/padding_thin_horizontal_material"
-    android:paddingRight="@dimen/padding_thin_horizontal_material"
-    android:paddingEnd="@dimen/padding_thin_horizontal_material"
-    android:contentDescription="@string/movie_trailer_desc"/>
+    android:layout_gravity="center_vertical|center_horizontal"
+    android:contentDescription="@string/movie_trailer_desc"
+    tools:srcCompat="@drawable/ic_play_circle_outline_black_48dp"/>
+</FrameLayout>
