@@ -128,9 +128,9 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:paddingTop="@dimen/padding_vertical_material"
-      android:text="@string/movie_overview"
       android:drawableLeft="@drawable/ic_message_black_36dp"
       android:drawableStart="@drawable/ic_message_black_36dp"
+      android:text="@string/movie_overview"
       android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <TextView
@@ -154,33 +154,53 @@
       android:layout_height="wrap_content"
       android:paddingTop="@dimen/padding_vertical_material"
       android:paddingBottom="@dimen/padding_vertical_material"
-      android:text="@string/movie_trailers"
       android:drawableLeft="@drawable/ic_video_library_black_36dp"
       android:drawableStart="@drawable/ic_video_library_black_36dp"
+      android:text="@string/movie_trailers"
       android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <android.support.v7.widget.RecyclerView
       android:id="@+id/rv_trailers"
+      android:scrollbarStyle="outsideInset"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:scrollbars="horizontal"
-      android:scrollbarStyle="outsideInset"/>
+      android:scrollbars="horizontal"/>
+
+    <!--This TextView will only appear when the movie does not have any trailer -->
+    <TextView
+      android:id="@+id/tv_no_trailers"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="start"
+      android:text="@string/no_movie_trailers_msg"
+      android:textAppearance="?android:attr/textAppearanceMedium"
+      android:visibility="gone"/>
 
     <!-- A divider line -->
     <View style="@style/DividerLineHorizontal"/>
-      <TextView
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/movie_reviews"
-        android:drawableLeft="@drawable/ic_forum_black_36dp"
-        android:drawableStart="@drawable/ic_forum_black_36dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <TextView
+      android:textStyle="bold"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="start"
+      android:drawableLeft="@drawable/ic_forum_black_36dp"
+      android:drawableStart="@drawable/ic_forum_black_36dp"
+      android:text="@string/movie_reviews"
+      android:textAppearance="?android:attr/textAppearanceMedium"/>
     <android.support.v7.widget.RecyclerView
       android:id="@+id/rv_reviews"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"/>
 
+    <!--This TextView will only appear when the movie does not have any reviews -->
+    <TextView
+      android:id="@+id/tv_no_reviews"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="start"
+      android:text="@string/no_movie_reviews_msg"
+      android:textAppearance="?android:attr/textAppearanceMedium"
+      android:visibility="gone"/>
   </LinearLayout>
 </ScrollView>

@@ -55,14 +55,14 @@ public class MovieDetailFragment
       .build();
 
   MovieTrailerList mTrailers;
-  RecyclerView mTrailersView;
+  RecyclerView mRvMovieTrailers;
   MovieTrailerAdapter mMovieTrailerAdapter;
 
   MovieReviewList mReviews;
-  RecyclerView mMovieReviewsView;
+  RecyclerView mRvMovieReviews;
   MovieReviewAdapter mMovieReviewAdapter;
 
-  private View mRootView;
+  View mRootView;
   private Call<MovieTrailerList> mCallTrailers;
   private Call<MovieReviewList> mCallReviews;
 
@@ -150,17 +150,17 @@ public class MovieDetailFragment
   private void fetchTrailers(Movie selectedMovie) {
 
     // Get a reference to the Trailer's RecyclerView
-    mTrailersView = mRootView.findViewById(R.id.rv_trailers);
+    mRvMovieTrailers = mRootView.findViewById(R.id.rv_trailers);
 
     // Set an -empty- adapter because the trailers have not been fetched
     mMovieTrailerAdapter = new MovieTrailerAdapter(this);
-    mTrailersView.setAdapter(mMovieTrailerAdapter);
+    mRvMovieTrailers.setAdapter(mMovieTrailerAdapter);
 
     // We will show the movie trailers in just one row
-    mTrailersView.setLayoutManager(new LinearLayoutManager(getContext(),
+    mRvMovieTrailers.setLayoutManager(new LinearLayoutManager(getContext(),
         LinearLayoutManager.HORIZONTAL,
         false));
-    mTrailersView.setHasFixedSize(true);
+    mRvMovieTrailers.setHasFixedSize(true);
 
     // Create an instance of our MovieTrailerService.
     MovieTrailerService movieTrailerService = RETROFIT.create(MovieTrailerService.class);
@@ -177,9 +177,12 @@ public class MovieDetailFragment
           mTrailers = response.body();
 
           if (mTrailers.getTrailerList().isEmpty()) {
-            // TODO: Show a "No trailers available" text
+            // Show "No trailers" text
+            TextView tvNoTrailers = mRootView.findViewById(R.id.tv_no_trailers);
+            tvNoTrailers.setVisibility(View.VISIBLE);
+            // Hide the RecyclerView that contains the movie trailers
+            mRvMovieTrailers.setVisibility(View.GONE);
           } else {
-
             // Set the data(trailers) we have just fetched
             mMovieTrailerAdapter.setMovieTrailerList(mTrailers);
           }
@@ -204,29 +207,28 @@ public class MovieDetailFragment
   private void fetchReviews(Movie selectedMovie) {
 
     // Get a reference to the Trailer's RecyclerView
-    mMovieReviewsView = mRootView.findViewById(R.id.rv_reviews);
+    mRvMovieReviews = mRootView.findViewById(R.id.rv_reviews);
 
     // Set an -empty- adapter because the reviews have not been fetched
     mMovieReviewAdapter = new MovieReviewAdapter();
-    mMovieReviewsView.setAdapter(mMovieReviewAdapter);
+    mRvMovieReviews.setAdapter(mMovieReviewAdapter);
 
     // We will show the movie trailers in just one row
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
         LinearLayoutManager.HORIZONTAL,
         false);
-    mMovieReviewsView.setLayoutManager(layoutManager);
-    //mMovieReviewsView.setHasFixedSize(true);
+    mRvMovieReviews.setLayoutManager(layoutManager);
 
     // Set a divider line
     DividerItemDecoration dividerLine
-        = new DividerItemDecoration(mMovieReviewsView.getContext(),
+        = new DividerItemDecoration(mRvMovieReviews.getContext(),
         layoutManager.getOrientation());
-    mMovieReviewsView.addItemDecoration(dividerLine);
+    mRvMovieReviews.addItemDecoration(dividerLine);
 
     // Create an instance of our MovieReviewService.
     MovieReviewService movieReviewService = RETROFIT.create(MovieReviewService.class);
 
-    // Create a call instance for looking up the movie's list of trailers
+    // Create a call instance for looking up the movie's list of reviews
     mCallReviews = movieReviewService.get(selectedMovie.getId(),
         BuildConfig.MOVIE_DB_API_KEY);
 
@@ -239,7 +241,11 @@ public class MovieDetailFragment
           mReviews = response.body();
 
           if (mReviews.getReviewList().isEmpty()) {
-            // TODO: Show a "No reviews yet!" text
+            // Show "No reviews" text
+            TextView tvNoReviews = mRootView.findViewById(R.id.tv_no_reviews);
+            tvNoReviews.setVisibility(View.VISIBLE);
+            // Hide the RecyclerView that contains the movie reviews
+            mRvMovieReviews.setVisibility(View.GONE);
           } else {
             // Set the data(reviews) we have just fetched
             mMovieReviewAdapter.setMovieReviewList(mReviews);
