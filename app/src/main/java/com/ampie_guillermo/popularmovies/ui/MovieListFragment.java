@@ -313,6 +313,7 @@ public class MovieListFragment
 
   private static class MovieListLoader extends AsyncTaskLoader<ArrayList<Movie>> {
 
+    private static final String LOG_TAG = MovieListLoader.class.getSimpleName();
     private final Bundle mArgs;
     private ArrayList<Movie> mCachedMovieList;
 
