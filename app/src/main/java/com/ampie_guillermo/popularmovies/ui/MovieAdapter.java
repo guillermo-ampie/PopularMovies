@@ -105,7 +105,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
   static class MovieViewHolder extends RecyclerView.ViewHolder {
 
     MovieItemClickListener mOnClickListener;
-    private ImageView mMovieThumbnailView;
+    private final ImageView mMovieThumbnailView;
 
     MovieViewHolder(View view, MovieItemClickListener onClickListener) {
       super(view);
