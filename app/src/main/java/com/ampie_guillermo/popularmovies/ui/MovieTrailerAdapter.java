@@ -27,43 +27,6 @@ public class MovieTrailerAdapter extends
   }
 
   /**
-   * Called by RecyclerView to display the data at the specified position. This method should
-   * update the contents of the {link ViewHolder#itemView} to reflect the item at the given
-   * position.
-   * <p>
-   * Note that unlike {@link ListView}, RecyclerView will not call this method
-   * again if the position of the item changes in the data set unless the item itself is
-   * invalidated or the new position cannot be determined. For this reason, you should only
-   * use the <code>position</code> parameter while acquiring the related data item inside
-   * this method and should not keep a copy of it. If you need the position of an item later
-   * on (e.g. in a click listener), use {link ViewHolder#getAdapterPosition()} which will
-   * have the updated adapter position.
-   * <p>
-   * Override {link #onBindViewHolder(ViewHolder, int, List)} instead if Adapter can
-   * handle efficient partial bind.
-   *
-   * @param holder The ViewHolder which should be updated to represent the contents of the item at
-   * the given position in the data set.
-   * @param position The position of the item within the adapter's data set.
-   */
-  @Override
-  public void onBindViewHolder(MovieTrailerAdapter.TrailerViewHolder holder, int position) {
-    Uri thumbnailUri
-        = Uri.withAppendedPath(Uri.parse(THUMBNAIL_BASE_URL),
-        mMovieTrailerList.getTrailerList()
-            .get(position)
-            .getKey() + THUMBNAIL_IMAGE_TYPE);
-
-    // Show trailer thumbnail image
-    Picasso.with(holder.itemView.getContext()) // itemView is a member of class ViewHolder
-        .load(thumbnailUri)
-        .placeholder(R.drawable.no_thumbnail)
-        .error(R.drawable.no_thumbnail)
-        .fit()
-        .into(holder.getTrailerThumbnailView());
-  }
-
-  /**
    * Called when RecyclerView needs a new {link ViewHolder} of the given type to represent
    * an item.
    * <p>
@@ -93,6 +56,39 @@ public class MovieTrailerAdapter extends
   }
 
   /**
+   * Called by RecyclerView to display the data at the specified position. This method should
+   * update the contents of the {link ViewHolder#itemView} to reflect the item at the given
+   * position.
+   * <p>
+   * Note that unlike {@link ListView}, RecyclerView will not call this method
+   * again if the position of the item changes in the data set unless the item itself is
+   * invalidated or the new position cannot be determined. For this reason, you should only
+   * use the <code>position</code> parameter while acquiring the related data item inside
+   * this method and should not keep a copy of it. If you need the position of an item later
+   * on (e.g. in a click listener), use {link ViewHolder#getAdapterPosition()} which will
+   * have the updated adapter position.
+   * <p>
+   * Override {link #onBindViewHolder(ViewHolder, int, List)} instead if Adapter can
+   * handle efficient partial bind.
+   *
+   * @param holder The ViewHolder which should be updated to represent the contents of the item at
+   * the given position in the data set.
+   * @param position The position of the item within the adapter's data set.
+   */
+  @Override
+  public void onBindViewHolder(MovieTrailerAdapter.TrailerViewHolder holder, int position) {
+    Uri thumbnailUri
+        = Uri.withAppendedPath(Uri.parse(THUMBNAIL_BASE_URL),
+        mMovieTrailerList.getTrailerList()
+            .get(position)
+            .getKey() + THUMBNAIL_IMAGE_TYPE);
+
+    // Show trailer thumbnail image
+    holder.setupItemView(thumbnailUri);
+  }
+
+
+  /**
    * Returns the total number of items in the data set held by the adapter.
    *
    * @return The total number of items in this adapter.
@@ -117,6 +113,8 @@ public class MovieTrailerAdapter extends
   static class TrailerViewHolder extends RecyclerView.ViewHolder
       implements View.OnClickListener {
 
+    // This class uses "implements View.OnClickListener" instead of member variables as in
+    // MovieAdapter.MovieViewHolder
     private final ImageView mTrailerThumbnailView;
 
     TrailerViewHolder(View itemView) {
@@ -125,15 +123,19 @@ public class MovieTrailerAdapter extends
       itemView.setOnClickListener(this);
     }
 
-
     @Override
     public void onClick(View view) {
       // getAdapterPosition() gives us the the item that was clicked
       MovieTrailerAdapter.sOnClickListener.onMovieTrailerItemClick(getAdapterPosition());
     }
 
-    ImageView getTrailerThumbnailView() {
-      return mTrailerThumbnailView;
+    void setupItemView(Uri trailerThumbnailUri) {
+      Picasso.with(itemView.getContext()) // itemView is a member of class ViewHolder
+          .load(trailerThumbnailUri)
+          .placeholder(R.drawable.no_thumbnail)
+          .error(R.drawable.no_thumbnail)
+          .fit()
+          .into(mTrailerThumbnailView);
     }
   }
 }
