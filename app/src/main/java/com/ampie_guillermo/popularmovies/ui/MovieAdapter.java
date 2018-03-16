@@ -3,6 +3,7 @@ package com.ampie_guillermo.popularmovies.ui;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -15,59 +16,11 @@ import java.util.ArrayList;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
   private static final String LOG_TAG = MovieAdapter.class.getSimpleName();
-  MovieItemClickListener mOnClickListener;
+  private MovieItemClickListener mOnClickListener;
   private ArrayList<Movie> mMovieList;
 
   MovieAdapter(MovieItemClickListener onClickListener) {
     mOnClickListener = onClickListener;
-  }
-
-  /**
-   * Called by RecyclerView to display the data at the specified position. This method should
-   * update the contents of the {link ViewHolder#itemView} to reflect the item at the given
-   * position.
-   * <p>
-   * Note that unlike {@link ListView}, RecyclerView will not call this method
-   * again if the position of the item changes in the data set unless the item itself is
-   * invalidated or the new position cannot be determined. For this reason, you should only
-   * use the <code>position</code> parameter while acquiring the related data item inside
-   * this method and should not keep a copy of it. If you need the position of an item later
-   * on (e.g. in a click listener), use {link ViewHolder#getAdapterPosition()} which will
-   * have the updated adapter position.
-   *
-   * Override {link #onBindViewHolder(ViewHolder, int, List)} instead if Adapter can
-   * handle efficient partial bind.
-   *
-   * @param holder The ViewHolder which should be updated to represent the contents of the item at
-   * the given position in the data set.
-   * @param position The position of the item within the adapter's data set.
-   */
-  @Override
-  public void onBindViewHolder(MovieAdapter.MovieViewHolder holder, int position) {
-
-    Movie currentMovie = mMovieList.get(position);
-
-    Picasso.with(holder.itemView.getContext())
-        .load(currentMovie.getPosterCompleteUri())
-        .placeholder(R.drawable.no_thumbnail)
-        .error(R.drawable.no_thumbnail)
-        .into(holder.mMovieThumbnailView);
-  }
-
-  /**
-   * Returns the total number of items in the data set held by the adapter.
-   *
-   * @return The total number of items in this adapter.
-   */
-  @Override
-  public int getItemCount() {
-    return (mMovieList != null) ? mMovieList.size() : 0;
-  }
-
-  void setMovieList(ArrayList<Movie> movieList) {
-    //Set the new data & update the UI
-    mMovieList = new ArrayList<>(movieList);
-    notifyDataSetChanged();
   }
 
   /**
@@ -95,7 +48,52 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     LayoutInflater inflater = LayoutInflater.from(parent.getContext());
     View view = inflater.inflate(R.layout.movie_poster_item, parent, false);
 
-    return new MovieViewHolder(view);
+    return new MovieViewHolder(view, mOnClickListener);
+  }
+
+  /**
+   * Called by RecyclerView to display the data at the specified position. This method should
+   * update the contents of the {link ViewHolder#itemView} to reflect the item at the given
+   * position.
+   * <p>
+   * Note that unlike {@link ListView}, RecyclerView will not call this method
+   * again if the position of the item changes in the data set unless the item itself is
+   * invalidated or the new position cannot be determined. For this reason, you should only
+   * use the <code>position</code> parameter while acquiring the related data item inside
+   * this method and should not keep a copy of it. If you need the position of an item later
+   * on (e.g. in a click listener), use {link ViewHolder#getAdapterPosition()} which will
+   * have the updated adapter position.
+   *
+   * Override {link #onBindViewHolder(ViewHolder, int, List)} instead if Adapter can
+   * handle efficient partial bind.
+   *
+   * @param holder The ViewHolder which should be updated to represent the contents of the item at
+   * the given position in the data set.
+   * @param position The position of the item within the adapter's data set.
+   */
+  @Override
+  public void onBindViewHolder(MovieAdapter.MovieViewHolder holder, int position) {
+
+    Movie currentMovie = mMovieList.get(position);
+
+    holder.setupItemView(currentMovie);
+
+  }
+
+  /**
+   * Returns the total number of items in the data set held by the adapter.
+   *
+   * @return The total number of items in this adapter.
+   */
+  @Override
+  public int getItemCount() {
+    return (mMovieList != null) ? mMovieList.size() : 0;
+  }
+
+  void setMovieList(ArrayList<Movie> movieList) {
+    //Set the new data & update the UI
+    mMovieList = new ArrayList<>(movieList);
+    notifyDataSetChanged();
   }
 
   interface MovieItemClickListener {
@@ -103,21 +101,31 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     void onMovieItemClick(int clickedItemIndex);
   }
 
-  // The View Holder used for each movie trailer
-  class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+  // The View Holder used for each movie poster
+  static class MovieViewHolder extends RecyclerView.ViewHolder {
 
-    ImageView mMovieThumbnailView;
+    MovieItemClickListener mOnClickListener;
+    private ImageView mMovieThumbnailView;
 
-    MovieViewHolder(View itemView) {
-      super(itemView);
-      mMovieThumbnailView = itemView.findViewById(R.id.movie_poster_view);
-      itemView.setOnClickListener(this);
+    MovieViewHolder(View view, MovieItemClickListener onClickListener) {
+      super(view);
+      mMovieThumbnailView = view.findViewById(R.id.movie_poster_view);
+      mOnClickListener = onClickListener;
+
+      mMovieThumbnailView.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          mOnClickListener.onMovieItemClick(getAdapterPosition());
+        }
+      });
     }
 
-    @Override
-    public void onClick(View view) {
-      // getAdapterPosition() gives us the the item that was clicked
-      mOnClickListener.onMovieItemClick(getAdapterPosition());
+    void setupItemView(Movie currentMovie) {
+      Picasso.with(itemView.getContext())
+          .load(currentMovie.getPosterCompleteUri())
+          .placeholder(R.drawable.no_thumbnail)
+          .error(R.drawable.no_thumbnail)
+          .into(mMovieThumbnailView);
     }
   }
 }
