@@ -38,13 +38,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * A fragment containing a GridView with all the movies' posters.
- * The code is inspired by the Sunshine-Version-2 demo project from
- * the ---Developing Android Apps - Fundamentals--- course
- * <p>
- * NOTE: MovieDB API Key stored in "~/.gradle/gradle.properties"
- * Using the method specified for Sunshine-Version-2 with
- * API key
+ * NOTE: MovieDB API Key stored in "~/.gradle/gradle.properties" using the method specified for
+ * Sunshine-Version-2 with API key
  */
 public class MovieListFragment
     extends Fragment
@@ -256,7 +251,6 @@ public class MovieListFragment
    */
   @Override
   public void onLoaderReset(Loader<ArrayList<Movie>> loader) {
-//    mMovieAdapter.;
   }
 
   @Override
