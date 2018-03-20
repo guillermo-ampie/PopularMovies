@@ -1,5 +1,7 @@
 package com.ampie_guillermo.popularmovies.ui;
 
+import android.support.v7.recyclerview.extensions.ListAdapter;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,17 +11,31 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import com.ampie_guillermo.popularmovies.R;
 import com.ampie_guillermo.popularmovies.model.Movie;
+import com.ampie_guillermo.popularmovies.ui.MovieAdapter.MovieViewHolder;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
+public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
 
   private static final String LOG_TAG = MovieAdapter.class.getSimpleName();
+  private static final DiffUtil.ItemCallback<Movie> DIFF_CALLBACK =
+      new DiffUtil.ItemCallback<Movie>() {
+        @Override
+        public boolean areItemsTheSame(Movie oldItem, Movie newItem) {
+          return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(Movie oldItem, Movie newItem) {
+          return oldItem.getId().equals(newItem.getId());
+        }
+      };
+  //  private ArrayList<Movie> mMovieList;
   private MovieItemClickListener mOnClickListener;
-  private ArrayList<Movie> mMovieList;
 
   MovieAdapter(MovieItemClickListener onClickListener) {
+    super(DIFF_CALLBACK);
     mOnClickListener = onClickListener;
   }
 
@@ -74,26 +90,27 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
   @Override
   public void onBindViewHolder(MovieAdapter.MovieViewHolder holder, int position) {
 
-    Movie currentMovie = mMovieList.get(position);
-
+//    Movie currentMovie = get(position);
+    Movie currentMovie = getItem(position);
     holder.setupItemView(currentMovie);
 
   }
 
-  /**
-   * Returns the total number of items in the data set held by the adapter.
-   *
-   * @return The total number of items in this adapter.
-   */
-  @Override
-  public int getItemCount() {
-    return (mMovieList != null) ? mMovieList.size() : 0;
-  }
+//  /**
+//   * Returns the total number of items in the data set held by the adapter.
+//   *
+//   * @return The total number of items in this adapter.
+//   */
+//  @Override
+//  public int getItemCount() {
+//    return (mMovieList != null) ? mMovieList.size() : 0;
+//  }
 
   void setMovieList(ArrayList<Movie> movieList) {
     //Set the new data & update the UI
-    mMovieList = new ArrayList<>(movieList);
-    notifyDataSetChanged();
+//    mMovieList = new ArrayList<>(movieList);
+//    notifyDataSetChanged();
+    submitList(movieList);
   }
 
   interface MovieItemClickListener {
@@ -104,8 +121,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
   // The View Holder used for each movie poster
   static class MovieViewHolder extends RecyclerView.ViewHolder {
 
-    MovieItemClickListener mOnClickListener;
     private final ImageView mMovieThumbnailView;
+    MovieItemClickListener mOnClickListener;
 
     MovieViewHolder(View view, MovieItemClickListener onClickListener) {
       super(view);

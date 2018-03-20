@@ -11,7 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        // For vector drawables only (it requires the Support Library 23.2 or higher)
+        // For vector drawables (it requires the Support Library 23.2 or higher)
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -31,16 +31,16 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:27.0.2'
-    compile 'com.android.support:design:27.0.2'
+    compile 'com.android.support:appcompat-v7:27.1.0'
+    compile 'com.android.support:design:27.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.android.support:support-v4:27.0.2'
+    compile 'com.android.support:support-v4:27.1.0'
     compile 'com.facebook.stetho:stetho:1.5.0'
     annotationProcessor 'net.simonvt.schematic:schematic-compiler:0.7.0'
     compile 'net.simonvt.schematic:schematic:0.7.0'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-    compile 'com.android.support:recyclerview-v7:27.0.2'
+    compile 'com.android.support:recyclerview-v7:27.1.0'
     implementation 'com.android.support:support-annotations:28.0.0-alpha1'
 }
 
