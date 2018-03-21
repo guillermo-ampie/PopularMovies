@@ -16,14 +16,14 @@
         android:paddingRight="@dimen/padding_horizontal_material"
         android:paddingEnd="@dimen/padding_horizontal_material"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        tools:text="@string/sample_review_author" />
+        tools:text="@sample/movie_review.json/results/author" />
 
     <TextView
         android:id="@+id/review_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        tools:text="@string/sample_movie_review"
+        tools:text="@sample/movie_review.json/results/content"
         android:paddingLeft="@dimen/padding_fat_horizontal_material"
         android:paddingStart="@dimen/padding_fat_horizontal_material"
         android:paddingRight="@dimen/padding_fat_horizontal_material"

@@ -20,7 +20,7 @@
       android:layout_height="wrap_content"
       android:background="@color/colorAccent"
       android:gravity="center_horizontal"
-      tools:text="@string/sample_movie_name"/>
+      tools:text="@sample/movie_data.json/results/title"/>
 
     <LinearLayout
       android:layout_width="match_parent"
@@ -60,7 +60,7 @@
           android:layout_height="wrap_content"
           android:layout_gravity="start"
           android:textAppearance="?android:attr/textAppearanceLarge"
-          tools:text="@string/sample_movie_release_date"/>
+          tools:text="@sample/movie_data.json/results/release_date"/>
 
         <TextView
           android:layout_width="wrap_content"
@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            tools:text="@string/sample_movie_rating"/>
+            tools:text="@sample/movie_data.json/results/vote_average"/>
 
           <TextView
             android:id="@+id/textView"
@@ -105,7 +105,7 @@
           android:layout_height="wrap_content"
           android:layout_gravity="start"
           android:textAppearance="?android:attr/textAppearanceLarge"
-          tools:text="@string/sample_movie_vote_count"/>
+          tools:text="@sample/movie_data.json/results/vote_count"/>
 
       </LinearLayout>
 
@@ -135,7 +135,7 @@
           android:layout_height="wrap_content"
           android:layout_gravity="start"
           android:textAppearance="?android:attr/textAppearanceSmall"
-          tools:text="@string/sample_movie_overview"/>
+          tools:text="@sample/movie_data.json/results/overview"/>
 
       </LinearLayout>
 
@@ -149,9 +149,9 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="start"
-      android:text="@string/movie_trailers"
       android:drawableLeft="@drawable/ic_video_library_black_36dp"
       android:drawableStart="@drawable/ic_video_library_black_36dp"
+      android:text="@string/movie_trailers"
       android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <android.support.v7.widget.RecyclerView
@@ -178,9 +178,9 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="start"
-      android:text="@string/movie_reviews"
       android:drawableLeft="@drawable/ic_forum_black_36dp"
       android:drawableStart="@drawable/ic_forum_black_36dp"
+      android:text="@string/movie_reviews"
       android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <android.support.v7.widget.RecyclerView
