@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ImageView
   xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/movie_poster_view"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
@@ -12,7 +13,7 @@
   android:paddingBottom="@dimen/padding_thin_horizontal_material"
   android:adjustViewBounds="true"
   android:contentDescription="@string/movie_poster_desc"
-  android:src="@drawable/no_thumbnail"/>
+  tools:src="@drawable/no_thumbnail"/>
   <!--android:layout_gravity="start|center_vertical"-->
   <!--android:maxWidth="@dimen/movie_poster_width"-->
 
