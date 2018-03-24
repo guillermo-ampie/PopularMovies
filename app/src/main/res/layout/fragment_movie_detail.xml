@@ -40,7 +40,8 @@
         android:layout_gravity="start"
         android:adjustViewBounds="true"
         android:contentDescription="@string/movie_poster_desc"
-        android:maxWidth="@dimen/movie_poster_width"/>
+        android:maxWidth="@dimen/movie_poster_width"
+        tools:src="@sample/movieposter"/>
 
       <LinearLayout
         android:layout_width="wrap_content"
