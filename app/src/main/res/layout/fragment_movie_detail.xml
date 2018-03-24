@@ -130,6 +130,7 @@
       android:paddingTop="@dimen/padding_vertical_material"
       android:drawableLeft="@drawable/ic_message_black_36dp"
       android:drawableStart="@drawable/ic_message_black_36dp"
+      android:drawablePadding="@dimen/drawable_to_text_padding"
       android:text="@string/movie_overview"
       android:textAppearance="?android:attr/textAppearanceMedium"/>
 
@@ -156,6 +157,7 @@
       android:paddingBottom="@dimen/padding_vertical_material"
       android:drawableLeft="@drawable/ic_video_library_black_36dp"
       android:drawableStart="@drawable/ic_video_library_black_36dp"
+      android:drawablePadding="@dimen/drawable_to_text_padding"
       android:text="@string/movie_trailers"
       android:textAppearance="?android:attr/textAppearanceMedium"/>
 
@@ -164,7 +166,8 @@
       android:scrollbarStyle="outsideInset"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:scrollbars="horizontal"/>
+      android:scrollbars="horizontal"
+      tools:listItem="@layout/movie_trailer_thumbnail_item"/>
 
     <!--This TextView will only appear when the movie does not have any trailer -->
     <TextView
@@ -186,12 +189,14 @@
       android:layout_gravity="start"
       android:drawableLeft="@drawable/ic_forum_black_36dp"
       android:drawableStart="@drawable/ic_forum_black_36dp"
+      android:drawablePadding="@dimen/drawable_to_text_padding"
       android:text="@string/movie_reviews"
       android:textAppearance="?android:attr/textAppearanceMedium"/>
     <android.support.v7.widget.RecyclerView
       android:id="@+id/rv_reviews"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
+      android:layout_height="wrap_content"
+      tools:listitem="@layout/movie_review_item"/>
 
     <!--This TextView will only appear when the movie does not have any reviews -->
     <TextView
