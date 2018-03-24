@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/review_author"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:paddingLeft="@dimen/padding_horizontal_material"
-        android:paddingStart="@dimen/padding_horizontal_material"
-        android:paddingRight="@dimen/padding_horizontal_material"
-        android:paddingEnd="@dimen/padding_horizontal_material"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        tools:text="@sample/movie_review.json/results/author" />
+  <TextView
+    android:id="@+id/review_author"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:paddingStart="@dimen/padding_horizontal_material"
+    android:paddingEnd="@dimen/padding_horizontal_material"
+    android:paddingLeft="@dimen/padding_horizontal_material"
+    android:paddingRight="@dimen/padding_horizontal_material"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    tools:text="@sample/movie_review.json/results/author"/>
 
-    <TextView
-        android:id="@+id/review_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        tools:text="@sample/movie_review.json/results/content"
-        android:paddingLeft="@dimen/padding_fat_horizontal_material"
-        android:paddingStart="@dimen/padding_fat_horizontal_material"
-        android:paddingRight="@dimen/padding_fat_horizontal_material"
-        android:paddingEnd="@dimen/padding_fat_horizontal_material"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+  <TextView
+    android:id="@+id/review_content"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:paddingStart="@dimen/padding_fat_horizontal_material"
+    android:paddingEnd="@dimen/padding_fat_horizontal_material"
+    android:paddingLeft="@dimen/padding_fat_horizontal_material"
+    android:paddingRight="@dimen/padding_fat_horizontal_material"
+    android:textAppearance="?android:attr/textAppearanceSmall"
+    tools:text="@sample/movie_review.json/results/content"/>
 
 </LinearLayout>
