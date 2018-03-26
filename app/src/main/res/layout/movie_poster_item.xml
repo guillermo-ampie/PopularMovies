@@ -13,7 +13,7 @@
   android:paddingBottom="@dimen/padding_thin_horizontal_material"
   android:adjustViewBounds="true"
   android:contentDescription="@string/movie_poster_desc"
-  tools:src="@drawable/no_thumbnail"/>
+  tools:src="@sample/movieposter"/>
   <!--android:layout_gravity="start|center_vertical"-->
   <!--android:maxWidth="@dimen/movie_poster_width"-->
 
