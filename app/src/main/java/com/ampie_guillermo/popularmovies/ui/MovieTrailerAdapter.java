@@ -41,8 +41,8 @@ public class MovieTrailerAdapter extends
    *
    * @param parent The ViewGroup into which the new View will be added after it is bound to an
    * adapter position.
-   * @param viewType The view type of the new View.
-   * @return A new ViewHolder that holds a View of the given view type.
+   * @param viewType The divider_view_1 type of the new View.
+   * @return A new ViewHolder that holds a View of the given divider_view_1 type.
    * @see #getItemViewType(int) see onBindViewHolder(ViewHolder, int)
    */
   @Override
@@ -50,7 +50,7 @@ public class MovieTrailerAdapter extends
 
     Context context = parent.getContext();
     LayoutInflater inflater = LayoutInflater.from(context);
-    View view = inflater.inflate(R.layout.movie_trailer_thumbnail_item, parent, false);
+    View view = inflater.inflate(R.layout.item_movie_trailer_thumbnail, parent, false);
 
     return new MovieTrailerAdapter.TrailerViewHolder(view);
   }
@@ -119,7 +119,7 @@ public class MovieTrailerAdapter extends
 
     TrailerViewHolder(View itemView) {
       super(itemView);
-      mTrailerThumbnailView = itemView.findViewById(R.id.trailer_thumbnail_view);
+      mTrailerThumbnailView = itemView.findViewById(R.id.image_movie_trailer_thumbnail_trailer_thumbnail);
       itemView.setOnClickListener(this);
     }
 

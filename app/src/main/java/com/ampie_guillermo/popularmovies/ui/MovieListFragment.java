@@ -98,7 +98,7 @@ public class MovieListFragment
    * <p/>
    * <p>Note that this can be called while the fragment's activity is
    * still in the process of being created.  As such, you can not rely
-   * on things like the activity's content view hierarchy being initialized
+   * on things like the activity's content divider_view_1 hierarchy being initialized
    * at this point.  If you want to do work once the activity itself is
    * created, see {@link #onActivityCreated(Bundle)}.
    *
@@ -130,7 +130,7 @@ public class MovieListFragment
      */
 
     // Get a reference to the RecyclerView (the movie grid), and attach the movie adapter to it.
-    RecyclerView movieGridView = rootView.findViewById(R.id.movie_grid_view);
+    RecyclerView movieGridView = rootView.findViewById(R.id.recycler_main_movie_grid);
 
     // Al the items (all are movie posters) in the RecyclerView are the same size
     movieGridView.setHasFixedSize(true);
@@ -148,7 +148,7 @@ public class MovieListFragment
 
   /**
    * Called when the fragment's activity has been created and this
-   * fragment's view hierarchy instantiated.  It can be used to do final
+   * fragment's divider_view_1 hierarchy instantiated.  It can be used to do final
    * initialization once these pieces are in place, such as retrieving
    * views or restoring state.  It is also useful for fragments that use
    * {@link #setRetainInstance(boolean)} to retain their instance,

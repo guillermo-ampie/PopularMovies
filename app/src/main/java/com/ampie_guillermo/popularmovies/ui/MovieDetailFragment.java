@@ -77,7 +77,7 @@ public class MovieDetailFragment
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       // "ScrollIndicators" attribute is available since "Marshmallow (API 23)"
-      ScrollView sv = mRootView.findViewById(R.id.main_scroll_view);
+      ScrollView sv = mRootView.findViewById(R.id.scroll_movie_detail_main);
       sv.setScrollIndicators(View.SCROLL_INDICATOR_RIGHT);
     }
 
@@ -87,11 +87,11 @@ public class MovieDetailFragment
     Movie selectedMovie = intent.getExtras().getParcelable(getString(R.string.selected_movie));
     if (selectedMovie != null) {
       // we will reuse -tv- variable for all the TextView objects in this fragment
-      TextView tv = mRootView.findViewById(R.id.movie_title_text);
+      TextView tv = mRootView.findViewById(R.id.text_movie_detail_movie_title);
       tv.setText(selectedMovie.getOriginalTitle());
 
       ImageView moviePosterView =
-          mRootView.findViewById(R.id.movie_poster_detail_view);
+          mRootView.findViewById(R.id.image_movie_detail_movie_poster);
       // Show the movie poster
       Picasso.with(getContext())
           .load(selectedMovie.getPosterCompleteUri())
@@ -99,7 +99,7 @@ public class MovieDetailFragment
           .error(R.drawable.no_thumbnail)
           .into(moviePosterView);
 
-      tv = mRootView.findViewById(R.id.release_date_text);
+      tv = mRootView.findViewById(R.id.text_movie_detail_release_date_content);
       tv.setText(selectedMovie.getReleaseDate());
 
       // Rating & Votes values will be formatted based on the current locale's properties
@@ -107,16 +107,16 @@ public class MovieDetailFragment
       numberFormat.setMaximumFractionDigits(1);
       String rating = numberFormat.format(selectedMovie.getVoteAverage());
 
-      tv = mRootView.findViewById(R.id.rating_text);
+      tv = mRootView.findViewById(R.id.text_movie_detail_movie_rating_content);
       tv.setText(rating);
 
       // Format the number using the current's locale grouping
       numberFormat.setGroupingUsed(true);
       String votes = numberFormat.format(selectedMovie.getVoteCount());
-      tv = mRootView.findViewById(R.id.vote_count_text);
+      tv = mRootView.findViewById(R.id.text_movie_detail_movie_vote_count_content);
       tv.setText(votes);
 
-      tv = mRootView.findViewById(R.id.movie_overview_text);
+      tv = mRootView.findViewById(R.id.text_movie_detail_movie_overview_content);
       tv.setText(selectedMovie.getOverview());
 
       // Get the movie trailers
@@ -150,7 +150,7 @@ public class MovieDetailFragment
   private void fetchTrailers(Movie selectedMovie) {
 
     // Get a reference to the Trailer's RecyclerView
-    mRvMovieTrailers = mRootView.findViewById(R.id.rv_trailers);
+    mRvMovieTrailers = mRootView.findViewById(R.id.recycler_movie_detail_trailers);
 
     // Set an -empty- adapter because the trailers have not been fetched
     mMovieTrailerAdapter = new MovieTrailerAdapter(this);
@@ -178,7 +178,7 @@ public class MovieDetailFragment
 
           if (mTrailers.getTrailerList().isEmpty()) {
             // Show "No trailers" text
-            TextView tvNoTrailers = mRootView.findViewById(R.id.tv_no_trailers);
+            TextView tvNoTrailers = mRootView.findViewById(R.id.text_movie_detail_no_trailers);
             tvNoTrailers.setVisibility(View.VISIBLE);
             // Hide the RecyclerView that contains the movie trailers
             mRvMovieTrailers.setVisibility(View.GONE);
@@ -207,7 +207,7 @@ public class MovieDetailFragment
   private void fetchReviews(Movie selectedMovie) {
 
     // Get a reference to the Trailer's RecyclerView
-    mRvMovieReviews = mRootView.findViewById(R.id.rv_reviews);
+    mRvMovieReviews = mRootView.findViewById(R.id.recycler_movie_detail_reviews);
 
     // Set an -empty- adapter because the reviews have not been fetched
     mMovieReviewAdapter = new MovieReviewAdapter();
@@ -242,7 +242,7 @@ public class MovieDetailFragment
 
           if (mReviews.getReviewList().isEmpty()) {
             // Show "No reviews" text
-            TextView tvNoReviews = mRootView.findViewById(R.id.tv_no_reviews);
+            TextView tvNoReviews = mRootView.findViewById(R.id.text_movie_detail_no_reviews);
             tvNoReviews.setVisibility(View.VISIBLE);
             // Hide the RecyclerView that contains the movie reviews
             mRvMovieReviews.setVisibility(View.GONE);

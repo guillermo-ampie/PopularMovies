@@ -54,15 +54,15 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
    *
    * @param parent The ViewGroup into which the new View will be added after it is bound to an
    * adapter position.
-   * @param viewType The view type of the new View.
-   * @return A new ViewHolder that holds a View of the given view type.
+   * @param viewType The divider_view_1 type of the new View.
+   * @return A new ViewHolder that holds a View of the given divider_view_1 type.
    * @see #getItemViewType(int) see #onBindViewHolder(ViewHolder, int)
    */
   @Override
   public MovieAdapter.MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
     LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-    View view = inflater.inflate(R.layout.movie_poster_item, parent, false);
+    View view = inflater.inflate(R.layout.item_movie_poster, parent, false);
 
     return new MovieViewHolder(view, mOnClickListener);
   }
@@ -126,7 +126,7 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
 
     MovieViewHolder(View view, MovieItemClickListener onClickListener) {
       super(view);
-      mMovieThumbnailView = view.findViewById(R.id.movie_poster_view);
+      mMovieThumbnailView = view.findViewById(R.id.image_movie_poster);
       mOnClickListener = onClickListener;
 
       mMovieThumbnailView.setOnClickListener(new OnClickListener() {

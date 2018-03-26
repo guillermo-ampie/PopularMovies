@@ -36,15 +36,15 @@ public class MovieReviewAdapter
    *
    * @param parent The ViewGroup into which the new View will be added after it is bound to an
    * adapter position.
-   * @param viewType The view type of the new View.
-   * @return A new ViewHolder that holds a View of the given view type.
+   * @param viewType The divider_view_1 type of the new View.
+   * @return A new ViewHolder that holds a View of the given divider_view_1 type.
    * @see #getItemViewType(int) see #onBindViewHolder(ViewHolder, int)
    */
   @Override
   public MovieReviewViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     Context context = parent.getContext();
     LayoutInflater inflater = LayoutInflater.from(context);
-    View view = inflater.inflate(R.layout.movie_review_item, parent, false);
+    View view = inflater.inflate(R.layout.item_movie_review, parent, false);
 
     return new MovieReviewViewHolder(view);
 
@@ -101,8 +101,8 @@ public class MovieReviewAdapter
 
     MovieReviewViewHolder(View view) {
       super(view);
-      mAuthorView = view.findViewById(R.id.review_author);
-      mReviewContentView = view.findViewById(R.id.review_content);
+      mAuthorView = view.findViewById(R.id.text_movie_review_item_review_author);
+      mReviewContentView = view.findViewById(R.id.text_movie_review_item_review_content);
     }
 
     void setItemView(MovieReview movieReview) {

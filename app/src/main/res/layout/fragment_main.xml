@@ -19,7 +19,7 @@
   <!--android:id="@+id/movie_grid">-->
   <!--</GridView>-->
   <android.support.v7.widget.RecyclerView
-    android:id="@+id/movie_grid_view"
+    android:id="@+id/recycler_main_movie_grid"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="vertical"

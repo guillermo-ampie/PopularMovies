@@ -95,10 +95,10 @@ public class MainActivity extends AppCompatActivity {
 
     setContentView(R.layout.activity_main);
 
-    Toolbar toolbar = findViewById(R.id.toolbar);
+    Toolbar toolbar = findViewById(R.id.toolbar_movie_detail_toolbar);
     setSupportActionBar(toolbar);
 
-    mViewPager = findViewById(R.id.viewpager);
+    mViewPager = findViewById(R.id.viewpager_main_viewpager);
     ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
     /**
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
     mViewPager.setAdapter(viewPagerAdapter);
 
     // Get the TabLayout and attach the ViewPager to it
-    mTabLayout = findViewById(R.id.tabs);
+    mTabLayout = findViewById(R.id.tab_main_tabs);
 
     if (mTabLayout != null) {
       mTabLayout.setupWithViewPager(mViewPager);
@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
    * to restore their state, but it is sometimes convenient to do it here
    * after all of the initialization has been done or to allow subclasses to
    * decide whether to use your default implementation.  The default
-   * implementation of this method performs a restore of any view state that
+   * implementation of this method performs a restore of any divider_view_1 state that
    * had previously been frozen by {@link #onSaveInstanceState}.
    * <p/>
    * <p>This method is called between {@link #onStart} and

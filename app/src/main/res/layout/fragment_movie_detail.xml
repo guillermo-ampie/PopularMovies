@@ -2,7 +2,7 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/main_scroll_view"
+  android:id="@+id/scroll_movie_detail_main"
   style="@android:style/Widget.DeviceDefault.Light.ScrollView"
   android:scrollbarStyle="outsideOverlay"
   android:layout_width="match_parent"
@@ -11,7 +11,7 @@
   tools:showIn="@layout/activity_movie_detail">
 
   <android.support.constraint.ConstraintLayout
-    android:id="@+id/main_constraint_layout"
+    android:id="@+id/layout_movie_detail_main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="@dimen/activity_vertical_margin"
@@ -23,7 +23,7 @@
     app:layout_constraintTop_toTopOf="parent">
 
     <TextView
-      android:id="@+id/movie_title_text"
+      android:id="@+id/text_movie_detail_movie_title"
       style="@android:style/TextAppearance.DeviceDefault.Widget.ActionMode.Title.Inverse"
       android:textStyle="bold"
       android:layout_width="match_parent"
@@ -35,7 +35,7 @@
       app:layout_constraintTop_toTopOf="parent"
       tools:text="@sample/movie_data.json/results/original_title"/>
     <ImageView
-      android:id="@+id/movie_poster_detail_view"
+      android:id="@+id/image_movie_detail_movie_poster"
       android:layout_width="wrap_content"
       android:layout_height="@dimen/movie_poster_width"
       android:layout_marginTop="@dimen/padding_vertical_material"
@@ -43,11 +43,11 @@
       android:adjustViewBounds="true"
       android:contentDescription="@string/movie_poster_desc"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
-      app:layout_constraintTop_toBottomOf="@id/movie_title_text"
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_movie_title"
       tools:src="@sample/movieposter"/>
 
     <TextView
-      android:id="@+id/movie_release_date"
+      android:id="@+id/text_movie_detail_movie_release_date"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="@dimen/padding_fat_vertical_material"
@@ -55,20 +55,20 @@
       android:layout_marginLeft="@dimen/padding_fat_horizontal_material"
       android:text="@string/movie_release_date"
       android:textAppearance="?android:attr/textAppearanceSmall"
-      app:layout_constraintStart_toEndOf="@id/movie_poster_detail_view"
-      app:layout_constraintTop_toBottomOf="@id/movie_title_text"/>
+      app:layout_constraintStart_toEndOf="@id/image_movie_detail_movie_poster"
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_movie_title"/>
     <TextView
-      android:id="@+id/release_date_text"
+      android:id="@+id/text_movie_detail_release_date_content"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/padding_fat_horizontal_material"
       android:layout_marginLeft="@dimen/padding_fat_horizontal_material"
       android:textAppearance="?android:attr/textAppearanceLarge"
-      app:layout_constraintStart_toEndOf="@id/movie_poster_detail_view"
-      app:layout_constraintTop_toBottomOf="@id/movie_release_date"
+      app:layout_constraintStart_toEndOf="@id/image_movie_detail_movie_poster"
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_movie_release_date"
       tools:text="@sample/movie_data.json/results/release_date"/>
     <TextView
-      android:id="@+id/movie_rating"
+      android:id="@+id/text_movie_detail_movie_rating"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="@dimen/padding_vertical_material"
@@ -77,20 +77,20 @@
       android:paddingTop="@dimen/padding_thin_vertical_material"
       android:text="@string/movie_rating"
       android:textAppearance="?android:attr/textAppearanceSmall"
-      app:layout_constraintStart_toEndOf="@id/movie_poster_detail_view"
-      app:layout_constraintTop_toBottomOf="@id/release_date_text"/>
+      app:layout_constraintStart_toEndOf="@id/image_movie_detail_movie_poster"
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_release_date_content"/>
     <TextView
-      android:id="@+id/rating_text"
+      android:id="@+id/text_movie_detail_movie_rating_content"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/padding_fat_horizontal_material"
       android:layout_marginLeft="@dimen/padding_fat_horizontal_material"
       android:textAppearance="?android:attr/textAppearanceLarge"
-      app:layout_constraintStart_toEndOf="@id/movie_poster_detail_view"
-      app:layout_constraintTop_toBottomOf="@id/movie_rating"
+      app:layout_constraintStart_toEndOf="@id/image_movie_detail_movie_poster"
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_movie_rating"
       tools:text="@sample/movie_data.json/results/vote_average"/>
     <TextView
-      android:id="@+id/movie_vote_count"
+      android:id="@+id/text_movie_detail_movie_vote_count"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="@dimen/padding_vertical_material"
@@ -99,39 +99,39 @@
       android:paddingTop="@dimen/padding_vertical_material"
       android:text="@string/movie_vote_count"
       android:textAppearance="?android:attr/textAppearanceSmall"
-      app:layout_constraintStart_toEndOf="@id/movie_poster_detail_view"
-      app:layout_constraintTop_toBottomOf="@id/rating_text"/>
+      app:layout_constraintStart_toEndOf="@id/image_movie_detail_movie_poster"
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_movie_rating_content"/>
     <TextView
-      android:id="@+id/vote_count_text"
+      android:id="@+id/text_movie_detail_movie_vote_count_content"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/padding_fat_horizontal_material"
       android:layout_marginLeft="@dimen/padding_fat_horizontal_material"
       android:textAppearance="?android:attr/textAppearanceLarge"
-      app:layout_constraintStart_toEndOf="@id/movie_poster_detail_view"
-      app:layout_constraintTop_toBottomOf="@id/movie_vote_count"
+      app:layout_constraintStart_toEndOf="@id/image_movie_detail_movie_poster"
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_movie_vote_count"
       tools:text="@sample/movie_data.json/results/vote_count"/>
     <TextView
-      android:id="@+id/top_mark"
+      android:id="@+id/text_movie_detail_top_mark"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/padding_thin_horizontal_material"
       android:layout_marginLeft="@dimen/padding_thin_horizontal_material"
       android:text="@string/top_mark"
       android:textAppearance="?android:attr/textAppearanceMedium"
-      app:layout_constraintBaseline_toBaselineOf="@+id/vote_count_text"
-      app:layout_constraintStart_toEndOf="@+id/vote_count_text"/>
+      app:layout_constraintBaseline_toBaselineOf="@+id/text_movie_detail_movie_vote_count_content"
+      app:layout_constraintStart_toEndOf="@+id/text_movie_detail_movie_vote_count_content"/>
 
     <!-- A divider line: horizontal -->
     <View
-      android:id="@+id/view"
+      android:id="@+id/divider_view_1"
       style="@style/DividerLineHorizontal"
       app:layout_constraintEnd_toStartOf="@id/keyline_right"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
-      app:layout_constraintTop_toBottomOf="@+id/movie_poster_detail_view"/>
+      app:layout_constraintTop_toBottomOf="@+id/image_movie_detail_movie_poster"/>
 
     <TextView
-      android:id="@+id/movie_overview"
+      android:id="@+id/text_movie_detail_movie_overview"
       android:textStyle="bold"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -142,10 +142,10 @@
       android:text="@string/movie_overview"
       android:textAppearance="?android:attr/textAppearanceMedium"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
-      app:layout_constraintTop_toBottomOf="@+id/view"/>
+      app:layout_constraintTop_toBottomOf="@+id/divider_view_1"/>
 
     <TextView
-      android:id="@+id/movie_overview_text"
+      android:id="@+id/text_movie_detail_movie_overview_content"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:paddingStart="@dimen/padding_horizontal_material"
@@ -154,19 +154,19 @@
       android:paddingRight="@dimen/padding_horizontal_material"
       android:textAppearance="?android:attr/textAppearanceSmall"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
-      app:layout_constraintTop_toBottomOf="@+id/movie_overview"
+      app:layout_constraintTop_toBottomOf="@+id/text_movie_detail_movie_overview"
       tools:text="@sample/movie_data.json/results/overview"/>
 
     <!-- A divider line: horizontal -->
     <View
-      android:id="@+id/view2"
+      android:id="@+id/divider_view_2"
       style="@style/DividerLineHorizontal"
       app:layout_constraintEnd_toStartOf="@id/keyline_right"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
-      app:layout_constraintTop_toBottomOf="@id/movie_overview_text"/>
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_movie_overview_content"/>
 
     <TextView
-      android:id="@+id/movie_trailers"
+      android:id="@+id/text_movie_detail_movie_trailers"
       android:textStyle="bold"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -178,37 +178,37 @@
       android:text="@string/movie_trailers"
       android:textAppearance="?android:attr/textAppearanceMedium"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
-      app:layout_constraintTop_toBottomOf="@id/view2"/>
+      app:layout_constraintTop_toBottomOf="@id/divider_view_2"/>
     <android.support.v7.widget.RecyclerView
-      android:id="@+id/rv_trailers"
+      android:id="@+id/recycler_movie_detail_trailers"
       android:scrollbarStyle="outsideInset"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:scrollbars="horizontal"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
-      app:layout_constraintTop_toBottomOf="@id/movie_trailers"
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_movie_trailers"
       tools:listItem="@layout/movie_trailer_thumbnail_item"/>
     <!--This TextView will only appear when the movie does not have any trailer -->
     <TextView
-      android:id="@+id/tv_no_trailers"
+      android:id="@+id/text_movie_detail_no_trailers"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="@string/no_movie_trailers_msg"
       android:textAppearance="?android:attr/textAppearanceMedium"
       android:visibility="gone"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
-      app:layout_constraintTop_toBottomOf="@id/movie_trailers"/>
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_movie_trailers"/>
 
     <!-- A divider line: horizontal -->
     <View
-      android:id="@+id/view3"
+      android:id="@+id/divider_view_3"
       style="@style/DividerLineHorizontal"
       app:layout_constraintEnd_toStartOf="@id/keyline_right"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
-      app:layout_constraintTop_toBottomOf="@id/rv_trailers"/>
+      app:layout_constraintTop_toBottomOf="@id/recycler_movie_detail_trailers"/>
 
     <TextView
-      android:id="@+id/movie_reviews"
+      android:id="@+id/text_movie_detail_movie_reviews"
       android:textStyle="bold"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -219,25 +219,25 @@
       android:text="@string/movie_reviews"
       android:textAppearance="?android:attr/textAppearanceMedium"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
-      app:layout_constraintTop_toBottomOf="@id/view3"/>
+      app:layout_constraintTop_toBottomOf="@id/divider_view_3"/>
     <android.support.v7.widget.RecyclerView
-      android:id="@+id/rv_reviews"
+      android:id="@+id/recycler_movie_detail_reviews"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
-      app:layout_constraintTop_toBottomOf="@id/movie_reviews"
-      tools:listitem="@layout/movie_review_item"/>
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_movie_reviews"
+      tools:listitem="@layout/item_movie_review"/>
 
     <!--This TextView will only appear when the movie does not have any reviews -->
     <TextView
-      android:id="@+id/tv_no_reviews"
+      android:id="@+id/text_movie_detail_no_reviews"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="@string/no_movie_reviews_msg"
       android:textAppearance="?android:attr/textAppearanceMedium"
       android:visibility="gone"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
-      app:layout_constraintTop_toBottomOf="@id/movie_reviews"/>
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_movie_reviews"/>
     <android.support.constraint.Guideline
       android:id="@+id/keyline_left"
       android:layout_width="wrap_content"
@@ -247,8 +247,7 @@
       android:id="@+id/keyline_right"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:orientation="vertical"
-      app:layout_constraintGuide_percent="0.94160587"/>
+      android:orientation="vertical"/>
   </android.support.constraint.ConstraintLayout>
 </ScrollView>
 
