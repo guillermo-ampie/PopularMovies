@@ -198,7 +198,8 @@
       android:visibility="gone"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
       app:layout_constraintTop_toBottomOf="@id/text_movie_detail_trailers"/>
-
+    <!-- TODO: When there are no trailers the TextView "text_movie_detail_no_trailer" and the
+    divider line "divider_view_3" overlaps! -->
     <!-- A divider line: horizontal -->
     <View
       android:id="@+id/divider_view_3"
@@ -224,6 +225,7 @@
       android:id="@+id/recycler_movie_detail_reviews"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
       app:layout_constraintTop_toBottomOf="@id/text_movie_detail_reviews"
       tools:listitem="@layout/item_movie_review"/>
@@ -242,12 +244,14 @@
       android:id="@+id/keyline_left"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:orientation="vertical"
       app:layout_constraintGuide_begin="@dimen/padding_horizontal_material"/>
     <android.support.constraint.Guideline
       android:id="@+id/keyline_right"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:orientation="vertical"/>
+      android:orientation="vertical"
+      app:layout_constraintGuide_end="@dimen/padding_horizontal_material"/>
   </android.support.constraint.ConstraintLayout>
 </ScrollView>
 
