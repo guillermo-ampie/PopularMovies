@@ -87,11 +87,11 @@ public class MovieDetailFragment
     Movie selectedMovie = intent.getExtras().getParcelable(getString(R.string.selected_movie));
     if (selectedMovie != null) {
       // we will reuse -tv- variable for all the TextView objects in this fragment
-      TextView tv = mRootView.findViewById(R.id.text_movie_detail_movie_title);
+      TextView tv = mRootView.findViewById(R.id.text_movie_detail_title);
       tv.setText(selectedMovie.getOriginalTitle());
 
       ImageView moviePosterView =
-          mRootView.findViewById(R.id.image_movie_detail_movie_poster);
+          mRootView.findViewById(R.id.image_movie_detail_poster);
       // Show the movie poster
       Picasso.with(getContext())
           .load(selectedMovie.getPosterCompleteUri())
@@ -107,16 +107,16 @@ public class MovieDetailFragment
       numberFormat.setMaximumFractionDigits(1);
       String rating = numberFormat.format(selectedMovie.getVoteAverage());
 
-      tv = mRootView.findViewById(R.id.text_movie_detail_movie_rating_content);
+      tv = mRootView.findViewById(R.id.text_movie_detail_rating_content);
       tv.setText(rating);
 
       // Format the number using the current's locale grouping
       numberFormat.setGroupingUsed(true);
       String votes = numberFormat.format(selectedMovie.getVoteCount());
-      tv = mRootView.findViewById(R.id.text_movie_detail_movie_vote_count_content);
+      tv = mRootView.findViewById(R.id.text_movie_detail_vote_count_content);
       tv.setText(votes);
 
-      tv = mRootView.findViewById(R.id.text_movie_detail_movie_overview_content);
+      tv = mRootView.findViewById(R.id.text_movie_detail_overview_content);
       tv.setText(selectedMovie.getOverview());
 
       // Get the movie trailers

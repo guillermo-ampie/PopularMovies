@@ -13,7 +13,7 @@
     android:orientation="vertical">
 
     <TextView
-      android:id="@+id/text_movie_detail_movie_title"
+      android:id="@+id/text_movie_detail_title"
       style="@android:style/TextAppearance.DeviceDefault.Widget.ActionMode.Title.Inverse"
       android:textStyle="bold"
       android:layout_width="fill_parent"
@@ -29,13 +29,13 @@
       android:orientation="horizontal">
 
       <ImageView
-        android:id="@+id/image_movie_detail_movie_poster"
+        android:id="@+id/image_movie_detail_poster"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1.25"
         android:layout_gravity="start"
         android:adjustViewBounds="true"
-        android:contentDescription="@string/movie_poster_desc"
+        android:contentDescription="@string/description_movie_poster"
         android:maxWidth="@dimen/movie_poster_width"
         tools:src="@sample/movieposter"/>
 
@@ -52,7 +52,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="start"
-          android:text="@string/movie_release_date"
+          android:text="@string/movie_detail_release_date"
           android:textAppearance="?android:attr/textAppearanceSmall"/>
 
         <TextView
@@ -67,7 +67,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="start"
-          android:text="@string/movie_rating"
+          android:text="@string/movie_detail_rating"
           android:textAppearance="?android:attr/textAppearanceSmall"/>
 
         <LinearLayout
@@ -76,7 +76,7 @@
           android:orientation="horizontal">
 
           <TextView
-            android:id="@+id/text_movie_detail_movie_rating_content"
+            android:id="@+id/text_movie_detail_rating_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -88,7 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:text="@string/top_mark"
+            android:text="@string/movie_detail_top_mark"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         </LinearLayout>
@@ -97,11 +97,11 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="start"
-          android:text="@string/movie_vote_count"
+          android:text="@string/movie_detail_vote_count"
           android:textAppearance="?android:attr/textAppearanceSmall"/>
 
         <TextView
-          android:id="@+id/text_movie_detail_movie_vote_count_content"
+          android:id="@+id/text_movie_detail_vote_count_content"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="start"
@@ -128,11 +128,11 @@
           android:drawableLeft="@drawable/ic_message_black_36dp"
           android:drawableStart="@drawable/ic_message_black_36dp"
           android:drawablePadding="@dimen/drawable_to_text_padding"
-          android:text="@string/movie_overview"
+          android:text="@string/movie_detail_overview"
           android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <TextView
-          android:id="@+id/text_movie_detail_movie_overview_content"
+          android:id="@+id/text_movie_detail_overview_content"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_gravity="start"
@@ -154,7 +154,7 @@
       android:drawableLeft="@drawable/ic_video_library_black_36dp"
       android:drawableStart="@drawable/ic_video_library_black_36dp"
       android:drawablePadding="@dimen/drawable_to_text_padding"
-      android:text="@string/movie_trailers"
+      android:text="@string/movie_detail_trailers"
       android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <android.support.v7.widget.RecyclerView
@@ -170,7 +170,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="start"
-      android:text="@string/no_movie_trailers_msg"
+      android:text="@string/movie_detail_no_movie_trailers"
       android:textAppearance="?android:attr/textAppearanceMedium"
       android:visibility="gone"/>
 
@@ -185,7 +185,7 @@
       android:drawableLeft="@drawable/ic_forum_black_36dp"
       android:drawableStart="@drawable/ic_forum_black_36dp"
       android:drawablePadding="@dimen/drawable_to_text_padding"
-      android:text="@string/movie_reviews"
+      android:text="@string/movie_detail_reviews"
       android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <android.support.v7.widget.RecyclerView
@@ -201,7 +201,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="start"
-      android:text="@string/no_movie_reviews_msg"
+      android:text="@string/movie_detail_no_movie_reviews"
       android:textAppearance="?android:attr/textAppearanceMedium"
       android:visibility="gone"/>
   </LinearLayout>

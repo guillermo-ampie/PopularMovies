@@ -14,13 +14,13 @@
     android:paddingEnd="@dimen/padding_thin_horizontal_material"
     android:paddingLeft="@dimen/padding_thin_horizontal_material"
     android:paddingRight="@dimen/padding_thin_horizontal_material"
-    android:contentDescription="@string/movie_trailer_desc"
+    android:contentDescription="@string/description_movie_trailer"
     tools:src="@drawable/no_thumbnail"/>
 
   <ImageView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical|center_horizontal"
-    android:contentDescription="@string/movie_trailer_desc"
+    android:contentDescription="@string/description_movie_trailer"
     app:srcCompat="@drawable/ic_play_circle_outline_black_48dp"/>
 </FrameLayout>

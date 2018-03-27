@@ -1,21 +1,29 @@
 <resources>
+  <!-- App and activity titles -->
   <string name="app_name">Popular Movies</string>
-  <string name="movie_poster_desc">Movie Poster</string>
-  <string name="title_activity_movie_detail">Movie Detail</string>
-  <string name="movie_release_date">Year:</string>
-  <string name="movie_rating">Rating:</string>
-  <string name="movie_vote_count">Votes:</string>
-  <string name="movie_overview">Overview:</string>
+  <string name="movie_detail_title">Movie Detail</string>
+
+  <!-- MainActivity -->
   <string name="sort_by_popularity">Popularity</string>
   <string name="sort_by_rating">Ranking</string>
-  <string name="movie_trailer_desc">Movie trailer image</string>
-  <string name="movie_trailers">Trailers:</string>
   <string name="favorite_movies">Favorites</string>
-  <string name="top_mark" translatable="false">/10</string>
-  <string name="movie_reviews">Reviews:</string>
-  <string name="no_movie_reviews_msg">This movie has no reviews yet!</string>
-  <string name="no_movie_trailers_msg">Sorry, no available trailers yet!</string>
-  <!--Non UI constant strings-->
+
+  <!-- MovieDetailActivity -->
+  <string name="movie_detail_release_date">Year:</string>
+  <string name="movie_detail_rating">Rating:</string>
+  <string name="movie_detail_vote_count">Votes:</string>
+  <string name="movie_detail_top_mark" translatable="false">/10</string>
+  <string name="movie_detail_overview">Overview:</string>
+  <string name="movie_detail_trailers">Trailers:</string>
+  <string name="movie_detail_reviews">Reviews:</string>
+  <string name="movie_detail_no_movie_reviews">This movie has no reviews yet!</string>
+  <string name="movie_detail_no_movie_trailers">Sorry, no available trailers yet!</string>
+
+  <!-- Strings for "android:contentDescription" -->
+  <string name="description_movie_poster">Movie Poster</string>
+  <string name="description_movie_trailer">Movie trailer image</string>
+
+  <!-- Non UI constant strings -->
   <string name="selected_movie">selected-movie</string>
 
   <!-- Error messages -->

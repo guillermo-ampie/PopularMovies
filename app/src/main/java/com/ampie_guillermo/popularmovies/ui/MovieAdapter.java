@@ -126,7 +126,7 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
 
     MovieViewHolder(View view, MovieItemClickListener onClickListener) {
       super(view);
-      mMovieThumbnailView = view.findViewById(R.id.image_movie_poster);
+      mMovieThumbnailView = view.findViewById(R.id.image_movie_poster_movie_poster);
       mOnClickListener = onClickListener;
 
       mMovieThumbnailView.setOnClickListener(new OnClickListener() {

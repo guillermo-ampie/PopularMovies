@@ -23,7 +23,7 @@
     app:layout_constraintTop_toTopOf="parent">
 
     <TextView
-      android:id="@+id/text_movie_detail_movie_title"
+      android:id="@+id/text_movie_detail_title"
       style="@android:style/TextAppearance.DeviceDefault.Widget.ActionMode.Title.Inverse"
       android:textStyle="bold"
       android:layout_width="match_parent"
@@ -35,28 +35,28 @@
       app:layout_constraintTop_toTopOf="parent"
       tools:text="@sample/movie_data.json/results/original_title"/>
     <ImageView
-      android:id="@+id/image_movie_detail_movie_poster"
+      android:id="@+id/image_movie_detail_poster"
       android:layout_width="wrap_content"
       android:layout_height="@dimen/movie_poster_width"
       android:layout_marginTop="@dimen/padding_vertical_material"
       android:paddingTop="@dimen/padding_thin_vertical_material"
       android:adjustViewBounds="true"
-      android:contentDescription="@string/movie_poster_desc"
+      android:contentDescription="@string/description_movie_poster"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
-      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_movie_title"
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_title"
       tools:src="@sample/movieposter"/>
 
     <TextView
-      android:id="@+id/text_movie_detail_movie_release_date"
+      android:id="@+id/text_movie_detail_release_date"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="@dimen/padding_fat_vertical_material"
       android:layout_marginStart="@dimen/padding_fat_horizontal_material"
       android:layout_marginLeft="@dimen/padding_fat_horizontal_material"
-      android:text="@string/movie_release_date"
+      android:text="@string/movie_detail_release_date"
       android:textAppearance="?android:attr/textAppearanceSmall"
-      app:layout_constraintStart_toEndOf="@id/image_movie_detail_movie_poster"
-      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_movie_title"/>
+      app:layout_constraintStart_toEndOf="@id/image_movie_detail_poster"
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_title"/>
     <TextView
       android:id="@+id/text_movie_detail_release_date_content"
       android:layout_width="wrap_content"
@@ -64,52 +64,52 @@
       android:layout_marginStart="@dimen/padding_fat_horizontal_material"
       android:layout_marginLeft="@dimen/padding_fat_horizontal_material"
       android:textAppearance="?android:attr/textAppearanceLarge"
-      app:layout_constraintStart_toEndOf="@id/image_movie_detail_movie_poster"
-      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_movie_release_date"
+      app:layout_constraintStart_toEndOf="@id/image_movie_detail_poster"
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_release_date"
       tools:text="@sample/movie_data.json/results/release_date"/>
     <TextView
-      android:id="@+id/text_movie_detail_movie_rating"
+      android:id="@+id/text_movie_detail_rating"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="@dimen/padding_vertical_material"
       android:layout_marginStart="@dimen/padding_fat_horizontal_material"
       android:layout_marginLeft="@dimen/padding_fat_horizontal_material"
       android:paddingTop="@dimen/padding_thin_vertical_material"
-      android:text="@string/movie_rating"
+      android:text="@string/movie_detail_rating"
       android:textAppearance="?android:attr/textAppearanceSmall"
-      app:layout_constraintStart_toEndOf="@id/image_movie_detail_movie_poster"
+      app:layout_constraintStart_toEndOf="@id/image_movie_detail_poster"
       app:layout_constraintTop_toBottomOf="@id/text_movie_detail_release_date_content"/>
     <TextView
-      android:id="@+id/text_movie_detail_movie_rating_content"
+      android:id="@+id/text_movie_detail_rating_content"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/padding_fat_horizontal_material"
       android:layout_marginLeft="@dimen/padding_fat_horizontal_material"
       android:textAppearance="?android:attr/textAppearanceLarge"
-      app:layout_constraintStart_toEndOf="@id/image_movie_detail_movie_poster"
-      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_movie_rating"
+      app:layout_constraintStart_toEndOf="@id/image_movie_detail_poster"
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_rating"
       tools:text="@sample/movie_data.json/results/vote_average"/>
     <TextView
-      android:id="@+id/text_movie_detail_movie_vote_count"
+      android:id="@+id/text_movie_detail_vote_count"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="@dimen/padding_vertical_material"
       android:layout_marginStart="@dimen/padding_fat_horizontal_material"
       android:layout_marginLeft="@dimen/padding_fat_horizontal_material"
       android:paddingTop="@dimen/padding_vertical_material"
-      android:text="@string/movie_vote_count"
+      android:text="@string/movie_detail_vote_count"
       android:textAppearance="?android:attr/textAppearanceSmall"
-      app:layout_constraintStart_toEndOf="@id/image_movie_detail_movie_poster"
-      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_movie_rating_content"/>
+      app:layout_constraintStart_toEndOf="@id/image_movie_detail_poster"
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_rating_content"/>
     <TextView
-      android:id="@+id/text_movie_detail_movie_vote_count_content"
+      android:id="@+id/text_movie_detail_vote_count_content"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/padding_fat_horizontal_material"
       android:layout_marginLeft="@dimen/padding_fat_horizontal_material"
       android:textAppearance="?android:attr/textAppearanceLarge"
-      app:layout_constraintStart_toEndOf="@id/image_movie_detail_movie_poster"
-      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_movie_vote_count"
+      app:layout_constraintStart_toEndOf="@id/image_movie_detail_poster"
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_vote_count"
       tools:text="@sample/movie_data.json/results/vote_count"/>
     <TextView
       android:id="@+id/text_movie_detail_top_mark"
@@ -117,10 +117,10 @@
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/padding_thin_horizontal_material"
       android:layout_marginLeft="@dimen/padding_thin_horizontal_material"
-      android:text="@string/top_mark"
+      android:text="@string/movie_detail_top_mark"
       android:textAppearance="?android:attr/textAppearanceMedium"
-      app:layout_constraintBaseline_toBaselineOf="@+id/text_movie_detail_movie_vote_count_content"
-      app:layout_constraintStart_toEndOf="@+id/text_movie_detail_movie_vote_count_content"/>
+      app:layout_constraintBaseline_toBaselineOf="@+id/text_movie_detail_vote_count_content"
+      app:layout_constraintStart_toEndOf="@+id/text_movie_detail_vote_count_content"/>
 
     <!-- A divider line: horizontal -->
     <View
@@ -128,10 +128,10 @@
       style="@style/DividerLineHorizontal"
       app:layout_constraintEnd_toStartOf="@id/keyline_right"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
-      app:layout_constraintTop_toBottomOf="@+id/image_movie_detail_movie_poster"/>
+      app:layout_constraintTop_toBottomOf="@+id/image_movie_detail_poster"/>
 
     <TextView
-      android:id="@+id/text_movie_detail_movie_overview"
+      android:id="@+id/text_movie_detail_overview"
       android:textStyle="bold"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -139,13 +139,13 @@
       android:drawableLeft="@drawable/ic_message_black_36dp"
       android:drawablePadding="@dimen/drawable_to_text_padding"
       android:drawableStart="@drawable/ic_message_black_36dp"
-      android:text="@string/movie_overview"
+      android:text="@string/movie_detail_overview"
       android:textAppearance="?android:attr/textAppearanceMedium"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
       app:layout_constraintTop_toBottomOf="@+id/divider_view_1"/>
 
     <TextView
-      android:id="@+id/text_movie_detail_movie_overview_content"
+      android:id="@+id/text_movie_detail_overview_content"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:paddingStart="@dimen/padding_horizontal_material"
@@ -154,7 +154,7 @@
       android:paddingRight="@dimen/padding_horizontal_material"
       android:textAppearance="?android:attr/textAppearanceSmall"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
-      app:layout_constraintTop_toBottomOf="@+id/text_movie_detail_movie_overview"
+      app:layout_constraintTop_toBottomOf="@+id/text_movie_detail_overview"
       tools:text="@sample/movie_data.json/results/overview"/>
 
     <!-- A divider line: horizontal -->
@@ -163,10 +163,10 @@
       style="@style/DividerLineHorizontal"
       app:layout_constraintEnd_toStartOf="@id/keyline_right"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
-      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_movie_overview_content"/>
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_overview_content"/>
 
     <TextView
-      android:id="@+id/text_movie_detail_movie_trailers"
+      android:id="@+id/text_movie_detail_trailers"
       android:textStyle="bold"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -175,7 +175,7 @@
       android:drawableLeft="@drawable/ic_video_library_black_36dp"
       android:drawablePadding="@dimen/drawable_to_text_padding"
       android:drawableStart="@drawable/ic_video_library_black_36dp"
-      android:text="@string/movie_trailers"
+      android:text="@string/movie_detail_trailers"
       android:textAppearance="?android:attr/textAppearanceMedium"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
       app:layout_constraintTop_toBottomOf="@id/divider_view_2"/>
@@ -186,18 +186,18 @@
       android:layout_height="wrap_content"
       android:scrollbars="horizontal"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
-      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_movie_trailers"
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_trailers"
       tools:listItem="@layout/movie_trailer_thumbnail_item"/>
     <!--This TextView will only appear when the movie does not have any trailer -->
     <TextView
       android:id="@+id/text_movie_detail_no_trailers"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="@string/no_movie_trailers_msg"
+      android:text="@string/movie_detail_no_movie_trailers"
       android:textAppearance="?android:attr/textAppearanceMedium"
       android:visibility="gone"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
-      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_movie_trailers"/>
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_trailers"/>
 
     <!-- A divider line: horizontal -->
     <View
@@ -208,7 +208,7 @@
       app:layout_constraintTop_toBottomOf="@id/recycler_movie_detail_trailers"/>
 
     <TextView
-      android:id="@+id/text_movie_detail_movie_reviews"
+      android:id="@+id/text_movie_detail_reviews"
       android:textStyle="bold"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -216,7 +216,7 @@
       android:drawableLeft="@drawable/ic_forum_black_36dp"
       android:drawablePadding="@dimen/drawable_to_text_padding"
       android:drawableStart="@drawable/ic_forum_black_36dp"
-      android:text="@string/movie_reviews"
+      android:text="@string/movie_detail_reviews"
       android:textAppearance="?android:attr/textAppearanceMedium"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
       app:layout_constraintTop_toBottomOf="@id/divider_view_3"/>
@@ -225,7 +225,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
-      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_movie_reviews"
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_reviews"
       tools:listitem="@layout/item_movie_review"/>
 
     <!--This TextView will only appear when the movie does not have any reviews -->
@@ -233,11 +233,11 @@
       android:id="@+id/text_movie_detail_no_reviews"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="@string/no_movie_reviews_msg"
+      android:text="@string/movie_detail_no_movie_reviews"
       android:textAppearance="?android:attr/textAppearanceMedium"
       android:visibility="gone"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
-      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_movie_reviews"/>
+      app:layout_constraintTop_toBottomOf="@id/text_movie_detail_reviews"/>
     <android.support.constraint.Guideline
       android:id="@+id/keyline_left"
       android:layout_width="wrap_content"

@@ -2,7 +2,7 @@
 <ImageView
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/image_movie_poster"
+  android:id="@+id/image_movie_poster_movie_poster"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:paddingStart="@dimen/padding_thin_horizontal_material"
@@ -12,7 +12,7 @@
   android:paddingTop="@dimen/padding_thin_horizontal_material"
   android:paddingBottom="@dimen/padding_thin_horizontal_material"
   android:adjustViewBounds="true"
-  android:contentDescription="@string/movie_poster_desc"
+  android:contentDescription="@string/description_movie_poster"
   tools:src="@sample/movieposter"/>
   <!--android:layout_gravity="start|center_vertical"-->
   <!--android:maxWidth="@dimen/movie_poster_width"-->

@@ -101,8 +101,8 @@ public class MovieReviewAdapter
 
     MovieReviewViewHolder(View view) {
       super(view);
-      mAuthorView = view.findViewById(R.id.text_movie_review_item_review_author);
-      mReviewContentView = view.findViewById(R.id.text_movie_review_item_review_content);
+      mAuthorView = view.findViewById(R.id.text_movie_review_review_author);
+      mReviewContentView = view.findViewById(R.id.text_movie_review_review_content);
     }
 
     void setItemView(MovieReview movieReview) {
