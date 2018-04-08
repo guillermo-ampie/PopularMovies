@@ -90,11 +90,11 @@ public class MovieDetailFragment
       TextView tv = mRootView.findViewById(R.id.text_movie_detail_title);
       tv.setText(selectedMovie.getOriginalTitle());
 
-      ImageView moviePosterView =
-          mRootView.findViewById(R.id.image_movie_detail_poster);
+      ImageView moviePosterView = mRootView.findViewById(R.id.image_movie_detail_poster);
+
       // Show the movie poster
       Picasso.with(getContext())
-          .load(selectedMovie.getPosterCompleteUri())
+          .load(selectedMovie.getPosterUri())
           .placeholder(R.drawable.no_thumbnail)
           .error(R.drawable.no_thumbnail)
           .into(moviePosterView);

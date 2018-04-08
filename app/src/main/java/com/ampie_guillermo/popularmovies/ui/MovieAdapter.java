@@ -139,7 +139,7 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
 
     void setupItemView(Movie currentMovie) {
       Picasso.with(itemView.getContext())
-          .load(currentMovie.getPosterCompleteUri())
+          .load(currentMovie.getPosterUri())
           .placeholder(R.drawable.no_thumbnail)
           .error(R.drawable.no_thumbnail)
           .into(mMovieThumbnailView);
