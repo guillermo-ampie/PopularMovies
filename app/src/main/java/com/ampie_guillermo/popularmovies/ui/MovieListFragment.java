@@ -23,6 +23,7 @@ import com.ampie_guillermo.popularmovies.BuildConfig;
 import com.ampie_guillermo.popularmovies.R;
 import com.ampie_guillermo.popularmovies.model.Movie;
 import com.ampie_guillermo.popularmovies.utils.MyPMErrorUtils;
+import com.ampie_guillermo.popularmovies.utils.UiErrorHelper;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,8 +68,7 @@ public class MovieListFragment
    * in the Bundle given to {@link #onCreate(Bundle)},
    * #onCreateView(LayoutInflater, ViewGroup, Bundle)}, and
    * {@link #onActivityCreated(Bundle)}.
-   * <p/>
-   * <p>This corresponds to  Activity onSaveInstanceState(Bundle)
+   * This corresponds to  Activity onSaveInstanceState(Bundle)
    * Activity onSaveInstanceState(Bundle)} and most of the discussion there
    * applies here as well.  Note however: <em>this method may be called
    * at any time before {@link #onDestroy()}</em>.  There are many situations
@@ -95,8 +95,7 @@ public class MovieListFragment
    * Called to do initial creation of a fragment.  This is called after
    * {@link #onAttach (Activity)} and before
    * {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
-   * <p/>
-   * <p>Note that this can be called while the fragment's activity is
+   * Note that this can be called while the fragment's activity is
    * still in the process of being created.  As such, you can not rely
    * on things like the activity's content divider_view_1 hierarchy being initialized
    * at this point.  If you want to do work once the activity itself is
@@ -237,9 +236,26 @@ public class MovieListFragment
    */
   @Override
   public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> data) {
-    Log.v(LOG_TAG, "++++++++++ Adding the new data fetched");
-    mMovieList = new ArrayList<>(data);
-    mMovieAdapter.setMovieList(data);
+    Log.v(LOG_TAG, "++++++++++ onLoadFinished()");
+    if (data != null) {
+      Log.v(LOG_TAG, "++++++++++ Adding the new data fetched");
+      mMovieList = new ArrayList<>(data);
+      mMovieAdapter.setMovieList(data);
+    } else {
+      // We could have an error, inspect the loader in order to get the error an give feedback
+      // to the user
+      UiErrorHelper uiErrorHelper = new UiErrorHelper(((MovieListLoader) loader).getUiError());
+      if (uiErrorHelper.isErrorEnabled()) {
+        if (uiErrorHelper.isExceptionErrorConditionEnabled()) {
+          MyPMErrorUtils.showErrorMessage(LOG_TAG,
+              getContext(), uiErrorHelper.getErrorMsgResId(), uiErrorHelper.getExceptionErrorMsg());
+        } else {
+          MyPMErrorUtils.showErrorMessage(LOG_TAG, getContext(), uiErrorHelper.getErrorMsgResId());
+        }
+      }
+      // User has already gotten feedback about the error, let's cleat it
+//      uiErrorHelper.clear();
+    }
   }
 
   /**
@@ -292,16 +308,16 @@ public class MovieListFragment
 
     @Override
     protected void getMovies() {
-            /*
-             * READ FROM DATABASE AND POPULATE "mCachedMovieList":
-             * if (Database is empty) {
-             *   show "No favorite movies"
-             * }
-             * else {
-             * display all movies in the database (we are storing only the FAVORITES movies
-             * in the database)
-             * }
-             */
+      /*
+       * READ FROM DATABASE AND POPULATE "mCachedMovieList":
+       * if (Database is empty) {
+       *   show "No favorite movies"
+       * }
+       * else {
+       * display all movies in the database (we are storing only the FAVORITES movies
+       * in the database)
+       * }
+       */
     }
   }
 
@@ -309,24 +325,24 @@ public class MovieListFragment
 
     private static final String LOG_TAG = MovieListLoader.class.getSimpleName();
     private final Bundle mArgs;
+    private UiErrorHelper mUiError;
     private ArrayList<Movie> mCachedMovieList;
 
     MovieListLoader(Context context, Bundle args) {
       super(context);
       mArgs = args;
       mCachedMovieList = new ArrayList<>(MOVIES_RESULT_SIZE);
+      mUiError = new UiErrorHelper();
     }
 
     @Nullable
     @Override
     public ArrayList<Movie> loadInBackground() {
-      Context context = getContext();
+      Log.v(LOG_TAG, "++++++++++ loadInBackground() ");
       String sortingMethod = mArgs.getString(MOVIE_SORTING_METHOD_EXTRA);
 
       if (TextUtils.isEmpty(sortingMethod)) {
-        MyPMErrorUtils.showErrorMessage(LOG_TAG,
-            getContext(),
-            R.string.error_missing_sorting_method);
+        mUiError.setErrorResId(R.string.error_missing_sorting_method);
         return null;
       }
 
@@ -364,10 +380,7 @@ public class MovieListFragment
         InputStream inputStream = urlConnection.getInputStream();
         StringBuilder buffer = new StringBuilder();
         if (inputStream == null) {
-          // Oops, we got nothing.
-          MyPMErrorUtils.showErrorMessage(LOG_TAG,
-              context,
-              R.string.error_empty_response);
+          mUiError.setErrorResId(R.string.error_empty_response);
           return null;
         }
         reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -380,21 +393,18 @@ public class MovieListFragment
 
         if (buffer.length() == 0) {
           // Stream was empty.  Nothing to do!
-          MyPMErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_empty_response);
+          mUiError.setErrorResId(R.string.error_empty_response);
           return null;
         }
         movieJsonStr = buffer.toString();
       } catch (MalformedURLException e) {
-        // If we didn't successfully get the movie list, there's nothing to do
-        MyPMErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_contacting_server, e);
+        mUiError.setExceptionErrorMsg(R.string.error_contacting_server, e.getMessage());
         return null;
       } catch (ProtocolException e) {
-        // If we didn't successfully get the movie list, there's nothing to do
-        MyPMErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_contacting_server, e);
+        mUiError.setExceptionErrorMsg(R.string.error_contacting_server, e.getMessage());
         return null;
       } catch (IOException e) {
-        // If we didn't successfully get the movie list, there's nothing to do
-        MyPMErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_contacting_server, e);
+        mUiError.setExceptionErrorMsg(R.string.error_contacting_server, e.getMessage());
         return null;
       } finally {
         if (urlConnection != null) {
@@ -404,20 +414,19 @@ public class MovieListFragment
           try {
             reader.close();
           } catch (IOException e) {
-            MyPMErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_closing_stream, e);
+            mUiError.setExceptionErrorMsg(R.string.error_closing_stream, e.getMessage());
           }
         }
       }
-      Log.d(LOG_TAG, "++++++++++ in loadInBackground() ");
+
       try {
         return getMoviesDataFromJson(movieJsonStr);
       } catch (JSONException e) {
-        MyPMErrorUtils
-            .showErrorMessage(LOG_TAG, context, R.string.error_processing_json_response, e);
+        mUiError.setExceptionErrorMsg(R.string.error_processing_json_response, e.getMessage());
       }
 
       // This will only happen if there was an error getting or parsing the response.
-      MyPMErrorUtils.showErrorMessage(LOG_TAG, context, R.string.error_contacting_server);
+      mUiError.setErrorResId(R.string.error_contacting_server);
       return null;
     }
 
@@ -433,10 +442,10 @@ public class MovieListFragment
       }
       // TODO: Show a progress bar
       if (mCachedMovieList.isEmpty()) {
-        Log.d(LOG_TAG, "++++++++++ Forcing a load");
+        Log.v(LOG_TAG, "++++++++++ Forcing a load");
         forceLoad();
       } else {
-        Log.d(LOG_TAG, "++++++++++ Delivering a cached result");
+        Log.v(LOG_TAG, "++++++++++ Delivering a cached result");
         deliverResult(mCachedMovieList);
       }
     }
@@ -453,12 +462,11 @@ public class MovieListFragment
       if (data != null) {
         mCachedMovieList = new ArrayList<>(data);
       }
+
       super.deliverResult(data);
     }
 
     private ArrayList<Movie> getMoviesDataFromJson(String moviesJsonStr) throws JSONException {
-
-      String MOVIE_POSTER_BASE_URI = "https://image.tmdb.org/t/p/w";
 
 //      /** Obsolete code!:
 //       * We need to specify in the HTTPS request and the XML files
@@ -474,15 +482,12 @@ public class MovieListFragment
 //      int moviePosterWidthInPixels = (int) (res.getDimension(R.dimen.movie_poster_width)
 //          / res.getDisplayMetrics().density);
 
-      int moviePosterWidth = getContext().getResources().getInteger(R.integer.movie_poster_width);
+      final JSONObject movieJson = new JSONObject(moviesJsonStr);
 
-      MOVIE_POSTER_BASE_URI += String.valueOf(moviePosterWidth);
-
-      JSONObject movieJson = new JSONObject(moviesJsonStr);
       final String MOVIE_RESULTS = "results";
-      JSONArray moviesArray = movieJson.getJSONArray(MOVIE_RESULTS);
+      final JSONArray moviesArray = movieJson.getJSONArray(MOVIE_RESULTS);
 
-      Movie[] movieList = new Movie[moviesArray.length()];
+      final Movie[] movieList = new Movie[moviesArray.length()];
 
       // These are the names of the JSON objects we need to extract.
       final String MOVIE_ID = "id";
@@ -490,46 +495,61 @@ public class MovieListFragment
       final String MOVIE_RELEASE_DATE = "release_date";
       final String MOVIE_OVERVIEW = "overview";
       final String MOVIE_POSTER_PATH = "poster_path";
+      final String MOVIE_BACKDROP_PATH = "backdrop_path";
       final String MOVIE_VOTE_AVERAGE = "vote_average";
       final String MOVIE_VOTE_COUNT = "vote_count";
 
+      final String MOVIE_IMAGES_BASE_URI = "https://image.tmdb.org/t/p/w";
+      final int moviePosterWidth =
+          getContext().getResources().getInteger(R.integer.movie_poster_width);
+      final Uri movieImagesBaseUri =
+          Uri.parse(MOVIE_IMAGES_BASE_URI + String.valueOf(moviePosterWidth));
+
+
       final int moviesCount = moviesArray.length();
-      for (int i = 0; i < moviesCount; i++) {
+      for (int i = 0; i < moviesCount; ++i) {
 
         // Get the JSON object with the movie data
 
-        JSONObject currentMovieJson = moviesArray.getJSONObject(i);
-        String movieID = Integer.toString(currentMovieJson.getInt(MOVIE_ID));
-        String movieOriginalTitle = currentMovieJson.getString(MOVIE_ORIGINAL_TITLE);
-        String movieReleaseDate = currentMovieJson.getString(MOVIE_RELEASE_DATE);
-        String movieOverview = currentMovieJson.getString(MOVIE_OVERVIEW);
-        String moviePosterRelativePath = currentMovieJson.getString(MOVIE_POSTER_PATH);
-        float movieVoteAverage = (float) currentMovieJson.getDouble(MOVIE_VOTE_AVERAGE);
-        int movieVoteCount = currentMovieJson.getInt(MOVIE_VOTE_COUNT);
+        final JSONObject currentMovieJson = moviesArray.getJSONObject(i);
+        final String id = Integer.toString(currentMovieJson.getInt(MOVIE_ID));
+        final String originalTitle = currentMovieJson.getString(MOVIE_ORIGINAL_TITLE);
+        final String releaseDate = currentMovieJson.getString(MOVIE_RELEASE_DATE);
+        final String overview = currentMovieJson.getString(MOVIE_OVERVIEW);
+        final String posterRelativePath = currentMovieJson.getString(MOVIE_POSTER_PATH);
+        final String backdropRelativePath = currentMovieJson.getString(MOVIE_BACKDROP_PATH);
+        final float voteAverage = (float) currentMovieJson.getDouble(MOVIE_VOTE_AVERAGE);
+        final int voteCount = currentMovieJson.getInt(MOVIE_VOTE_COUNT);
 
+        final Uri posterCompleteUri =
+            Uri.withAppendedPath(movieImagesBaseUri, posterRelativePath);
+        final Uri backdropCompleteUri =
+            Uri.withAppendedPath(movieImagesBaseUri, backdropRelativePath);
         /**
          * Store only the movie release year.
          * The format from TheMovieDB for release date: YYYY-MM-DD
          */
-        String movieReleaseYear = (movieReleaseDate.split("-"))[0];
-
-        Uri moviePosterCompleteUri = Uri.withAppendedPath(
-            Uri.parse(MOVIE_POSTER_BASE_URI), moviePosterRelativePath);
+        String releaseYear = (releaseDate.split("-"))[0];
 
         //Populate our array of movies
         movieList[i] = new Movie.MovieBuilder()
-            .setId(movieID)
-            .setOriginalTitle(movieOriginalTitle)
-            .setReleaseDate(movieReleaseYear)
-            .setOverview(movieOverview)
-            .setPosterCompleteUri(moviePosterCompleteUri)
-            .setVoteAverage(movieVoteAverage)
-            .setVoteCount(movieVoteCount)
+            .setId(id)
+            .setOriginalTitle(originalTitle)
+            .setReleaseDate(releaseYear)
+            .setOverview(overview)
+            .setPosterUri(posterCompleteUri)
+            .setBackdropUri(backdropCompleteUri)
+            .setVoteAverage(voteAverage)
+            .setVoteCount(voteCount)
             .build();
 
-//        Log.v (LOG_TAG, movieOriginalTitle);
+//        Log.v (LOG_TAG, originalTitle);
       }
       return new ArrayList<>(Arrays.asList(movieList));
+    }
+
+    UiErrorHelper getUiError() {
+      return mUiError;
     }
   }
 }
