@@ -161,6 +161,8 @@
       android:id="@+id/recycler_movie_detail_trailers"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:scrollbarStyle="outsideInset"
+      android:scrollbars="horizontal"
       tools:listItem="@layout/movie_trailer_thumbnail_item">
     </android.support.v7.widget.RecyclerView>
 
@@ -192,6 +194,8 @@
       android:id="@+id/recycler_movie_detail_reviews"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:scrollbarStyle="outsideInset"
+      android:scrollbars="horizontal"
       tools:listitem="@layout/item_movie_review">
     </android.support.v7.widget.RecyclerView>
 
