@@ -225,6 +225,8 @@
       android:id="@+id/recycler_movie_detail_reviews"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:scrollbarStyle="outsideInset"
+      android:scrollbars="horizontal"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
       app:layout_constraintTop_toBottomOf="@id/text_movie_detail_reviews"
