@@ -30,7 +30,10 @@ public interface MovieColumns {
     String OVERVIEW = "overview";
 
     @DataType(DataType.Type.TEXT) @NotNull
-    String POSTER_COMPLETE_URI = "poster_complete_uri";
+    String POSTER_URI = "poster_uri";
+
+    @DataType(DataType.Type.TEXT) @NotNull
+    String BACKDROP_URI = "backdrop_uri";
 
     @DataType(DataType.Type.REAL)
     String VOTE_AVERAGE = "vote_average";
