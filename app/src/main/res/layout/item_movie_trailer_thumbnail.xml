@@ -7,15 +7,15 @@
   android:layout_height="wrap_content">
   <ImageView
     android:id="@+id/image_movie_trailer_thumbnail_trailer_thumbnail"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:layout_gravity="start|center_vertical"
     android:paddingStart="@dimen/padding_thin_horizontal_material"
     android:paddingEnd="@dimen/padding_thin_horizontal_material"
     android:paddingLeft="@dimen/padding_thin_horizontal_material"
     android:paddingRight="@dimen/padding_thin_horizontal_material"
     android:contentDescription="@string/description_movie_trailer"
-    tools:src="@drawable/no_thumbnail"/>
+    tools:src="@sample/trailer_thumbnail"/>
 
   <ImageView
     android:layout_width="wrap_content"
