@@ -1,4 +1,4 @@
-package com.ampie_guillermo.popularmovies.ui;
+package com.ampie_guillermo.popularmovies.ui.adapter;
 
 
 import android.support.v4.app.Fragment;

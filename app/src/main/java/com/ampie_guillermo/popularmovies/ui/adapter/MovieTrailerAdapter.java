@@ -1,4 +1,4 @@
-package com.ampie_guillermo.popularmovies.ui;
+package com.ampie_guillermo.popularmovies.ui.adapter;
 
 import android.content.Context;
 import android.net.Uri;
@@ -22,7 +22,7 @@ public class MovieTrailerAdapter extends
   static MovieTrailerItemClickListener sOnClickListener;
   private MovieTrailerList mMovieTrailerList;
 
-  MovieTrailerAdapter(MovieTrailerItemClickListener onClickListener) {
+  public MovieTrailerAdapter(MovieTrailerItemClickListener onClickListener) {
     sOnClickListener = onClickListener;
   }
 
@@ -98,13 +98,13 @@ public class MovieTrailerAdapter extends
     return (mMovieTrailerList != null) ? mMovieTrailerList.getTrailerList().size() : 0;
   }
 
-  void setMovieTrailerList(MovieTrailerList trailerList) {
+  public void setMovieTrailerList(MovieTrailerList trailerList) {
     // set the new data & update the UI
     mMovieTrailerList = trailerList;
     notifyDataSetChanged();
   }
 
-  interface MovieTrailerItemClickListener {
+  public interface MovieTrailerItemClickListener {
 
     void onMovieTrailerItemClick(int clickedItemIndex);
   }

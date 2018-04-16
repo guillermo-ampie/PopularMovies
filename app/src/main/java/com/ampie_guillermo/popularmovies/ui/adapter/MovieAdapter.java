@@ -1,4 +1,4 @@
-package com.ampie_guillermo.popularmovies.ui;
+package com.ampie_guillermo.popularmovies.ui.adapter;
 
 import android.support.v7.recyclerview.extensions.ListAdapter;
 import android.support.v7.util.DiffUtil;
@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import com.ampie_guillermo.popularmovies.R;
 import com.ampie_guillermo.popularmovies.model.Movie;
-import com.ampie_guillermo.popularmovies.ui.MovieAdapter.MovieViewHolder;
+import com.ampie_guillermo.popularmovies.ui.adapter.MovieAdapter.MovieViewHolder;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
@@ -34,7 +34,7 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
   //  private ArrayList<Movie> mMovieList;
   private MovieItemClickListener mOnClickListener;
 
-  MovieAdapter(MovieItemClickListener onClickListener) {
+  public MovieAdapter(MovieItemClickListener onClickListener) {
     super(DIFF_CALLBACK);
     mOnClickListener = onClickListener;
   }
@@ -106,14 +106,14 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
 //    return (mMovieList != null) ? mMovieList.size() : 0;
 //  }
 
-  void setMovieList(ArrayList<Movie> movieList) {
+  public void setMovieList(ArrayList<Movie> movieList) {
     //Set the new data & update the UI
 //    mMovieList = new ArrayList<>(movieList);
 //    notifyDataSetChanged();
     submitList(movieList);
   }
 
-  interface MovieItemClickListener {
+  public interface MovieItemClickListener {
 
     void onMovieItemClick(int clickedItemIndex);
   }

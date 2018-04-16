@@ -22,6 +22,8 @@ import com.ampie_guillermo.popularmovies.model.MovieTrailerList;
 import com.ampie_guillermo.popularmovies.model.MovieTrailerList.MovieTrailer;
 import com.ampie_guillermo.popularmovies.network.MovieReviewService;
 import com.ampie_guillermo.popularmovies.network.MovieTrailerService;
+import com.ampie_guillermo.popularmovies.ui.adapter.MovieReviewAdapter;
+import com.ampie_guillermo.popularmovies.ui.adapter.MovieTrailerAdapter;
 import com.ampie_guillermo.popularmovies.utils.MyPMErrorUtils;
 import com.squareup.picasso.Picasso;
 import java.text.NumberFormat;

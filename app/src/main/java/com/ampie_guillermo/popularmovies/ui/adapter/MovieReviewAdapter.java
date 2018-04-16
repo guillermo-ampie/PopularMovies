@@ -1,4 +1,4 @@
-package com.ampie_guillermo.popularmovies.ui;
+package com.ampie_guillermo.popularmovies.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -88,7 +88,7 @@ public class MovieReviewAdapter
     return (mMoviewReviewList != null) ? mMoviewReviewList.getReviewList().size() : 0;
   }
 
-  void setMovieReviewList(MovieReviewList reviews) {
+  public void setMovieReviewList(MovieReviewList reviews) {
     // set the new data & update the UI
     mMoviewReviewList = reviews;
     notifyDataSetChanged();

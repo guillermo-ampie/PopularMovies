@@ -22,6 +22,7 @@ import android.widget.CursorAdapter;
 import com.ampie_guillermo.popularmovies.BuildConfig;
 import com.ampie_guillermo.popularmovies.R;
 import com.ampie_guillermo.popularmovies.model.Movie;
+import com.ampie_guillermo.popularmovies.ui.adapter.MovieAdapter;
 import com.ampie_guillermo.popularmovies.utils.MyPMErrorUtils;
 import com.ampie_guillermo.popularmovies.utils.UiErrorHelper;
 import java.io.BufferedReader;
