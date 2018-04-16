@@ -253,7 +253,7 @@ public class MovieListFragment
           MyPMErrorUtils.showErrorMessage(LOG_TAG, getContext(), uiErrorHelper.getErrorMsgResId());
         }
       }
-      // User has already gotten feedback about the error, let's cleat it
+      // User has already gotten feedback about the error, let's clear it
 //      uiErrorHelper.clear();
     }
   }
@@ -504,7 +504,6 @@ public class MovieListFragment
           getContext().getResources().getInteger(R.integer.movie_poster_width);
       final Uri movieImagesBaseUri =
           Uri.parse(MOVIE_IMAGES_BASE_URI + String.valueOf(moviePosterWidth));
-
 
       final int moviesCount = moviesArray.length();
       for (int i = 0; i < moviesCount; ++i) {
