@@ -158,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
    * decide whether to use your default implementation.  The default
    * implementation of this method performs a restore of any divider_view_1 state that
    * had previously been frozen by {@link #onSaveInstanceState}.
-   * <p/>
    * <p>This method is called between {@link #onStart} and
    * {@link #onPostCreate}.
    *
