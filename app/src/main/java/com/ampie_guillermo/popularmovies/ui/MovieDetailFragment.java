@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,15 +47,17 @@ public class MovieDetailFragment
 
   // The BASE URL is the same for trailers & reviews
   private static final String MOVIEDB_TRAILER_BASE_URL = "https://api.themoviedb.org";
+  private static final String MOVIE_TRAILER_LIST = "movie_trailer_list";
+  private static final String MOVIE_REVIEW_LIST = "movie_review_list";
   /**
    * Just avoid creating the RETROFIT object with every instantiation of the
    * MovieDetailFragment object (singleton pattern: eager initialization)
    */
-  private static final Retrofit RETROFIT
-      = new Retrofit.Builder()
-      .baseUrl(MOVIEDB_TRAILER_BASE_URL)
-      .addConverterFactory(GsonConverterFactory.create())
-      .build();
+  private static final Retrofit RETROFIT =
+      new Retrofit.Builder()
+          .baseUrl(MOVIEDB_TRAILER_BASE_URL)
+          .addConverterFactory(GsonConverterFactory.create())
+          .build();
 
   MovieTrailerList mTrailers;
   RecyclerView mRvMovieTrailers;
@@ -69,6 +72,8 @@ public class MovieDetailFragment
   private Call<MovieReviewList> mCallReviews;
 
   public MovieDetailFragment() {
+    mTrailers = new MovieTrailerList();
+    mReviews = new MovieReviewList();
   }
 
   @Override
@@ -122,10 +127,10 @@ public class MovieDetailFragment
       tv.setText(selectedMovie.getOverview());
 
       // Get the movie trailers
-      fetchTrailers(selectedMovie);
+      fetchTrailers(selectedMovie, savedInstanceState);
 
       // Get the movie reviews
-      fetchReviews(selectedMovie);
+      fetchReviews(selectedMovie, savedInstanceState);
     }
     return mRootView;
   }
@@ -149,7 +154,7 @@ public class MovieDetailFragment
     }
   }
 
-  private void fetchTrailers(Movie selectedMovie) {
+  private void fetchTrailers(Movie selectedMovie, Bundle savedInstanceState) {
 
     // Get a reference to the Trailer's RecyclerView
     mRvMovieTrailers = mRootView.findViewById(R.id.recycler_movie_detail_trailers);
@@ -164,49 +169,59 @@ public class MovieDetailFragment
         false));
     mRvMovieTrailers.setHasFixedSize(true);
 
-    // Create an instance of our MovieTrailerService.
-    MovieTrailerService movieTrailerService = RETROFIT.create(MovieTrailerService.class);
+    if (savedInstanceState != null) {
+      // We already have the trailers list
+      mTrailers = savedInstanceState.getParcelable(MOVIE_TRAILER_LIST);
+      setupTrailersView();
+    } else {
+      // We have to fetch the trailers
+      MovieTrailerService movieTrailerService = RETROFIT.create(MovieTrailerService.class);
 
-    // Create a call instance for looking up the movie's list of trailers
-    mCallTrailers = movieTrailerService.get(selectedMovie.getId(), BuildConfig.MOVIE_DB_API_KEY);
+      // Create a call instance for looking up the movie's list of trailers
+      mCallTrailers = movieTrailerService.get(selectedMovie.getId(), BuildConfig.MOVIE_DB_API_KEY);
 
-    // Fetch the trailers
-    mCallTrailers.enqueue(new Callback<MovieTrailerList>() {
-      @Override
-      public void onResponse(Call<MovieTrailerList> call, Response<MovieTrailerList> response) {
-        if (response.isSuccessful()) {
-          // Here we get the movie trailer list!
-          mTrailers = response.body();
-
-          if (mTrailers.getTrailerList().isEmpty()) {
-            // Show "No trailers" text
-            TextView tvNoTrailers = mRootView.findViewById(R.id.text_movie_detail_no_trailers);
-            tvNoTrailers.setVisibility(View.VISIBLE);
-            // Hide the RecyclerView that contains the movie trailers
-            mRvMovieTrailers.setVisibility(View.GONE);
+      // Fetch the trailers
+      mCallTrailers.enqueue(new Callback<MovieTrailerList>() {
+        @Override
+        public void onResponse(Call<MovieTrailerList> call, Response<MovieTrailerList> response) {
+          if (response.isSuccessful()) {
+            // Here we get the movie trailer list!
+            mTrailers = response.body();
+            setupTrailersView();
           } else {
-            // Set the data(trailers) we have just fetched
-            mMovieTrailerAdapter.setMovieTrailerList(mTrailers);
+            MyPMErrorUtils.showErrorMessage(LOG_TAG,
+                getContext(),
+                R.string.error_bad_response,
+                response.message());
           }
-        } else {
+        }
+
+        @Override
+        public void onFailure(Call<MovieTrailerList> call, Throwable t) {
           MyPMErrorUtils.showErrorMessage(LOG_TAG,
               getContext(),
-              R.string.error_bad_response,
-              response.message());
+              R.string.error_contacting_server,
+              t.getMessage());
         }
-      }
-
-      @Override
-      public void onFailure(Call<MovieTrailerList> call, Throwable t) {
-        MyPMErrorUtils.showErrorMessage(LOG_TAG,
-            getContext(),
-            R.string.error_contacting_server,
-            t.getMessage());
-      }
-    });
+      });
+    }
   }
 
-  private void fetchReviews(Movie selectedMovie) {
+  void setupTrailersView() {
+    if (mTrailers.getTrailerList().isEmpty()) {
+      // Show "No trailers" text
+      TextView tvNoTrailers = mRootView.findViewById(R.id.text_movie_detail_no_trailers);
+      tvNoTrailers.setVisibility(View.VISIBLE);
+      // Hide the RecyclerView that contains the movie trailers
+      mRvMovieTrailers.setVisibility(View.GONE);
+    } else {
+      // Set the data(trailers) we have just fetched
+      mMovieTrailerAdapter.setMovieTrailerList(mTrailers);
+    }
+  }
+
+
+  private void fetchReviews(Movie selectedMovie, Bundle savedInstanceState) {
 
     // Get a reference to the Trailer's RecyclerView
     mRvMovieReviews = mRootView.findViewById(R.id.recycler_movie_detail_reviews);
@@ -227,47 +242,56 @@ public class MovieDetailFragment
         layoutManager.getOrientation());
     mRvMovieReviews.addItemDecoration(dividerLine);
 
-    // Create an instance of our MovieReviewService.
-    MovieReviewService movieReviewService = RETROFIT.create(MovieReviewService.class);
+    if (savedInstanceState != null) {
+      // We already have the reviews list
+      mReviews = savedInstanceState.getParcelable(MOVIE_REVIEW_LIST);
+      setupReviewsView();
+    } else {
+      // We have to fetch the trailers
+      MovieReviewService movieReviewService = RETROFIT.create(MovieReviewService.class);
 
-    // Create a call instance for looking up the movie's list of reviews
-    mCallReviews = movieReviewService.get(selectedMovie.getId(),
-        BuildConfig.MOVIE_DB_API_KEY);
+      // Create a call instance for looking up the movie's list of reviews
+      mCallReviews = movieReviewService.get(selectedMovie.getId(),
+          BuildConfig.MOVIE_DB_API_KEY);
 
-    // Fetch the Reviews
-    mCallReviews.enqueue(new Callback<MovieReviewList>() {
-      @Override
-      public void onResponse(Call<MovieReviewList> call, Response<MovieReviewList> response) {
-        if (response.isSuccessful()) {
-          // Here we get the movie review list!
-          mReviews = response.body();
-
-          if (mReviews.getReviewList().isEmpty()) {
-            // Show "No reviews" text
-            TextView tvNoReviews = mRootView.findViewById(R.id.text_movie_detail_no_reviews);
-            tvNoReviews.setVisibility(View.VISIBLE);
-            // Hide the RecyclerView that contains the movie reviews
-            mRvMovieReviews.setVisibility(View.GONE);
+      // Fetch the Reviews
+      mCallReviews.enqueue(new Callback<MovieReviewList>() {
+        @Override
+        public void onResponse(Call<MovieReviewList> call, Response<MovieReviewList> response) {
+          if (response.isSuccessful()) {
+            // Here we get the movie review list!
+            mReviews = response.body();
+            setupReviewsView();
           } else {
-            // Set the data(reviews) we have just fetched
-            mMovieReviewAdapter.setMovieReviewList(mReviews);
+            MyPMErrorUtils.showErrorMessage(LOG_TAG,
+                getContext(),
+                R.string.error_bad_response,
+                response.message());
           }
-        } else {
+        }
+
+        @Override
+        public void onFailure(Call<MovieReviewList> call, Throwable t) {
           MyPMErrorUtils.showErrorMessage(LOG_TAG,
               getContext(),
-              R.string.error_bad_response,
-              response.message());
+              R.string.error_contacting_server,
+              t.getMessage());
         }
-      }
+      });
+    }
+  }
 
-      @Override
-      public void onFailure(Call<MovieReviewList> call, Throwable t) {
-        MyPMErrorUtils.showErrorMessage(LOG_TAG,
-            getContext(),
-            R.string.error_contacting_server,
-            t.getMessage());
-      }
-    });
+  void setupReviewsView() {
+    if (mReviews.getReviewList().isEmpty()) {
+      // Show "No reviews" text
+      TextView tvNoReviews = mRootView.findViewById(R.id.text_movie_detail_no_reviews);
+      tvNoReviews.setVisibility(View.VISIBLE);
+      // Hide the RecyclerView that contains the movie reviews
+      mRvMovieReviews.setVisibility(View.GONE);
+    } else {
+      // Set the data(reviews) we have just fetched
+      mMovieReviewAdapter.setMovieReviewList(mReviews);
+    }
   }
 
   @Override
@@ -288,4 +312,32 @@ public class MovieDetailFragment
     // TODO: Expand code to play trailer in youtube app if installed
     startActivity(new Intent(Intent.ACTION_VIEW, trailerUri));
   }
+
+  /**
+   * Called to ask the fragment to save its current dynamic state, so it
+   * can later be reconstructed in a new instance of its process is
+   * restarted.  If a new instance of the fragment later needs to be
+   * created, the data you place in the Bundle here will be available
+   * in the Bundle given to {@link #onCreate(Bundle)},
+   * {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}, and
+   * {@link #onActivityCreated(Bundle)}.
+   *
+   * <p>This corresponds to {link Activity#onSaveInstanceState(Bundle outState)
+   * Activity.onSaveInstanceState(Bundle)} and most of the discussion there
+   * applies here as well.  Note however: <em>this method may be called
+   * at any time before {@link #onDestroy()}</em>.  There are many situations
+   * where a fragment may be mostly torn down (such as when placed on the
+   * back stack with no UI showing), but its state will not be saved until
+   * its owning activity actually needs to save its state.
+   *
+   * @param outState Bundle in which to place your saved state.
+   */
+  @Override
+  public void onSaveInstanceState(@NonNull Bundle outState) {
+    super.onSaveInstanceState(outState);
+
+    outState.putParcelable(MOVIE_TRAILER_LIST, mTrailers);
+    outState.putParcelable(MOVIE_REVIEW_LIST, mReviews);
+  }
 }
+

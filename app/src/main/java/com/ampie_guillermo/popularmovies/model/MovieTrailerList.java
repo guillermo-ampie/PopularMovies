@@ -1,52 +1,106 @@
 package com.ampie_guillermo.popularmovies.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 
 /**
  * A class to store a movie's list of trailers
  */
-public class MovieTrailerList {
+public class MovieTrailerList implements Parcelable {
 
-    @SerializedName("id")
-    private final String mMovieId;
-
-    @SerializedName("results")
-    private final ArrayList <MovieTrailerList.MovieTrailer>  mTrailerList;
-
-    public MovieTrailerList() {
-        mMovieId = "";
-        mTrailerList = new ArrayList<>();
+  public static final Creator<MovieTrailerList> CREATOR = new Creator<MovieTrailerList>() {
+    @Override
+    public MovieTrailerList createFromParcel(Parcel source) {
+      return new MovieTrailerList(source);
     }
 
-    public ArrayList<MovieTrailerList.MovieTrailer> getTrailerList() {
-        return mTrailerList;
+    @Override
+    public MovieTrailerList[] newArray(int size) {
+      return new MovieTrailerList[size];
+    }
+  };
+
+  @SerializedName("id")
+  private final String mMovieId;
+  @SerializedName("results")
+  private final ArrayList<MovieTrailerList.MovieTrailer> mTrailerList;
+
+  public MovieTrailerList() {
+    mMovieId = "";
+    mTrailerList = new ArrayList<>();
+  }
+
+  protected MovieTrailerList(Parcel in) {
+    this.mMovieId = in.readString();
+    this.mTrailerList = in.createTypedArrayList(MovieTrailer.CREATOR);
+  }
+
+  public ArrayList<MovieTrailerList.MovieTrailer> getTrailerList() {
+    return mTrailerList;
+  }
+
+  public String getMovieId() {
+    return mMovieId;
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.mMovieId);
+    dest.writeTypedList(this.mTrailerList);
+  }
+
+  public static class MovieTrailer implements Parcelable {
+
+    public static final Creator<MovieTrailer> CREATOR = new Creator<MovieTrailer>() {
+      @Override
+      public MovieTrailer createFromParcel(Parcel source) {
+        return new MovieTrailer(source);
+      }
+
+      @Override
+      public MovieTrailer[] newArray(int size) {
+        return new MovieTrailer[size];
+      }
+    };
+    @SerializedName("key")
+    private final String mKey;
+    @SerializedName("name")
+    private final String mName;
+
+    public MovieTrailer(String key, String name) {
+      mKey = key;
+      mName = name;
     }
 
-    public String getMovieId() {
-        return mMovieId;
+    protected MovieTrailer(Parcel in) {
+      this.mKey = in.readString();
+      this.mName = in.readString();
     }
 
-    public static class MovieTrailer {
-
-        @SerializedName("key")
-        private final String mKey;
-
-        @SerializedName("name")
-        private final String mName;
-
-        public MovieTrailer(String key, String name) {
-            mKey  = key;
-            mName = name;
-        }
-
-        public String getKey() {
-            return mKey;
-        }
-
-        public String getName() {
-            return mName;
-        }
+    public String getKey() {
+      return mKey;
     }
+
+    public String getName() {
+      return mName;
+    }
+
+    @Override
+    public int describeContents() {
+      return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+      dest.writeString(this.mKey);
+      dest.writeString(this.mName);
+    }
+  }
 }
