@@ -20,7 +20,8 @@
     android:paddingEnd="@dimen/activity_horizontal_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent">
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_optimizationLevel="standard">
 
     <TextView
       android:id="@+id/text_movie_detail_title"
