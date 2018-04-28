@@ -36,14 +36,15 @@
       tools:text="@sample/movie_data.json/results/original_title"/>
     <ImageView
       android:id="@+id/image_movie_detail_poster"
-      android:layout_width="wrap_content"
-      android:layout_height="@dimen/movie_poster_width"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
       android:layout_marginTop="@dimen/padding_vertical_material"
       android:paddingTop="@dimen/padding_thin_vertical_material"
       android:adjustViewBounds="true"
       android:contentDescription="@string/description_movie_poster"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
       app:layout_constraintTop_toBottomOf="@id/text_movie_detail_title"
+      app:layout_constraintWidth_percent="0.618"
       tools:src="@sample/movieposter"/>
 
     <TextView
@@ -223,9 +224,9 @@
       app:layout_constraintTop_toBottomOf="@id/divider_view_3"/>
     <android.support.v7.widget.RecyclerView
       android:id="@+id/recycler_movie_detail_reviews"
+      android:scrollbarStyle="outsideInset"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:scrollbarStyle="outsideInset"
       android:scrollbars="horizontal"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
