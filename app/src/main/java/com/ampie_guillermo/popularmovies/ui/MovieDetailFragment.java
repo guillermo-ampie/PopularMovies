@@ -46,7 +46,7 @@ public class MovieDetailFragment
   static final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
 
   // The BASE URL is the same for trailers & reviews
-  private static final String MOVIEDB_IMAGES_BASE_URL = "https://api.themoviedb.org";
+  private static final String MOVIEDB_BASE_URL = "https://api.themoviedb.org";
   private static final String MOVIE_TRAILER_LIST = "movie_trailer_list";
   private static final String MOVIE_REVIEW_LIST = "movie_review_list";
   /**
@@ -55,7 +55,7 @@ public class MovieDetailFragment
    */
   private static final Retrofit RETROFIT =
       new Retrofit.Builder()
-          .baseUrl(MOVIEDB_IMAGES_BASE_URL)
+          .baseUrl(MOVIEDB_BASE_URL)
           .addConverterFactory(GsonConverterFactory.create())
           .build();
 
