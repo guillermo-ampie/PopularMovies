@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -190,7 +191,7 @@ public class MovieDetailFragment
             setupTrailersView();
           } else {
             MyPMErrorUtils.showErrorMessage(LOG_TAG,
-                getContext(),
+                getActivity(),
                 R.string.error_bad_response,
                 response.message());
           }
@@ -198,8 +199,13 @@ public class MovieDetailFragment
 
         @Override
         public void onFailure(Call<MovieTrailerList> call, Throwable t) {
+          //TODO: in onFailure() a call to getContext() or getActivity() can return null.
+          // When does this happen ?
+          Log.v(LOG_TAG, "++++++++++ onFailure");
           MyPMErrorUtils.showErrorMessage(LOG_TAG,
-              getContext(),
+//              getContext(),
+//              getActivity(),
+              mRootView.getContext(),
               R.string.error_contacting_server,
               t.getMessage());
         }
@@ -264,7 +270,7 @@ public class MovieDetailFragment
             setupReviewsView();
           } else {
             MyPMErrorUtils.showErrorMessage(LOG_TAG,
-                getContext(),
+                getActivity(),
                 R.string.error_bad_response,
                 response.message());
           }
@@ -272,8 +278,11 @@ public class MovieDetailFragment
 
         @Override
         public void onFailure(Call<MovieReviewList> call, Throwable t) {
+          Log.v(LOG_TAG, "++++++++++ onFailure");
           MyPMErrorUtils.showErrorMessage(LOG_TAG,
-              getContext(),
+//              getContext()
+//              getActivity(),
+              mRootView.getContext(),
               R.string.error_contacting_server,
               t.getMessage());
         }
