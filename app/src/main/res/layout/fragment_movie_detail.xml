@@ -93,6 +93,15 @@
       app:layout_constraintTop_toBottomOf="@id/text_movie_detail_rating"
       tools:text="@sample/movie_data.json/results/vote_average"/>
     <TextView
+      android:id="@+id/text_movie_detail_top_mark"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/padding_thin_horizontal_material"
+      android:text="@string/movie_detail_top_mark"
+      android:textAppearance="?android:attr/textAppearanceMedium"
+      app:layout_constraintBaseline_toBaselineOf="@+id/text_movie_detail_rating_content"
+      app:layout_constraintStart_toEndOf="@+id/text_movie_detail_rating_content"/>
+    <TextView
       android:id="@+id/text_movie_detail_vote_count"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -114,16 +123,6 @@
       app:layout_constraintStart_toEndOf="@id/image_movie_detail_poster"
       app:layout_constraintTop_toBottomOf="@id/text_movie_detail_vote_count"
       tools:text="@sample/movie_data.json/results/vote_count"/>
-    <TextView
-      android:id="@+id/text_movie_detail_top_mark"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/padding_thin_horizontal_material"
-      android:layout_marginLeft="@dimen/padding_thin_horizontal_material"
-      android:text="@string/movie_detail_top_mark"
-      android:textAppearance="?android:attr/textAppearanceMedium"
-      app:layout_constraintBaseline_toBaselineOf="@+id/text_movie_detail_vote_count_content"
-      app:layout_constraintStart_toEndOf="@+id/text_movie_detail_vote_count_content"/>
 
     <!-- A divider line: horizontal -->
     <View
