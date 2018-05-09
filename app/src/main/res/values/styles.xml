@@ -3,6 +3,9 @@
   <!-- Base application theme. -->
   <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
     <!-- Customize your theme here. -->
+    <!-- I got to add the item "coordinatorLayoutStyle" in order to eliminate the render problem
+         in the LayoutEditor: "Failed to find style 'coordinatorLayoutStyle' in current theme"-->
+    <item name="coordinatorLayoutStyle">@style/Widget.Design.CoordinatorLayout</item>
     <item name="colorPrimary">@color/colorPrimary</item>
     <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     <item name="colorAccent">@color/colorAccent</item>
