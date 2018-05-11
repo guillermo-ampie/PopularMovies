@@ -10,7 +10,6 @@ import android.os.Parcelable;
  */
 public class Movie implements Parcelable {
 
-  @SuppressWarnings("unused")
   public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
     @Override
     public Movie createFromParcel(Parcel in) {
