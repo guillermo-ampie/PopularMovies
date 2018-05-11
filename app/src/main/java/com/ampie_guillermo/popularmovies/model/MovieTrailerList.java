@@ -33,8 +33,8 @@ public class MovieTrailerList implements Parcelable {
   }
 
   protected MovieTrailerList(Parcel in) {
-    this.mMovieId = in.readString();
-    this.mTrailerList = in.createTypedArrayList(MovieTrailer.CREATOR);
+    mMovieId = in.readString();
+    mTrailerList = in.createTypedArrayList(MovieTrailer.CREATOR);
   }
 
   public ArrayList<MovieTrailerList.MovieTrailer> getTrailerList() {
@@ -52,8 +52,8 @@ public class MovieTrailerList implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeString(this.mMovieId);
-    dest.writeTypedList(this.mTrailerList);
+    dest.writeString(mMovieId);
+    dest.writeTypedList(mTrailerList);
   }
 
   public static class MovieTrailer implements Parcelable {
@@ -80,8 +80,8 @@ public class MovieTrailerList implements Parcelable {
     }
 
     protected MovieTrailer(Parcel in) {
-      this.mKey = in.readString();
-      this.mName = in.readString();
+      mKey = in.readString();
+      mName = in.readString();
     }
 
     public String getKey() {
@@ -99,8 +99,8 @@ public class MovieTrailerList implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-      dest.writeString(this.mKey);
-      dest.writeString(this.mName);
+      dest.writeString(mKey);
+      dest.writeString(mName);
     }
   }
 }
