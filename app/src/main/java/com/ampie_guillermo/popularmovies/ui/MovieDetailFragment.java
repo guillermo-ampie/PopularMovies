@@ -21,6 +21,7 @@ import com.ampie_guillermo.popularmovies.R;
 import com.ampie_guillermo.popularmovies.model.Movie;
 import com.ampie_guillermo.popularmovies.model.MovieReviewList;
 import com.ampie_guillermo.popularmovies.model.MovieTrailerList;
+import com.ampie_guillermo.popularmovies.model.MovieTrailerList.MovieTrailer;
 import com.ampie_guillermo.popularmovies.network.MovieReviewService;
 import com.ampie_guillermo.popularmovies.network.MovieTrailerService;
 import com.ampie_guillermo.popularmovies.ui.adapter.MovieReviewAdapter;
@@ -28,7 +29,7 @@ import com.ampie_guillermo.popularmovies.ui.adapter.MovieTrailerAdapter;
 import com.ampie_guillermo.popularmovies.utils.MyPMErrorUtils;
 import com.squareup.picasso.Picasso;
 import java.text.NumberFormat;
-import java.util.ArrayList;
+import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -304,7 +305,7 @@ public class MovieDetailFragment
   @Override
   public void onMovieTrailerItemClick(int clickedItemIndex) {
 
-    final ArrayList<MovieTrailerList.MovieTrailer> trailerList = mTrailers.getTrailerList();
+    final List<MovieTrailer> trailerList = mTrailers.getTrailerList();
 
     MyPMErrorUtils.validateIndexInCollection(clickedItemIndex, trailerList.size());
     final MovieTrailerList.MovieTrailer trailer = trailerList.get(clickedItemIndex);
