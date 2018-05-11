@@ -32,7 +32,7 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
         }
       };
   //  private ArrayList<Movie> mMovieList;
-  private MovieItemClickListener mOnClickListener;
+  private final MovieItemClickListener mOnClickListener;
 
   public MovieAdapter(MovieItemClickListener onClickListener) {
     super(DIFF_CALLBACK);
