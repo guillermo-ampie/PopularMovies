@@ -127,7 +127,7 @@ public class MovieTrailerAdapter extends
     @Override
     public void onClick(View view) {
       // getAdapterPosition() gives us the the item that was clicked
-      MovieTrailerAdapter.sOnClickListener.onMovieTrailerItemClick(getAdapterPosition());
+      sOnClickListener.onMovieTrailerItemClick(getAdapterPosition());
     }
 
     void setupItemView(Uri trailerThumbnailUri) {
