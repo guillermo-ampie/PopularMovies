@@ -33,8 +33,8 @@ public class MovieReviewList implements android.os.Parcelable {
   }
 
   protected MovieReviewList(Parcel in) {
-    this.mMovieId = in.readString();
-    this.mReviewList = in.createTypedArrayList(MovieReview.CREATOR);
+    mMovieId = in.readString();
+    mReviewList = in.createTypedArrayList(MovieReview.CREATOR);
   }
 
   public ArrayList<MovieReviewList.MovieReview> getReviewList() {
@@ -52,8 +52,8 @@ public class MovieReviewList implements android.os.Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeString(this.mMovieId);
-    dest.writeTypedList(this.mReviewList);
+    dest.writeString(mMovieId);
+    dest.writeTypedList(mReviewList);
   }
 
   public static class MovieReview implements android.os.Parcelable {
@@ -84,9 +84,9 @@ public class MovieReviewList implements android.os.Parcelable {
     }
 
     protected MovieReview(Parcel in) {
-      this.mReviewId = in.readString();
-      this.mAuthor = in.readString();
-      this.mContent = in.readString();
+      mReviewId = in.readString();
+      mAuthor = in.readString();
+      mContent = in.readString();
     }
 
     public String getId() {
@@ -108,9 +108,9 @@ public class MovieReviewList implements android.os.Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-      dest.writeString(this.mReviewId);
-      dest.writeString(this.mAuthor);
-      dest.writeString(this.mContent);
+      dest.writeString(mReviewId);
+      dest.writeString(mAuthor);
+      dest.writeString(mContent);
     }
   }
 }
