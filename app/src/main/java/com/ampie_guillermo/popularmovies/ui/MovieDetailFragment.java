@@ -44,7 +44,7 @@ public class MovieDetailFragment
     extends Fragment
     implements MovieTrailerAdapter.MovieTrailerItemClickListener {
 
-  static final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
+  private static final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
 
   // The BASE URL is the same for trailers & reviews
   private static final String MOVIEDB_BASE_URL = "https://api.themoviedb.org";
@@ -61,14 +61,14 @@ public class MovieDetailFragment
           .build();
 
   MovieTrailerList mTrailers;
-  RecyclerView mRvMovieTrailers;
-  MovieTrailerAdapter mMovieTrailerAdapter;
+  private RecyclerView mRvMovieTrailers;
+  private MovieTrailerAdapter mMovieTrailerAdapter;
 
   MovieReviewList mReviews;
-  RecyclerView mRvMovieReviews;
-  MovieReviewAdapter mMovieReviewAdapter;
+  private RecyclerView mRvMovieReviews;
+  private MovieReviewAdapter mMovieReviewAdapter;
 
-  View mRootView;
+  private View mRootView;
   private Call<MovieTrailerList> mCallTrailers;
   private Call<MovieReviewList> mCallReviews;
 
@@ -213,7 +213,7 @@ public class MovieDetailFragment
     }
   }
 
-  void setupTrailersView() {
+  private void setupTrailersView() {
     if (mTrailers.getTrailerList().isEmpty()) {
       // Show "No trailers" text
       TextView tvNoTrailers = mRootView.findViewById(R.id.text_movie_detail_no_trailers);
@@ -290,7 +290,7 @@ public class MovieDetailFragment
     }
   }
 
-  void setupReviewsView() {
+  private void setupReviewsView() {
     if (mReviews.getReviewList().isEmpty()) {
       // Show "No reviews" text
       TextView tvNoReviews = mRootView.findViewById(R.id.text_movie_detail_no_reviews);
