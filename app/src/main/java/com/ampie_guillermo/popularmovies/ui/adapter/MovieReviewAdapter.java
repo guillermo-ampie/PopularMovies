@@ -10,10 +10,11 @@ import android.widget.TextView;
 import com.ampie_guillermo.popularmovies.R;
 import com.ampie_guillermo.popularmovies.model.MovieReviewList;
 import com.ampie_guillermo.popularmovies.model.MovieReviewList.MovieReview;
+import com.ampie_guillermo.popularmovies.ui.adapter.MovieReviewAdapter.MovieReviewViewHolder;
 
 
 public class MovieReviewAdapter
-    extends RecyclerView.Adapter<MovieReviewAdapter.MovieReviewViewHolder> {
+    extends RecyclerView.Adapter<MovieReviewViewHolder> {
 
   private static final String LOG_TAG = MovieReviewAdapter.class.getSimpleName();
   private MovieReviewList mMoviewReviewList;
@@ -68,7 +69,7 @@ public class MovieReviewAdapter
    * @param position The position of the item within the adapter's data set.
    */
   @Override
-  public void onBindViewHolder(MovieReviewAdapter.MovieReviewViewHolder holder, int position) {
+  public void onBindViewHolder(MovieReviewViewHolder holder, int position) {
 
     MovieReview movieReview = mMoviewReviewList.getReviewList().get(position);
     holder.setItemView(movieReview);
