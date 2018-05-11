@@ -1,13 +1,14 @@
 package com.ampie_guillermo.popularmovies.model;
 
 import android.os.Parcel;
+import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 /**
  * A class to store a movie's list of reviews
  */
-public class MovieReviewList implements android.os.Parcelable {
+public class MovieReviewList implements Parcelable {
 
   public static final Creator<MovieReviewList> CREATOR = new Creator<MovieReviewList>() {
     @Override
@@ -56,7 +57,7 @@ public class MovieReviewList implements android.os.Parcelable {
     dest.writeTypedList(mReviewList);
   }
 
-  public static class MovieReview implements android.os.Parcelable {
+  public static class MovieReview implements Parcelable {
 
     public static final Creator<MovieReview> CREATOR = new Creator<MovieReview>() {
       @Override
