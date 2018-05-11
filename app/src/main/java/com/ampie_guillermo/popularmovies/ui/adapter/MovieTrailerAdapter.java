@@ -104,6 +104,7 @@ public class MovieTrailerAdapter extends
     notifyDataSetChanged();
   }
 
+  @FunctionalInterface
   public interface MovieTrailerItemClickListener {
 
     void onMovieTrailerItemClick(int clickedItemIndex);
