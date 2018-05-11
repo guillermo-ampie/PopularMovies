@@ -18,9 +18,6 @@ public class MovieReviewAdapter
   private static final String LOG_TAG = MovieReviewAdapter.class.getSimpleName();
   private MovieReviewList mMoviewReviewList;
 
-  public MovieReviewAdapter() {
-  }
-
   /**
    * Called when RecyclerView needs a new {link ViewHolder} of the given type to represent
    * an item.
