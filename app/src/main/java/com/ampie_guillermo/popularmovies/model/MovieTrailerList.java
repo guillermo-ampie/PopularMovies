@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A class to store a movie's list of trailers
@@ -37,8 +39,8 @@ public class MovieTrailerList implements Parcelable {
     mTrailerList = in.createTypedArrayList(MovieTrailer.CREATOR);
   }
 
-  public ArrayList<MovieTrailerList.MovieTrailer> getTrailerList() {
-    return mTrailerList;
+  public List<MovieTrailer> getTrailerList() {
+    return Collections.unmodifiableList(mTrailerList);
   }
 
   public String getMovieId() {
