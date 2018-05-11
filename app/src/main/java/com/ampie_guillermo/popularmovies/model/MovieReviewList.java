@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A class to store a movie's list of reviews
@@ -38,8 +40,8 @@ public class MovieReviewList implements Parcelable {
     mReviewList = in.createTypedArrayList(MovieReview.CREATOR);
   }
 
-  public ArrayList<MovieReviewList.MovieReview> getReviewList() {
-    return mReviewList;
+  public List<MovieReview> getReviewList() {
+    return Collections.unmodifiableList(mReviewList);
   }
 
   public String getMovieId() {
