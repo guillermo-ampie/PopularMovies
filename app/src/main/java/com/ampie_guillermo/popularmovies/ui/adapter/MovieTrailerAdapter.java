@@ -19,7 +19,7 @@ public class MovieTrailerAdapter extends
   private static final String LOG_TAG = MovieTrailerAdapter.class.getSimpleName();
   private static final String THUMBNAIL_BASE_URL = "https://img.youtube.com/vi/";
   private static final String THUMBNAIL_IMAGE_TYPE = "/hqdefault.jpg";
-  static MovieTrailerItemClickListener sOnClickListener;
+  private static MovieTrailerItemClickListener sOnClickListener;
   private MovieTrailerList mMovieTrailerList;
 
   public MovieTrailerAdapter(MovieTrailerItemClickListener onClickListener) {
