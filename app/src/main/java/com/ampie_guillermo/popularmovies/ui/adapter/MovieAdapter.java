@@ -123,7 +123,7 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
   static class MovieViewHolder extends RecyclerView.ViewHolder {
 
     private final ImageView mMovieThumbnailView;
-    MovieItemClickListener mOnClickListener;
+    final MovieItemClickListener mOnClickListener;
 
     MovieViewHolder(View view, MovieItemClickListener onClickListener) {
       super(view);
