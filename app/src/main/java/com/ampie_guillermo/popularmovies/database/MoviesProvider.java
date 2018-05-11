@@ -16,7 +16,7 @@ import net.simonvt.schematic.annotation.TableEndpoint;
 @ContentProvider(authority = MoviesProvider.AUTHORITY, database = MoviesDatabase.class)
 public final class MoviesProvider {
 
-    public MoviesProvider() {
+    private MoviesProvider() {
     }
 
     public static final String AUTHORITY = "com.ampie_guillermo.popularmovies.MoviesProvider";
@@ -36,7 +36,7 @@ public final class MoviesProvider {
     }
 
     @TableEndpoint(table = MoviesDatabase.MOVIES_TABLE)
-    public static class Movies {
+    public static final class Movies {
 
         @ContentUri(path = Path.MOVIES,
                     type = "vnd.android.cursor.dir/movie")
