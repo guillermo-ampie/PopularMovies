@@ -21,7 +21,6 @@ import com.ampie_guillermo.popularmovies.R;
 import com.ampie_guillermo.popularmovies.model.Movie;
 import com.ampie_guillermo.popularmovies.model.MovieReviewList;
 import com.ampie_guillermo.popularmovies.model.MovieTrailerList;
-import com.ampie_guillermo.popularmovies.model.MovieTrailerList.MovieTrailer;
 import com.ampie_guillermo.popularmovies.network.MovieReviewService;
 import com.ampie_guillermo.popularmovies.network.MovieTrailerService;
 import com.ampie_guillermo.popularmovies.ui.adapter.MovieReviewAdapter;
@@ -61,10 +60,9 @@ public class MovieDetailFragment
           .build();
 
   MovieTrailerList mTrailers;
+  MovieReviewList mReviews;
   private RecyclerView mRvMovieTrailers;
   private MovieTrailerAdapter mMovieTrailerAdapter;
-
-  MovieReviewList mReviews;
   private RecyclerView mRvMovieReviews;
   private MovieReviewAdapter mMovieReviewAdapter;
 
@@ -306,12 +304,12 @@ public class MovieDetailFragment
   @Override
   public void onMovieTrailerItemClick(int clickedItemIndex) {
 
-    final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?";
-    final String VIDEO_PARAM = "v";
-    final ArrayList<MovieTrailer> trailerList = mTrailers.getTrailerList();
+    final ArrayList<MovieTrailerList.MovieTrailer> trailerList = mTrailers.getTrailerList();
 
     MyPMErrorUtils.validateIndexInCollection(clickedItemIndex, trailerList.size());
-    final MovieTrailer trailer = trailerList.get(clickedItemIndex);
+    final MovieTrailerList.MovieTrailer trailer = trailerList.get(clickedItemIndex);
+    final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?";
+    final String VIDEO_PARAM = "v";
     final Uri trailerUri = Uri.parse(YOUTUBE_BASE_URL)
         .buildUpon()
         .appendQueryParameter(VIDEO_PARAM, trailer.getKey())
