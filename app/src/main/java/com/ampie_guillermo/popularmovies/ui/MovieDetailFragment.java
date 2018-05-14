@@ -21,7 +21,6 @@ import com.ampie_guillermo.popularmovies.R;
 import com.ampie_guillermo.popularmovies.model.Movie;
 import com.ampie_guillermo.popularmovies.model.MovieReviewList;
 import com.ampie_guillermo.popularmovies.model.MovieTrailerList;
-import com.ampie_guillermo.popularmovies.model.MovieTrailerList.MovieTrailer;
 import com.ampie_guillermo.popularmovies.network.MovieReviewService;
 import com.ampie_guillermo.popularmovies.network.MovieTrailerService;
 import com.ampie_guillermo.popularmovies.ui.adapter.MovieReviewAdapter;
@@ -44,7 +43,7 @@ public class MovieDetailFragment
     extends Fragment
     implements MovieTrailerAdapter.MovieTrailerItemClickListener {
 
-  private static final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
+  static final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
 
   // The BASE URL is the same for trailers & reviews
   private static final String MOVIEDB_BASE_URL = "https://api.themoviedb.org";
@@ -67,7 +66,7 @@ public class MovieDetailFragment
   private RecyclerView mRvMovieReviews;
   private MovieReviewAdapter mMovieReviewAdapter;
 
-  private View mRootView;
+  View mRootView;
   private Call<MovieTrailerList> mCallTrailers;
   private Call<MovieReviewList> mCallReviews;
 
@@ -212,7 +211,7 @@ public class MovieDetailFragment
     }
   }
 
-  private void setupTrailersView() {
+  void setupTrailersView() {
     if (mTrailers.getTrailerList().isEmpty()) {
       // Show "No trailers" text
       TextView tvNoTrailers = mRootView.findViewById(R.id.text_movie_detail_no_trailers);
@@ -289,7 +288,7 @@ public class MovieDetailFragment
     }
   }
 
-  private void setupReviewsView() {
+  void setupReviewsView() {
     if (mReviews.getReviewList().isEmpty()) {
       // Show "No reviews" text
       TextView tvNoReviews = mRootView.findViewById(R.id.text_movie_detail_no_reviews);
@@ -305,7 +304,7 @@ public class MovieDetailFragment
   @Override
   public void onMovieTrailerItemClick(int clickedItemIndex) {
 
-    final List<MovieTrailer> trailerList = mTrailers.getTrailerList();
+    final List<MovieTrailerList.MovieTrailer> trailerList = mTrailers.getTrailerList();
 
     MyPMErrorUtils.validateIndexInCollection(clickedItemIndex, trailerList.size());
     final MovieTrailerList.MovieTrailer trailer = trailerList.get(clickedItemIndex);
