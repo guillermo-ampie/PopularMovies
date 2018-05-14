@@ -326,7 +326,7 @@ public class MovieListFragment
 
     private static final String LOG_TAG = MovieListLoader.class.getSimpleName();
     private final Bundle mArgs;
-    private UiErrorHelper mUiError;
+    private final UiErrorHelper mUiError;
     private ArrayList<Movie> mCachedMovieList;
 
     MovieListLoader(Context context, Bundle args) {
