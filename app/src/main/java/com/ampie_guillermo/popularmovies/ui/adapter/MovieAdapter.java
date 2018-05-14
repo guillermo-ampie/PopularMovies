@@ -5,7 +5,6 @@ import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -59,7 +58,7 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
    * @see #getItemViewType(int) see #onBindViewHolder(ViewHolder, int)
    */
   @Override
-  public MovieAdapter.MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+  public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
     LayoutInflater inflater = LayoutInflater.from(parent.getContext());
     View view = inflater.inflate(R.layout.item_movie_poster, parent, false);
@@ -88,7 +87,7 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
    * @param position The position of the item within the adapter's data set.
    */
   @Override
-  public void onBindViewHolder(MovieAdapter.MovieViewHolder holder, int position) {
+  public void onBindViewHolder(MovieViewHolder holder, int position) {
 
 //    Movie currentMovie = get(position);
     Movie currentMovie = getItem(position);
@@ -130,12 +129,8 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
       mMovieThumbnailView = view.findViewById(R.id.image_movie_poster_movie_poster);
       mOnClickListener = onClickListener;
 
-      mMovieThumbnailView.setOnClickListener(new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          mOnClickListener.onMovieItemClick(getAdapterPosition());
-        }
-      });
+      mMovieThumbnailView.setOnClickListener(
+          v -> mOnClickListener.onMovieItemClick(getAdapterPosition()));
     }
 
     void setupItemView(Movie currentMovie) {
