@@ -118,11 +118,11 @@ public class MovieTrailerAdapter extends
     // MovieAdapter.MovieViewHolder
     private final ImageView mTrailerThumbnailView;
 
-    TrailerViewHolder(View itemView) {
-      super(itemView);
-      mTrailerThumbnailView = itemView
+    TrailerViewHolder(View view) {
+      super(view);
+      mTrailerThumbnailView = view
           .findViewById(R.id.image_movie_trailer_thumbnail_trailer_thumbnail);
-      itemView.setOnClickListener(this);
+      view.setOnClickListener(this);
     }
 
     @Override
