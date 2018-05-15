@@ -35,6 +35,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -249,9 +250,13 @@ public class MovieListFragment
       if (uiErrorHelper.isErrorEnabled()) {
         if (uiErrorHelper.isExceptionErrorConditionEnabled()) {
           MyPMErrorUtils.showErrorMessage(LOG_TAG,
-              getContext(), uiErrorHelper.getErrorMsgResId(), uiErrorHelper.getExceptionErrorMsg());
+              Objects.requireNonNull(getContext()),
+              uiErrorHelper.getErrorMsgResId(),
+              uiErrorHelper.getExceptionErrorMsg());
         } else {
-          MyPMErrorUtils.showErrorMessage(LOG_TAG, getContext(), uiErrorHelper.getErrorMsgResId());
+          MyPMErrorUtils.showErrorMessage(LOG_TAG,
+              Objects.requireNonNull(getContext()),
+              uiErrorHelper.getErrorMsgResId());
         }
       }
       // User has already gotten feedback about the error, let's clear it
@@ -339,7 +344,7 @@ public class MovieListFragment
     @Nullable
     @Override
     public ArrayList<Movie> loadInBackground() {
-      Log.v(LOG_TAG, "++++++++++ loadInBackground() ");
+      Log.v(MovieListLoader.LOG_TAG, "++++++++++ loadInBackground() ");
       String sortingMethod = mArgs.getString(MOVIE_SORTING_METHOD_EXTRA);
 
       if (TextUtils.isEmpty(sortingMethod)) {
@@ -398,10 +403,7 @@ public class MovieListFragment
           return null;
         }
         movieJsonStr = buffer.toString();
-      } catch (MalformedURLException e) {
-        mUiError.setExceptionErrorMsg(R.string.error_contacting_server, e.getMessage());
-        return null;
-      } catch (ProtocolException e) {
+      } catch (MalformedURLException | ProtocolException e) {
         mUiError.setExceptionErrorMsg(R.string.error_contacting_server, e.getMessage());
         return null;
       } catch (IOException e) {
