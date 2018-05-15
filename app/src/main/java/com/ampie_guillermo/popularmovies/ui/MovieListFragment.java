@@ -355,7 +355,7 @@ public class MovieListFragment
       // These two need to be declared outside the try/catch
       // so that they can be closed in the finally block.
       HttpURLConnection urlConnection = null;
-      BufferedReader reader = null;
+//      BufferedReader reader = null;
 
       // The raw JSON response as a string.
       String movieJsonStr;
@@ -383,26 +383,28 @@ public class MovieListFragment
         urlConnection.connect();
 
         // Read the input stream into a String
-        InputStream inputStream = urlConnection.getInputStream();
-        StringBuilder buffer = new StringBuilder();
-        if (inputStream == null) {
-          mUiError.setErrorResId(R.string.error_empty_response);
-          return null;
-        }
-        reader = new BufferedReader(new InputStreamReader(inputStream));
+        try (InputStream inputStream = urlConnection.getInputStream()) {
+          StringBuilder buffer = new StringBuilder();
+//        if (inputStream == null) {
+//          mUiError.setErrorResId(R.string.error_empty_response);
+//          return null;
+//        }
+          try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
 
-        String line;
-        while ((line = reader.readLine()) != null) {
-          // Append a newline for debugging purposes
-          buffer.append(line).append('\n');
-        }
+            String line;
+            while ((line = reader.readLine()) != null) {
+              // Append a newline for debugging purposes
+              buffer.append(line).append('\n');
+            }
 
-        if (buffer.length() == 0) {
-          // Stream was empty.  Nothing to do!
-          mUiError.setErrorResId(R.string.error_empty_response);
-          return null;
+            if (buffer.length() == 0) {
+              // Stream was empty.  Nothing to do!
+              mUiError.setErrorResId(R.string.error_empty_response);
+              return null;
+            }
+            movieJsonStr = buffer.toString();
+          }
         }
-        movieJsonStr = buffer.toString();
       } catch (MalformedURLException | ProtocolException e) {
         mUiError.setExceptionErrorMsg(R.string.error_contacting_server, e.getMessage());
         return null;
@@ -413,13 +415,13 @@ public class MovieListFragment
         if (urlConnection != null) {
           urlConnection.disconnect();
         }
-        if (reader != null) {
-          try {
-            reader.close();
-          } catch (IOException e) {
-            mUiError.setExceptionErrorMsg(R.string.error_closing_stream, e.getMessage());
-          }
-        }
+//        if (reader != null) {
+//          try {
+//            reader.close();
+//          } catch (IOException e) {
+//            mUiError.setExceptionErrorMsg(R.string.error_closing_stream, e.getMessage());
+//          }
+//        }
       }
 
       try {
