@@ -19,10 +19,11 @@ public class MovieTrailerAdapter extends
   private static final String LOG_TAG = MovieTrailerAdapter.class.getSimpleName();
   private static final String THUMBNAIL_BASE_URL = "https://img.youtube.com/vi/";
   private static final String THUMBNAIL_IMAGE_TYPE = "/hqdefault.jpg";
-  private static MovieTrailerItemClickListener sOnClickListener;
+  static MovieTrailerItemClickListener sOnClickListener;
   private MovieTrailerList mMovieTrailerList;
 
   public MovieTrailerAdapter(MovieTrailerItemClickListener onClickListener) {
+    // TODO: Check the assignment to "sOnClickListener": can this cause a memory leak?
     sOnClickListener = onClickListener;
   }
 
@@ -79,9 +80,8 @@ public class MovieTrailerAdapter extends
   public void onBindViewHolder(MovieTrailerAdapter.TrailerViewHolder holder, int position) {
     Uri thumbnailUri
         = Uri.withAppendedPath(Uri.parse(THUMBNAIL_BASE_URL),
-        mMovieTrailerList.getTrailerList()
-            .get(position)
-            .getKey() + THUMBNAIL_IMAGE_TYPE);
+        mMovieTrailerList.getTrailerList().get(position).getKey()
+            + THUMBNAIL_IMAGE_TYPE);
 
     // Show trailer thumbnail image
     holder.setupItemView(thumbnailUri);
@@ -120,12 +120,13 @@ public class MovieTrailerAdapter extends
 
     TrailerViewHolder(View itemView) {
       super(itemView);
-      mTrailerThumbnailView = itemView.findViewById(R.id.image_movie_trailer_thumbnail_trailer_thumbnail);
+      mTrailerThumbnailView = itemView
+          .findViewById(R.id.image_movie_trailer_thumbnail_trailer_thumbnail);
       itemView.setOnClickListener(this);
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(View v) {
       // getAdapterPosition() gives us the the item that was clicked
       sOnClickListener.onMovieTrailerItemClick(getAdapterPosition());
     }
