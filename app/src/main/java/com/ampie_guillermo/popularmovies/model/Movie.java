@@ -12,8 +12,8 @@ public class Movie implements Parcelable {
 
   public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
     @Override
-    public Movie createFromParcel(Parcel in) {
-      return new Movie(in);
+    public Movie createFromParcel(Parcel source) {
+      return new Movie(source);
     }
 
     @Override
