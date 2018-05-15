@@ -13,6 +13,7 @@ import com.ampie_guillermo.popularmovies.model.Movie;
 import com.ampie_guillermo.popularmovies.ui.adapter.MovieAdapter.MovieViewHolder;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
@@ -22,7 +23,7 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
       new DiffUtil.ItemCallback<Movie>() {
         @Override
         public boolean areItemsTheSame(Movie oldItem, Movie newItem) {
-          return oldItem.getId() == newItem.getId();
+          return Objects.equals(oldItem.getId(), newItem.getId());
         }
 
         @Override
