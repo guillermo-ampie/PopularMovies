@@ -103,8 +103,8 @@ public class MovieDetailFragment
       // Show the movie poster
       Picasso.with(getContext())
           .load(selectedMovie.getPosterUri())
-          .placeholder(R.drawable.no_thumbnail)
-          .error(R.drawable.no_thumbnail)
+          .placeholder(R.drawable.ic_movie_black_237x180dp)
+          .error(R.drawable.ic_movie_black_237x180dp)
           .into(moviePosterView);
 
       tv = mRootView.findViewById(R.id.text_movie_detail_release_date_content);
