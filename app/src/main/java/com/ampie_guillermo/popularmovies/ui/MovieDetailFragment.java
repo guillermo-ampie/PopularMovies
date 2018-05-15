@@ -29,6 +29,7 @@ import com.ampie_guillermo.popularmovies.utils.MyPMErrorUtils;
 import com.squareup.picasso.Picasso;
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.Objects;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -61,12 +62,11 @@ public class MovieDetailFragment
 
   MovieTrailerList mTrailers;
   MovieReviewList mReviews;
+  View mRootView;
   private RecyclerView mRvMovieTrailers;
   private MovieTrailerAdapter mMovieTrailerAdapter;
   private RecyclerView mRvMovieReviews;
   private MovieReviewAdapter mMovieReviewAdapter;
-
-  View mRootView;
   private Call<MovieTrailerList> mCallTrailers;
   private Call<MovieReviewList> mCallReviews;
 
@@ -87,10 +87,12 @@ public class MovieDetailFragment
       sv.setScrollIndicators(View.SCROLL_INDICATOR_RIGHT);
     }
 
-    Intent intent = getActivity().getIntent();
+    Intent intent = Objects.requireNonNull(getActivity()).getIntent();
 
     // Get the selected movie passed by Intent
-    Movie selectedMovie = intent.getExtras().getParcelable(getString(R.string.selected_movie));
+    Movie selectedMovie = Objects
+        .requireNonNull(intent.getExtras())
+        .getParcelable(getString(R.string.selected_movie));
     if (selectedMovie != null) {
       // we will reuse -tv- variable for all the TextView objects in this fragment
       TextView tv = mRootView.findViewById(R.id.text_movie_detail_title);
@@ -189,7 +191,7 @@ public class MovieDetailFragment
             setupTrailersView();
           } else {
             MyPMErrorUtils.showErrorMessage(LOG_TAG,
-                getActivity(),
+                Objects.requireNonNull(getActivity()),
                 R.string.error_bad_response,
                 response.message());
           }
@@ -268,7 +270,7 @@ public class MovieDetailFragment
             setupReviewsView();
           } else {
             MyPMErrorUtils.showErrorMessage(LOG_TAG,
-                getActivity(),
+                Objects.requireNonNull(getActivity()),
                 R.string.error_bad_response,
                 response.message());
           }
