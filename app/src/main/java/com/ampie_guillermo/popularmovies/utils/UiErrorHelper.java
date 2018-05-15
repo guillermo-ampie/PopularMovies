@@ -19,10 +19,10 @@ public class UiErrorHelper {
     mExceptionErrorMsg = "";
   }
   public UiErrorHelper (UiErrorHelper errorHelper){
-    mErrorEnabled = errorHelper.isErrorEnabled();
-    mExceptionErrorConditionEnabled = errorHelper.isExceptionErrorConditionEnabled();
-    mErrorMsgResId = errorHelper.getErrorMsgResId();
-    mExceptionErrorMsg = errorHelper.getExceptionErrorMsg();
+    mErrorEnabled = errorHelper.mErrorEnabled;
+    mExceptionErrorConditionEnabled = errorHelper.mExceptionErrorConditionEnabled;
+    mErrorMsgResId = errorHelper.mErrorMsgResId;
+    mExceptionErrorMsg = errorHelper.mExceptionErrorMsg;
   }
 
   public UiErrorHelper(int errorMsgResId) {
@@ -62,7 +62,7 @@ public class UiErrorHelper {
   }
 
   public boolean isExceptionErrorConditionEnabled() {
-    return mExceptionErrorConditionEnabled;
+    return mExceptionErrorConditionEnabled.booleanValue();
   }
 
   public int getErrorMsgResId() {
