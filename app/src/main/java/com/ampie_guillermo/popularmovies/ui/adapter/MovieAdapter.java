@@ -1,5 +1,7 @@
 package com.ampie_guillermo.popularmovies.ui.adapter;
 
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.recyclerview.extensions.ListAdapter;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
@@ -122,8 +124,8 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
   // The View Holder used for each movie poster
   static class MovieViewHolder extends RecyclerView.ViewHolder {
 
-    private final ImageView mMovieThumbnailView;
     final MovieItemClickListener mOnClickListener;
+    private final ImageView mMovieThumbnailView;
 
     MovieViewHolder(View view, MovieItemClickListener onClickListener) {
       super(view);
@@ -135,10 +137,24 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
     }
 
     void setupItemView(Movie currentMovie) {
-      Picasso.with(itemView.getContext())
+      /*
+        The hack with the variable "placeholderDrawable" is needed to support -vector drawables- on
+        API level < 21 (Lollipop)
+        Reference: https://github.com/square/picasso/issues/1109, see
+        entry: "ncornette commented on Jun 27, 2016"
+       */
+      Drawable placeholderDrawable =
+          ResourcesCompat.getDrawable(itemView.getResources(),
+              R.drawable.ic_movie_black_237x180dp,
+              null);
+
+      Picasso.get()
+//      Picasso.with(itemView.getContext())
           .load(currentMovie.getPosterUri())
-          .placeholder(R.drawable.ic_movie_black_237x180dp)
-          .error(R.drawable.ic_movie_black_237x180dp)
+//          .placeholder(R.drawable.ic_movie_black_237x180dp)
+//          .error(R.drawable.ic_movie_black_237x180dp)
+          .placeholder(placeholderDrawable)
+          .error(placeholderDrawable)
           .into(mMovieThumbnailView);
     }
   }

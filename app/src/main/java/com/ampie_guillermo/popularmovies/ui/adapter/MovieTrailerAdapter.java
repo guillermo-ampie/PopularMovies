@@ -132,7 +132,8 @@ public class MovieTrailerAdapter extends
     }
 
     void setupItemView(Uri trailerThumbnailUri) {
-      Picasso.with(itemView.getContext()) // itemView is a member of class ViewHolder
+//      Picasso.with(itemView.getContext()) // itemView is a member of class ViewHolder
+      Picasso.get()
           .load(trailerThumbnailUri)
           .placeholder(R.drawable.ic_movie_black_237x180dp)
           .error(R.drawable.ic_movie_black_237x180dp)

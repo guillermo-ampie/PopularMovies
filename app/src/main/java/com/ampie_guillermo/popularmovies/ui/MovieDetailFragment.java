@@ -101,7 +101,8 @@ public class MovieDetailFragment
       ImageView moviePosterView = mRootView.findViewById(R.id.image_movie_detail_poster);
 
       // Show the movie poster
-      Picasso.with(getContext())
+//      Picasso.with(getContext())
+      Picasso.get()
           .load(selectedMovie.getPosterUri())
           .placeholder(R.drawable.ic_movie_black_237x180dp)
           .error(R.drawable.ic_movie_black_237x180dp)

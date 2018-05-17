@@ -36,8 +36,12 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
     implementation 'com.android.support:appcompat-v7:27.1.1'
+//    Added com.android.support:exifinterface:27.1.1 to avoid the error that there is a mix with
+//    com.android.support libraries, specifically with com.android.support:exifinterface:27.1.0 and
+//    the others with version 27.1.1. This happened when updated Picasso to v.2.71828
+    implementation 'com.android.support:exifinterface:27.1.1'
     implementation 'com.android.support:design:27.1.1'
-    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.facebook.stetho:stetho:1.5.0'
     annotationProcessor 'net.simonvt.schematic:schematic-compiler:0.7.0'
