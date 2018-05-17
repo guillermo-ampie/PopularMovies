@@ -72,7 +72,7 @@ public class MovieReviewAdapter
   public void onBindViewHolder(MovieReviewViewHolder holder, int position) {
 
     MovieReview movieReview = mMoviewReviewList.getReviewList().get(position);
-    holder.setItemView(movieReview);
+    holder.setupItemView(movieReview);
   }
 
   /**
@@ -103,7 +103,7 @@ public class MovieReviewAdapter
       mReviewContentView = view.findViewById(R.id.text_movie_review_review_content);
     }
 
-    void setItemView(MovieReview movieReview) {
+    void setupItemView(MovieReview movieReview) {
       mAuthorView.setText(movieReview.getAuthor());
       mReviewContentView.setText(movieReview.getContent());
     }
