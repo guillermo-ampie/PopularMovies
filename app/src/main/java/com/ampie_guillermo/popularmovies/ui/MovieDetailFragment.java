@@ -1,11 +1,13 @@
 package com.ampie_guillermo.popularmovies.ui;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -101,11 +103,16 @@ public class MovieDetailFragment
       ImageView moviePosterView = mRootView.findViewById(R.id.image_movie_detail_poster);
 
       // Show the movie poster
+
+      // See comment in MovieAdapter::setupItemView to allow vector drawables in
+      // API level < 21 (Lollipop)
+      final Drawable placeholderDrawable = ResourcesCompat
+          .getDrawable(this.getResources(), R.drawable.ic_movie_black_237x180dp,null);
 //      Picasso.with(getContext())
       Picasso.get()
           .load(selectedMovie.getPosterUri())
-          .placeholder(R.drawable.ic_movie_black_237x180dp)
-          .error(R.drawable.ic_movie_black_237x180dp)
+          .placeholder(placeholderDrawable)
+          .error(placeholderDrawable)
           .into(moviePosterView);
 
       tv = mRootView.findViewById(R.id.text_movie_detail_release_date_content);

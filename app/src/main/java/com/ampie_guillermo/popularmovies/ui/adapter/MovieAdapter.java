@@ -124,37 +124,35 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
   // The View Holder used for each movie poster
   static class MovieViewHolder extends RecyclerView.ViewHolder {
 
-    final MovieItemClickListener mOnClickListener;
+    private final Drawable mPlaceholderDrawable;
+    private final MovieItemClickListener mOnClickListener;
     private final ImageView mMovieThumbnailView;
 
     MovieViewHolder(View view, MovieItemClickListener onClickListener) {
       super(view);
       mMovieThumbnailView = view.findViewById(R.id.image_movie_poster_movie_poster);
       mOnClickListener = onClickListener;
+      /*
+        The hack with the variable "placeholderDrawable" is needed to support -vector drawables- on
+        API level < 21 (Lollipop)
+        Reference: https://github.com/square/picasso/issues/1109, see
+        entry: "ncornette commented on Jun 27, 2016"
+      */
+      mPlaceholderDrawable = ResourcesCompat
+          .getDrawable(itemView.getResources(), R.drawable.ic_movie_black_237x180dp, null);
 
       mMovieThumbnailView.setOnClickListener(
           v -> mOnClickListener.onMovieItemClick(getAdapterPosition()));
     }
 
     void setupItemView(Movie currentMovie) {
-      /*
-        The hack with the variable "placeholderDrawable" is needed to support -vector drawables- on
-        API level < 21 (Lollipop)
-        Reference: https://github.com/square/picasso/issues/1109, see
-        entry: "ncornette commented on Jun 27, 2016"
-       */
-      Drawable placeholderDrawable =
-          ResourcesCompat.getDrawable(itemView.getResources(),
-              R.drawable.ic_movie_black_237x180dp,
-              null);
-
       Picasso.get()
 //      Picasso.with(itemView.getContext())
           .load(currentMovie.getPosterUri())
 //          .placeholder(R.drawable.ic_movie_black_237x180dp)
 //          .error(R.drawable.ic_movie_black_237x180dp)
-          .placeholder(placeholderDrawable)
-          .error(placeholderDrawable)
+          .placeholder(mPlaceholderDrawable)
+          .error(mPlaceholderDrawable)
           .into(mMovieThumbnailView);
     }
   }

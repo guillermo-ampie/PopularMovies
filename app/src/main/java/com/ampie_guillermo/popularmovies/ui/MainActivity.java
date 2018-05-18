@@ -2,11 +2,13 @@ package com.ampie_guillermo.popularmovies.ui;
 
 
 import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import com.ampie_guillermo.popularmovies.BuildConfig;
@@ -31,6 +33,11 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    // See comment in MovieAdapter::setupItemView to allow vector drawables in
+    // API level < 21 (Lollipop)
+    if (Build.VERSION.SDK_INT < VERSION_CODES.LOLLIPOP) {
+      AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
     if (BuildConfig.DEBUG) {
       Log.v(LOG_TAG, "BUILD: ** DEBUG **");
 

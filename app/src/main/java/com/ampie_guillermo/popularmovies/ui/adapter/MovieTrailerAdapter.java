@@ -1,7 +1,9 @@
 package com.ampie_guillermo.popularmovies.ui.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -117,11 +119,15 @@ public class MovieTrailerAdapter extends
     // This class uses "implements View.OnClickListener" instead of member variables as in
     // MovieAdapter.MovieViewHolder
     private final ImageView mTrailerThumbnailView;
+    private final Drawable mPlaceholderDrawable;
 
     TrailerViewHolder(View view) {
       super(view);
-      mTrailerThumbnailView = view
-          .findViewById(R.id.image_movie_trailer_thumbnail_trailer_thumbnail);
+      mTrailerThumbnailView =
+          view.findViewById(R.id.image_movie_trailer_thumbnail_trailer_thumbnail);
+      mPlaceholderDrawable = ResourcesCompat
+          .getDrawable(itemView.getResources(), R.drawable.ic_movie_black_237x180dp, null);
+
       view.setOnClickListener(this);
     }
 
@@ -132,11 +138,15 @@ public class MovieTrailerAdapter extends
     }
 
     void setupItemView(Uri trailerThumbnailUri) {
-//      Picasso.with(itemView.getContext()) // itemView is a member of class ViewHolder
+      // See comment in MovieAdapter::setupItemView to allow vector drawables in
+      // API level < 21 (Lollipop)
+
+      // itemView is a member of class ViewHolder
+//      Picasso.with(itemView.getContext())
       Picasso.get()
           .load(trailerThumbnailUri)
-          .placeholder(R.drawable.ic_movie_black_237x180dp)
-          .error(R.drawable.ic_movie_black_237x180dp)
+          .placeholder(mPlaceholderDrawable)
+          .error(mPlaceholderDrawable)
           .fit()
           .into(mTrailerThumbnailView);
     }
