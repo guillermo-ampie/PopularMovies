@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ProgressBar;
 import com.ampie_guillermo.popularmovies.BuildConfig;
 import com.ampie_guillermo.popularmovies.R;
 import com.ampie_guillermo.popularmovies.model.Movie;
@@ -54,6 +55,7 @@ public class MovieListFragment
   private static final String LOG_TAG = MovieListFragment.class.getSimpleName();
   private static final int MOVIES_RESULT_SIZE = 20;
 
+  private ProgressBar mProgressBar;
   private MovieAdapter mMovieAdapter;
   private String mSortingMethodParam;
   private ArrayList<Movie> mMovieList;
@@ -125,6 +127,9 @@ public class MovieListFragment
       Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
+    mProgressBar = rootView.findViewById(R.id.progressbar_main_base);
+    showProgressBar();
+
     /**
      * The MovieAdapter will take data from a a JSON response from TheMovieDB.org
      * server and use it to populate the grid it is attached to.
@@ -184,6 +189,9 @@ public class MovieListFragment
 //      Log.d(LOG_TAG, "++++++++++ Restarting the loader");
 //      lm.restartLoader(MOVIE_LIST_LOADER_ID, bundle, this);
 //    }
+    // Show the progress bar
+//    showProgressBar();
+
     /**
      * In this App, we want to persist and cache the movie list fetched from the Internet upon
      * configuration changes (rotation of device) and in onPause() / onResume(). The persistence
@@ -238,6 +246,9 @@ public class MovieListFragment
    */
   @Override
   public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> data) {
+    // Hide the progress bar
+    hideProgressBar();
+
     Log.v(LOG_TAG, "++++++++++ onLoadFinished()");
     if (data != null) {
       Log.v(LOG_TAG, "++++++++++ Adding the new data fetched");
@@ -283,6 +294,14 @@ public class MovieListFragment
         MovieDetailActivity.class).putExtra(getString(R.string.selected_movie), currentMovie);
 
     startActivity(intent);
+  }
+
+  private void showProgressBar() {
+    mProgressBar.setVisibility(View.VISIBLE);
+  }
+
+  private void hideProgressBar() {
+    mProgressBar.setVisibility(View.INVISIBLE);
   }
 
   public static class PopularMovieListFragment extends MovieListFragment {
@@ -445,7 +464,7 @@ public class MovieListFragment
       if (mArgs == null) {
         return;
       }
-      // TODO: Show a progress bar
+
       if (mCachedMovieList.isEmpty()) {
         Log.v(LOG_TAG, "++++++++++ Forcing a load");
         forceLoad();
