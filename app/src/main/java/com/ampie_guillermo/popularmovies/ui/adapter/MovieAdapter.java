@@ -125,6 +125,7 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
   static class MovieViewHolder extends RecyclerView.ViewHolder {
 
     private final Drawable mPlaceholderDrawable;
+    private final Drawable mPlaceholderDrawableError;
     private final MovieItemClickListener mOnClickListener;
     private final ImageView mMovieThumbnailView;
 
@@ -140,6 +141,9 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
       */
       mPlaceholderDrawable = ResourcesCompat
           .getDrawable(itemView.getResources(), R.drawable.ic_movie_black_237x180dp, null);
+      mPlaceholderDrawableError = ResourcesCompat.getDrawable(itemView.getResources(),
+          R.drawable.ic_broken_image_black_237x180dp,
+          null);
 
       mMovieThumbnailView.setOnClickListener(
           v -> mOnClickListener.onMovieItemClick(getAdapterPosition()));
@@ -149,10 +153,8 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
       Picasso.get()
 //      Picasso.with(itemView.getContext())
           .load(currentMovie.getPosterUri())
-//          .placeholder(R.drawable.ic_movie_black_237x180dp)
-//          .error(R.drawable.ic_movie_black_237x180dp)
           .placeholder(mPlaceholderDrawable)
-          .error(mPlaceholderDrawable)
+          .error(mPlaceholderDrawableError)
           .into(mMovieThumbnailView);
     }
   }

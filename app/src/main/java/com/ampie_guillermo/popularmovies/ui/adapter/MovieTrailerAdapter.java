@@ -119,7 +119,10 @@ public class MovieTrailerAdapter extends
     // This class uses "implements View.OnClickListener" instead of member variables as in
     // MovieAdapter.MovieViewHolder
     private final ImageView mTrailerThumbnailView;
+    // TODO: can this placeholders be static or singleton?
     private final Drawable mPlaceholderDrawable;
+    private final Drawable mPlaceholderDrawableError;
+
 
     TrailerViewHolder(View view) {
       super(view);
@@ -127,6 +130,9 @@ public class MovieTrailerAdapter extends
           view.findViewById(R.id.image_movie_trailer_thumbnail_trailer_thumbnail);
       mPlaceholderDrawable = ResourcesCompat
           .getDrawable(itemView.getResources(), R.drawable.ic_movie_black_237x180dp, null);
+      mPlaceholderDrawableError = ResourcesCompat.getDrawable(itemView.getResources(),
+          R.drawable.ic_broken_image_black_237x180dp,
+          null);
 
       view.setOnClickListener(this);
     }
@@ -146,7 +152,7 @@ public class MovieTrailerAdapter extends
       Picasso.get()
           .load(trailerThumbnailUri)
           .placeholder(mPlaceholderDrawable)
-          .error(mPlaceholderDrawable)
+          .error(mPlaceholderDrawableError)
           .fit()
           .into(mTrailerThumbnailView);
     }

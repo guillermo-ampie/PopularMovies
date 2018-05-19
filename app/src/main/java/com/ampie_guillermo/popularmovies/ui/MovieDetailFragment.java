@@ -107,12 +107,14 @@ public class MovieDetailFragment
       // See comment in MovieAdapter::setupItemView to allow vector drawables in
       // API level < 21 (Lollipop)
       final Drawable placeholderDrawable = ResourcesCompat
-          .getDrawable(this.getResources(), R.drawable.ic_movie_black_237x180dp,null);
+          .getDrawable(this.getResources(), R.drawable.ic_movie_black_237x180dp, null);
+      final Drawable placeholderDrawableError = ResourcesCompat
+          .getDrawable(this.getResources(), R.drawable.ic_broken_image_black_237x180dp, null);
 //      Picasso.with(getContext())
       Picasso.get()
           .load(selectedMovie.getPosterUri())
           .placeholder(placeholderDrawable)
-          .error(placeholderDrawable)
+          .error(placeholderDrawableError)
           .into(moviePosterView);
 
       tv = mRootView.findViewById(R.id.text_movie_detail_release_date_content);
