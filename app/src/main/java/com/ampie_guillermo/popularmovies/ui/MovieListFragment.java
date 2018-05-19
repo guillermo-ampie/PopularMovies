@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import com.ampie_guillermo.popularmovies.BuildConfig;
 import com.ampie_guillermo.popularmovies.R;
@@ -55,7 +56,9 @@ public class MovieListFragment
   private static final String LOG_TAG = MovieListFragment.class.getSimpleName();
   private static final int MOVIES_RESULT_SIZE = 20;
 
-  private ProgressBar mProgressBar;
+  private ProgressBar mLoadingIndicator;
+  private ImageView mImageCloudOff;
+  private RecyclerView mRvMovieGrid;
   private MovieAdapter mMovieAdapter;
   private String mSortingMethodParam;
   private ArrayList<Movie> mMovieList;
@@ -125,36 +128,36 @@ public class MovieListFragment
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
-    View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+    final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-    mProgressBar = rootView.findViewById(R.id.progressbar_main_base);
-    showProgressBar();
+    mImageCloudOff = rootView.findViewById(R.id.image_main_no_connection);
+    mLoadingIndicator = rootView.findViewById(R.id.progressbar_main_base);
+    showLoadingIndicator();
+
+    // Get a reference to the RecyclerView (the movie grid), and attach the movie adapter to it.
+    mRvMovieGrid = rootView.findViewById(R.id.recycler_main_movie_grid);
+
+    // Al the items (movie posters) in the RecyclerView are the same size
+    mRvMovieGrid.setHasFixedSize(true);
+
+    // We will show the movie list in a grid with a parameterized number of columns
+    mRvMovieGrid.setLayoutManager(new GridLayoutManager(getContext(),
+        getResources().getInteger(R.integer.num_columns)));
 
     /**
      * The MovieAdapter will take data from a a JSON response from TheMovieDB.org
      * server and use it to populate the grid it is attached to.
      */
-
-    // Get a reference to the RecyclerView (the movie grid), and attach the movie adapter to it.
-    RecyclerView movieGridView = rootView.findViewById(R.id.recycler_main_movie_grid);
-
-    // Al the items (all are movie posters) in the RecyclerView are the same size
-    movieGridView.setHasFixedSize(true);
-
-    // We will show the movie list in a grid with a parameterized number of columns
-    movieGridView.setLayoutManager(new GridLayoutManager(getContext(),
-        getResources().getInteger(R.integer.num_columns)));
-
     // Set an empty adapter because the movies have not been fetched yet
     mMovieAdapter = new MovieAdapter(this);
-    movieGridView.setAdapter(mMovieAdapter);
+    mRvMovieGrid.setAdapter(mMovieAdapter);
 
     return rootView;
   }
 
   /**
    * Called when the fragment's activity has been created and this
-   * fragment's divider_view_1 hierarchy instantiated.  It can be used to do final
+   * fragment's hierarchy instantiated.  It can be used to do final
    * initialization once these pieces are in place, such as retrieving
    * views or restoring state.  It is also useful for fragments that use
    * {@link #setRetainInstance(boolean)} to retain their instance,
@@ -176,7 +179,7 @@ public class MovieListFragment
   }
 
   protected void getMovies() {
-    Bundle bundle = new Bundle();
+    final Bundle bundle = new Bundle();
     bundle.putString(MOVIE_SORTING_METHOD_EXTRA, mSortingMethodParam);
 
 //    LoaderManager lm = getLoaderManager();
@@ -190,7 +193,7 @@ public class MovieListFragment
 //      lm.restartLoader(MOVIE_LIST_LOADER_ID, bundle, this);
 //    }
     // Show the progress bar
-//    showProgressBar();
+//    showLoadingIndicator();
 
     /**
      * In this App, we want to persist and cache the movie list fetched from the Internet upon
@@ -247,7 +250,7 @@ public class MovieListFragment
   @Override
   public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> data) {
     // Hide the progress bar
-    hideProgressBar();
+    hideLoadingIndicator();
 
     Log.v(LOG_TAG, "++++++++++ onLoadFinished()");
     if (data != null) {
@@ -255,9 +258,11 @@ public class MovieListFragment
       mMovieList = new ArrayList<>(data);
       mMovieAdapter.setMovieList(data);
     } else {
+      showErrorDisplay();
       // We could have an error, inspect the loader in order to get the error an give feedback
       // to the user
-      UiErrorHelper uiErrorHelper = new UiErrorHelper(((MovieListLoader) loader).getUiError());
+      final UiErrorHelper uiErrorHelper = new UiErrorHelper(
+          ((MovieListLoader) loader).getUiError());
       if (uiErrorHelper.isErrorEnabled()) {
         if (uiErrorHelper.isExceptionErrorConditionEnabled()) {
           MyPMErrorUtils.showErrorMessage(LOG_TAG,
@@ -289,19 +294,24 @@ public class MovieListFragment
   @Override
   public void onMovieItemClick(int clickedItemIndex) {
     MyPMErrorUtils.validateIndexInCollection(clickedItemIndex, mMovieList.size());
-    Movie currentMovie = mMovieList.get(clickedItemIndex);
-    Intent intent = new Intent(getActivity(),
+    final Movie currentMovie = mMovieList.get(clickedItemIndex);
+    final Intent intent = new Intent(getActivity(),
         MovieDetailActivity.class).putExtra(getString(R.string.selected_movie), currentMovie);
 
     startActivity(intent);
   }
 
-  private void showProgressBar() {
-    mProgressBar.setVisibility(View.VISIBLE);
+  private void showLoadingIndicator() {
+    mLoadingIndicator.setVisibility(View.VISIBLE);
   }
 
-  private void hideProgressBar() {
-    mProgressBar.setVisibility(View.INVISIBLE);
+  private void hideLoadingIndicator() {
+    mLoadingIndicator.setVisibility(View.INVISIBLE);
+  }
+
+  private void showErrorDisplay() {
+  mRvMovieGrid.setVisibility(View.INVISIBLE);
+  mImageCloudOff.setVisibility(View.VISIBLE);
   }
 
   public static class PopularMovieListFragment extends MovieListFragment {
@@ -356,7 +366,7 @@ public class MovieListFragment
     MovieListLoader(Context context, Bundle args) {
       super(context);
       mArgs = args;
-      mCachedMovieList = new ArrayList<>(MOVIES_RESULT_SIZE);
+      mCachedMovieList = new ArrayList<>(MovieListFragment.MOVIES_RESULT_SIZE);
       mUiError = new UiErrorHelper();
     }
 
@@ -376,29 +386,30 @@ public class MovieListFragment
       HttpURLConnection urlConnection = null;
 //      BufferedReader reader = null;
 
-      // The raw JSON response as a string.
+      // The raw JSON response as a string
       String movieJsonStr;
 
       try {
         // Construct the URL for TheMovieDB query
+        final String GET = "GET";
         final String MOVIEDB_BASE_URL = "https://api.themoviedb.org/3/discover/movie?";
         final String SORT_BY_PARAM = "sort_by";
         final String API_KEY_PARAM = "api_key";
         final String VOTE_COUNT_PARAM = "vote_count.gte";
         final String VOTE_COUNT = "100"; // Let's get some sense from the valuations
 
-        Uri builtUri = Uri.parse(MOVIEDB_BASE_URL).buildUpon()
+        final Uri builtUri = Uri.parse(MOVIEDB_BASE_URL).buildUpon()
             .appendQueryParameter(SORT_BY_PARAM, sortingMethod)
             .appendQueryParameter(VOTE_COUNT_PARAM, VOTE_COUNT)
             .appendQueryParameter(API_KEY_PARAM, BuildConfig.MOVIE_DB_API_KEY)
             .build();
 
-        URL url = new URL(builtUri.toString());
+        final URL url = new URL(builtUri.toString());
         //Log.v(LOG_TAG, builtUri.toString());
 
         // Create the request to TheMovieDB, and open the connection
         urlConnection = (HttpURLConnection) url.openConnection();
-        urlConnection.setRequestMethod("GET");
+        urlConnection.setRequestMethod(GET);
         urlConnection.connect();
 
         // Read the input stream into a String
@@ -486,7 +497,6 @@ public class MovieListFragment
       if (data != null) {
         mCachedMovieList = new ArrayList<>(data);
       }
-
       super.deliverResult(data);
     }
 
@@ -548,11 +558,11 @@ public class MovieListFragment
             Uri.withAppendedPath(movieImagesBaseUri, posterRelativePath);
         final Uri backdropCompleteUri =
             Uri.withAppendedPath(movieImagesBaseUri, backdropRelativePath);
-        /**
+        /*
          * Store only the movie release year.
          * The format from TheMovieDB for release date: YYYY-MM-DD
          */
-        String releaseYear = (releaseDate.split("-"))[0];
+        final String releaseYear = (releaseDate.split("-"))[0];
 
         //Populate our array of movies
         movieList[i] = new Movie.MovieBuilder()
