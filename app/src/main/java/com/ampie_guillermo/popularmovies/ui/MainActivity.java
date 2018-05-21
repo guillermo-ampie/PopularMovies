@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    // See comment in MovieAdapter::setupItemView to allow vector drawables in
+    // See comment in MovieAdapter::MovieViewHolder()  to allow vector drawables in
     // API level < 21 (Lollipop)
     if (Build.VERSION.SDK_INT < VERSION_CODES.LOLLIPOP) {
       AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
