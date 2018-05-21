@@ -144,7 +144,7 @@ public class MovieTrailerAdapter extends
     }
 
     void setupItemView(Uri trailerThumbnailUri) {
-      // See comment in MovieAdapter::setupItemView to allow vector drawables in
+      // See comment in MovieAdapter::MovieViewHolder() to allow vector drawables in
       // API level < 21 (Lollipop)
 
       // itemView is a member of class ViewHolder
