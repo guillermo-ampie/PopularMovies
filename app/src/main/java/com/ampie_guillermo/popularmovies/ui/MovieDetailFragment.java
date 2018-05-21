@@ -137,6 +137,38 @@ public class MovieDetailFragment
       tv = mRootView.findViewById(R.id.text_movie_detail_overview_content);
       tv.setText(selectedMovie.getOverview());
 
+      /** Although the following (commented) code is correct, there is a workaround to all this,
+       * that allow us to use drawables directly from XML in TextViews (in pre Lollipop API) using
+       * a "selector":  wrap up the vector drawable in a selector file and you can specify
+       * "android:drawableStart=@drawable/drawable_wrapper" attribute (and related) in the
+       * TextView xml specification.
+       *  Note: See comment in MovieAdapter::MovieViewHolder
+       *  Reference: https://stackoverflow.com/questions/35761636/
+       *  is-it-possible-to-use-vectordrawable-in-buttons-and
+       *  -textviews-using-androiddraw/40250753#40250753
+       *  See entry from: https://stackoverflow.com/users/4513962/amit-tumkur
+       *  answered on Jan 8 at 8:28
+       */
+      // The following hack is to allow the use of vector drawables directly in TextViews in API
+      // level < 21 (Lollipop), see comment in MovieAdapter::setupItemView. The code here is to
+      // support vector drawables in TextViews (Compound Text Drawables) because CTD are not
+      // working anymore directly from XML in pre Lollipop, i.e: "android:drawableStart" and
+      // related attributes are not working anymore
+
+      // Begin of hack
+      // Set ic_message_black_36dp drawable
+//      final Drawable messageDrawable =
+//          AppCompatResources.getDrawable(getActivity(), R.drawable.ic_message_black_36dp);
+//      final TextView textMovieOverview = mRootView.findViewById(R.id.text_movie_detail_overview);
+//      final int drawableToTextPadding =
+//          (int) getActivity().getResources().getDimension(R.dimen.drawable_to_text_padding);
+//      textMovieOverview.setCompoundDrawablesWithIntrinsicBounds(messageDrawable,
+//          null,
+//          null,
+//          null);
+//      textMovieOverview.setCompoundDrawablePadding(drawableToTextPadding);
+      // End of hack
+
       // Get the movie trailers
       fetchTrailers(selectedMovie, savedInstanceState);
 
