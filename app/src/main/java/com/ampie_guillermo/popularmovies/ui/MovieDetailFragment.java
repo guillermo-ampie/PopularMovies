@@ -89,10 +89,10 @@ public class MovieDetailFragment
       sv.setScrollIndicators(View.SCROLL_INDICATOR_RIGHT);
     }
 
-    Intent intent = Objects.requireNonNull(getActivity()).getIntent();
+    final Intent intent = Objects.requireNonNull(getActivity()).getIntent();
 
     // Get the selected movie passed by Intent
-    Movie selectedMovie = Objects
+    final Movie selectedMovie = Objects
         .requireNonNull(intent.getExtras())
         .getParcelable(getString(R.string.selected_movie));
     if (selectedMovie != null) {
@@ -100,7 +100,7 @@ public class MovieDetailFragment
       TextView tv = mRootView.findViewById(R.id.text_movie_detail_title);
       tv.setText(selectedMovie.getOriginalTitle());
 
-      ImageView moviePosterView = mRootView.findViewById(R.id.image_movie_detail_poster);
+      final ImageView moviePosterView = mRootView.findViewById(R.id.image_movie_detail_poster);
 
       // Show the movie poster
 
@@ -123,14 +123,14 @@ public class MovieDetailFragment
       // Rating & Votes values will be formatted based on the current locale's properties
       NumberFormat numberFormat = NumberFormat.getNumberInstance();
       numberFormat.setMaximumFractionDigits(1);
-      String rating = numberFormat.format(selectedMovie.getVoteAverage());
+      final String rating = numberFormat.format(selectedMovie.getVoteAverage());
 
       tv = mRootView.findViewById(R.id.text_movie_detail_rating_content);
       tv.setText(rating);
 
       // Format the number using the current's locale grouping
       numberFormat.setGroupingUsed(true);
-      String votes = numberFormat.format(selectedMovie.getVoteCount());
+      final String votes = numberFormat.format(selectedMovie.getVoteCount());
       tv = mRootView.findViewById(R.id.text_movie_detail_vote_count_content);
       tv.setText(votes);
 
@@ -186,7 +186,7 @@ public class MovieDetailFragment
       setupTrailersView();
     } else {
       // We have to fetch the trailers
-      MovieTrailerService movieTrailerService = RETROFIT.create(MovieTrailerService.class);
+      final MovieTrailerService movieTrailerService = RETROFIT.create(MovieTrailerService.class);
 
       // Create a call instance for looking up the movie's list of trailers
       mCallTrailers = movieTrailerService.get(selectedMovie.getId(), BuildConfig.MOVIE_DB_API_KEY);
@@ -247,13 +247,13 @@ public class MovieDetailFragment
     mRvMovieReviews.setAdapter(mMovieReviewAdapter);
 
     // We will show the movie trailers in just one row
-    LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
+    final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
         LinearLayoutManager.HORIZONTAL,
         false);
     mRvMovieReviews.setLayoutManager(layoutManager);
 
     // Set a divider line
-    DividerItemDecoration dividerLine
+    final DividerItemDecoration dividerLine
         = new DividerItemDecoration(mRvMovieReviews.getContext(),
         layoutManager.getOrientation());
     mRvMovieReviews.addItemDecoration(dividerLine);
@@ -264,7 +264,7 @@ public class MovieDetailFragment
       setupReviewsView();
     } else {
       // We have to fetch the trailers
-      MovieReviewService movieReviewService = RETROFIT.create(MovieReviewService.class);
+      final MovieReviewService movieReviewService = RETROFIT.create(MovieReviewService.class);
 
       // Create a call instance for looking up the movie's list of reviews
       mCallReviews = movieReviewService.get(selectedMovie.getId(),
@@ -303,7 +303,7 @@ public class MovieDetailFragment
   void setupReviewsView() {
     if (mReviews.getReviewList().isEmpty()) {
       // Show "No reviews" text
-      TextView tvNoReviews = mRootView.findViewById(R.id.text_movie_detail_no_reviews);
+      final TextView tvNoReviews = mRootView.findViewById(R.id.text_movie_detail_no_reviews);
       tvNoReviews.setVisibility(View.VISIBLE);
       // Hide the RecyclerView that contains the movie reviews
       mRvMovieReviews.setVisibility(View.GONE);
