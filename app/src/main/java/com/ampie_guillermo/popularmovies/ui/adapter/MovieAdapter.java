@@ -134,8 +134,8 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
       mMovieThumbnailView = view.findViewById(R.id.image_movie_poster_movie_poster);
       mOnClickListener = onClickListener;
       /*
-        The hack with the variable "placeholderDrawable" is needed to support -vector drawables- on
-        API level < 21 (Lollipop)
+        The hack with the variable "mPlaceholderDrawable" and "mPlaceholderDrawableError" is needed
+        to support -vector drawables- on API level < 21 (Lollipop)
         Reference: https://github.com/square/picasso/issues/1109, see
         entry: "ncornette commented on Jun 27, 2016"
       */
