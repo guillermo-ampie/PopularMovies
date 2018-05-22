@@ -363,10 +363,11 @@ public class MovieDetailFragment
     final MovieTrailerList.MovieTrailer trailer = trailerList.get(clickedItemIndex);
     final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?";
     final String VIDEO_PARAM = "v";
-    final Uri trailerUri = Uri.parse(YOUTUBE_BASE_URL)
-        .buildUpon()
-        .appendQueryParameter(VIDEO_PARAM, trailer.getKey())
-        .build();
+    final Uri trailerUri =
+        Uri.parse(YOUTUBE_BASE_URL)
+            .buildUpon()
+            .appendQueryParameter(VIDEO_PARAM, trailer.getKey())
+            .build();
 
     // Play the movie trailer on youtube.com
     // TODO: Expand code to play trailer in youtube app if installed
