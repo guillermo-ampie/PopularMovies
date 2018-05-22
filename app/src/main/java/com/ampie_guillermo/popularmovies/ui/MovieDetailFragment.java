@@ -333,13 +333,22 @@ public class MovieDetailFragment
   }
 
   void setupReviewsView() {
-    if (mReviews.getReviewList().isEmpty()) {
+    List<MovieReviewList.MovieReview> reviewList = mReviews.getReviewList();
+
+    if (reviewList.isEmpty()) {
       // Show "No reviews" text
       final TextView tvNoReviews = mRootView.findViewById(R.id.text_movie_detail_no_reviews);
       tvNoReviews.setVisibility(View.VISIBLE);
       // Hide the RecyclerView that contains the movie reviews
       mRvMovieReviews.setVisibility(View.GONE);
     } else {
+      final TextView textReviewsTitle = mRootView.findViewById(R.id.text_movie_detail_reviews);
+      final String totalReviews =
+          "("
+              + String.valueOf(reviewList.size())
+              + ") "
+              + getResources().getString(R.string.movie_detail_reviews);
+      textReviewsTitle.setText(totalReviews);
       // Set the data(reviews) we have just fetched
       mMovieReviewAdapter.setMovieReviewList(mReviews);
     }
