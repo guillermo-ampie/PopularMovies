@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.ampie_guillermo.popularmovies"
-        minSdkVersion 19
+        minSdkVersion 18
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
