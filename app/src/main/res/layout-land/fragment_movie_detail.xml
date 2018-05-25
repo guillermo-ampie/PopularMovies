@@ -171,6 +171,7 @@
       android:layout_height="wrap_content"
       android:layout_gravity="start"
       android:text="@string/movie_detail_no_movie_trailers"
+      android:textStyle="italic"
       android:textAppearance="?android:attr/textAppearanceMedium"
       android:visibility="gone"/>
 
@@ -204,6 +205,7 @@
       android:layout_height="wrap_content"
       android:layout_gravity="start"
       android:text="@string/movie_detail_no_movie_reviews"
+      android:textStyle="italic"
       android:textAppearance="?android:attr/textAppearanceMedium"
       android:visibility="gone"/>
   </LinearLayout>
