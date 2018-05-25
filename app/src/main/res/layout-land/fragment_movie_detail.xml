@@ -184,8 +184,8 @@
       android:layout_height="wrap_content"
       android:layout_gravity="start"
       android:drawablePadding="@dimen/drawable_to_text_padding"
-      android:drawableStart="@drawable/ic_forum_black_36dp_wrapper"
-      android:text="@string/movie_detail_reviews"
+      android:drawableStart="@drawable/ic_rate_review_black_36dp_wrapper"
+      tools:text="@sample/movie_review.json/total_results"
       android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <android.support.v7.widget.RecyclerView

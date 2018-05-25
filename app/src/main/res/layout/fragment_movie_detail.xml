@@ -210,7 +210,7 @@
       android:layout_height="wrap_content"
       android:paddingTop="@dimen/padding_vertical_material"
       android:drawablePadding="@dimen/drawable_to_text_padding"
-      android:drawableStart="@drawable/ic_forum_black_36dp_wrapper"
+      android:drawableStart="@drawable/ic_rate_review_black_36dp_wrapper"
       android:textAppearance="?android:attr/textAppearanceMedium"
       app:layout_constraintStart_toEndOf="@id/keyline_left"
       app:layout_constraintTop_toBottomOf="@id/divider_view_3"
