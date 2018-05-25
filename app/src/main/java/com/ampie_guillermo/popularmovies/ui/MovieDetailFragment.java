@@ -213,7 +213,7 @@ public class MovieDetailFragment
     mRvMovieTrailers.setHasFixedSize(true);
 
     if (savedInstanceState != null) {
-      // We already have the trailers list
+      // We already have the trailers list, retrieve it and show it
       mTrailers = savedInstanceState.getParcelable(MOVIE_TRAILER_LIST);
       setupTrailersView();
     } else {
@@ -257,17 +257,16 @@ public class MovieDetailFragment
 
   void setupTrailersView() {
     if (mTrailers.getTrailerList().isEmpty()) {
-      // Show "No trailers" text
+      // We got no trailers, show "No trailers" text
       TextView tvNoTrailers = mRootView.findViewById(R.id.text_movie_detail_no_trailers);
       tvNoTrailers.setVisibility(View.VISIBLE);
-      // Hide the RecyclerView that contains the movie trailers
+      // Hide the RecyclerView that shows the movie trailers
       mRvMovieTrailers.setVisibility(View.GONE);
     } else {
       // Set the data(trailers) we have just fetched
       mMovieTrailerAdapter.setMovieTrailerList(mTrailers);
     }
   }
-
 
   private void fetchReviews(Movie selectedMovie, Bundle savedInstanceState) {
 
@@ -279,19 +278,18 @@ public class MovieDetailFragment
     mRvMovieReviews.setAdapter(mMovieReviewAdapter);
 
     // We will show the movie trailers in just one row
-    final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
-        LinearLayoutManager.HORIZONTAL,
-        false);
+    final LinearLayoutManager layoutManager =
+        new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
     mRvMovieReviews.setLayoutManager(layoutManager);
 
     // Set a divider line
-    final DividerItemDecoration dividerLine
-        = new DividerItemDecoration(mRvMovieReviews.getContext(),
-        layoutManager.getOrientation());
+    final DividerItemDecoration dividerLine =
+        new DividerItemDecoration(mRvMovieReviews.getContext(),
+            layoutManager.getOrientation());
     mRvMovieReviews.addItemDecoration(dividerLine);
 
     if (savedInstanceState != null) {
-      // We already have the reviews list
+      // We already have the reviews list, retrieve it and show it
       mReviews = savedInstanceState.getParcelable(MOVIE_REVIEW_LIST);
       setupReviewsView();
     } else {
@@ -322,6 +320,7 @@ public class MovieDetailFragment
         public void onFailure(Call<MovieReviewList> call, Throwable t) {
           Log.v(LOG_TAG, "++++++++++ onFailure");
           MyPMErrorUtils.showErrorMessage(LOG_TAG,
+              // getContext() and getActivity() could be null
 //              getContext()
 //              getActivity(),
               mRootView.getContext(),
@@ -336,17 +335,16 @@ public class MovieDetailFragment
     List<MovieReviewList.MovieReview> reviewList = mReviews.getReviewList();
 
     if (reviewList.isEmpty()) {
-      // Show "No reviews" text
+      // We got no reviews, show "No reviews" text
       final TextView tvNoReviews = mRootView.findViewById(R.id.text_movie_detail_no_reviews);
       tvNoReviews.setVisibility(View.VISIBLE);
-      // Hide the RecyclerView that contains the movie reviews
+      // Hide the RecyclerView that shows the movie reviews
       mRvMovieReviews.setVisibility(View.GONE);
     } else {
+      // We got reviews, show them and their total
       final TextView textReviewsTitle = mRootView.findViewById(R.id.text_movie_detail_reviews);
       final String totalReviews =
-          "("
-              + String.valueOf(reviewList.size())
-              + ") "
+          "(" + String.valueOf(reviewList.size()) + ") "
               + getResources().getString(R.string.movie_detail_reviews);
       textReviewsTitle.setText(totalReviews);
       // Set the data(reviews) we have just fetched
