@@ -344,7 +344,7 @@ public class MovieDetailFragment
       // We got reviews, show them and their total
       final TextView textReviewsTitle = mRootView.findViewById(R.id.text_movie_detail_reviews);
       final String totalReviews =
-          "(" + String.valueOf(reviewList.size()) + ") "
+          '(' + String.valueOf(reviewList.size()) + ") "
               + getResources().getString(R.string.movie_detail_reviews);
       textReviewsTitle.setText(totalReviews);
       // Set the data(reviews) we have just fetched
