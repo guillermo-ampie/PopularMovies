@@ -1,6 +1,7 @@
 package com.ampie_guillermo.popularmovies.ui;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.ampie_guillermo.popularmovies.BuildConfig;
 import com.ampie_guillermo.popularmovies.R;
 import com.ampie_guillermo.popularmovies.model.Movie;
@@ -28,6 +30,8 @@ import com.ampie_guillermo.popularmovies.network.MovieTrailerService;
 import com.ampie_guillermo.popularmovies.ui.adapter.MovieReviewAdapter;
 import com.ampie_guillermo.popularmovies.ui.adapter.MovieTrailerAdapter;
 import com.ampie_guillermo.popularmovies.utils.MyPMErrorUtils;
+import com.ampie_guillermo.popularmovies.utils.VectorAnimationSelectWithPath;
+import com.sdsmdg.harjot.vectormaster.VectorMasterView;
 import com.squareup.picasso.Picasso;
 import java.text.NumberFormat;
 import java.util.List;
@@ -44,7 +48,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class MovieDetailFragment
     extends Fragment
-    implements MovieTrailerAdapter.MovieTrailerItemClickListener {
+    implements
+    MovieTrailerAdapter.MovieTrailerItemClickListener,
+    VectorAnimationSelectWithPath.OnSelectedEventListener {
 
   static final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
 
@@ -52,9 +58,11 @@ public class MovieDetailFragment
   private static final String MOVIEDB_BASE_URL = "https://api.themoviedb.org";
   private static final String MOVIE_TRAILER_LIST = "movie_trailer_list";
   private static final String MOVIE_REVIEW_LIST = "movie_review_list";
+
+  private static final long ANIMATION_DURATION = 1000L;
   /**
    * Just avoid creating the RETROFIT object with every instantiation of the
-   * MovieDetailFragment object (singleton pattern: eager initialization)
+   * MovieDetailFragment object (singleton pattern: eager initialization).
    */
   private static final Retrofit RETROFIT =
       new Retrofit.Builder()
@@ -96,6 +104,7 @@ public class MovieDetailFragment
         .requireNonNull(intent.getExtras())
         .getParcelable(getString(R.string.selected_movie));
     if (selectedMovie != null) {
+      final Resources resources = getResources();
       // we will reuse -tv- variable for all the TextView objects in this fragment
       TextView tv = mRootView.findViewById(R.id.text_movie_detail_title);
       tv.setText(selectedMovie.getOriginalTitle());
@@ -107,9 +116,9 @@ public class MovieDetailFragment
       // See comment in MovieAdapter::setupItemView to allow vector drawables in
       // API level < 21 (Lollipop)
       final Drawable placeholderDrawable = ResourcesCompat
-          .getDrawable(this.getResources(), R.drawable.ic_movie_black_237x180dp, null);
+          .getDrawable(resources, R.drawable.ic_movie_black_237x180dp, null);
       final Drawable placeholderDrawableError = ResourcesCompat
-          .getDrawable(this.getResources(), R.drawable.ic_broken_image_black_237x180dp, null);
+          .getDrawable(resources, R.drawable.ic_broken_image_black_237x180dp, null);
 //      Picasso.with(getContext())
       Picasso.get()
           .load(selectedMovie.getPosterUri())
@@ -123,14 +132,14 @@ public class MovieDetailFragment
       // Rating & Votes values will be formatted based on the current locale's properties
       NumberFormat numberFormat = NumberFormat.getNumberInstance();
       numberFormat.setMaximumFractionDigits(1);
-      final String rating = numberFormat.format(selectedMovie.getVoteAverage());
+      final String rating = numberFormat.format((double) selectedMovie.getVoteAverage());
 
       tv = mRootView.findViewById(R.id.text_movie_detail_rating_content);
       tv.setText(rating);
 
       // Format the number using the current's locale grouping
       numberFormat.setGroupingUsed(true);
-      final String votes = numberFormat.format(selectedMovie.getVoteCount());
+      final String votes = numberFormat.format((long) selectedMovie.getVoteCount());
       tv = mRootView.findViewById(R.id.text_movie_detail_vote_count_content);
       tv.setText(votes);
 
@@ -169,6 +178,21 @@ public class MovieDetailFragment
 //      textMovieOverview.setCompoundDrawablePadding(drawableToTextPadding);
       // End of hack
 
+      final VectorMasterView vectorMasterFavourite =
+          mRootView.findViewById(R.id.vector_master_movie_detail_heart);
+      final int startColor = resources.getColor(R.color.white);
+      final int endColor = resources.getColor(R.color.red);
+      final boolean isSelected = true;
+      final VectorAnimationSelectWithPath vectorAnimation =
+          new VectorAnimationSelectWithPath(vectorMasterFavourite,
+              getString(R.string.movie_detail_vector_path_name),
+              startColor,
+              endColor);
+      vectorAnimation.registerOnSelectedEventListener(this);
+      vectorAnimation.setStrokeColor(endColor);
+      vectorAnimation.setSelected(isSelected);
+      vectorAnimation.startAnimation(ANIMATION_DURATION);
+
       // Get the movie trailers
       fetchTrailers(selectedMovie, savedInstanceState);
 
@@ -197,7 +221,7 @@ public class MovieDetailFragment
     }
   }
 
-  private void fetchTrailers(Movie selectedMovie, Bundle savedInstanceState) {
+  private void fetchTrailers(final Movie selectedMovie, final Bundle savedInstanceState) {
 
     // Get a reference to the Trailer's RecyclerView
     mRvMovieTrailers = mRootView.findViewById(R.id.recycler_movie_detail_trailers);
@@ -268,7 +292,7 @@ public class MovieDetailFragment
     }
   }
 
-  private void fetchReviews(Movie selectedMovie, Bundle savedInstanceState) {
+  private void fetchReviews(final Movie selectedMovie, final Bundle savedInstanceState) {
 
     // Get a reference to the Trailer's RecyclerView
     mRvMovieReviews = mRootView.findViewById(R.id.recycler_movie_detail_reviews);
@@ -353,7 +377,7 @@ public class MovieDetailFragment
   }
 
   @Override
-  public void onMovieTrailerItemClick(int clickedItemIndex) {
+  public void onMovieTrailerItemClick(final int clickedItemIndex) {
 
     final List<MovieTrailerList.MovieTrailer> trailerList = mTrailers.getTrailerList();
 
@@ -397,6 +421,14 @@ public class MovieDetailFragment
 
     outState.putParcelable(MOVIE_TRAILER_LIST, mTrailers);
     outState.putParcelable(MOVIE_REVIEW_LIST, mReviews);
+  }
+
+  @Override
+  public void onSelected(boolean isSelected) {
+    final String message =
+        isSelected ? getString(R.string.movie_detail_add_movie)
+            : getString(R.string.movie_detail_remove_movie);
+    Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
   }
 }
 
