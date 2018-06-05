@@ -18,7 +18,8 @@ public class UiErrorHelper {
     mErrorMsgResId = -1;
     mExceptionErrorMsg = "";
   }
-  public UiErrorHelper (UiErrorHelper errorHelper){
+
+  public UiErrorHelper(UiErrorHelper errorHelper) {
     mErrorEnabled = errorHelper.mErrorEnabled;
     mExceptionErrorConditionEnabled = errorHelper.mExceptionErrorConditionEnabled;
     mErrorMsgResId = errorHelper.mErrorMsgResId;
