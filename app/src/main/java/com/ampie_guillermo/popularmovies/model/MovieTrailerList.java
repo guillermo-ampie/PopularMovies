@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * A class to store a movie's list of trailers
+ * A class to store a movie's list of trailers.
  */
 public class MovieTrailerList implements Parcelable {
 

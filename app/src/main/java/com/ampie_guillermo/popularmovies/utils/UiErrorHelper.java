@@ -1,7 +1,7 @@
 package com.ampie_guillermo.popularmovies.utils;
 
 /**
- * UiErrorHelper: A super simple class to store an error that will be shown in the UI
+ * UiErrorHelper: A super simple class to store an error that will be shown in the UI.
  */
 
 public class UiErrorHelper {

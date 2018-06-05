@@ -1,6 +1,5 @@
 package com.ampie_guillermo.popularmovies.ui;
 
-
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;

@@ -8,7 +8,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
- * Retrofit turns your HTTP API into a Java interface
+ * Retrofit turns your HTTP API into a Java interface.
  */
 public interface MovieReviewService {
     @GET("/3/movie/{movieid}/reviews")

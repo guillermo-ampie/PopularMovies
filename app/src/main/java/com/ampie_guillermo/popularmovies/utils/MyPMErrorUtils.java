@@ -8,7 +8,7 @@ import com.ampie_guillermo.popularmovies.BuildConfig;
 import java.text.MessageFormat;
 
 /**
- * MyPMErrorUtils: A few method to check / notify / register error conditions
+ * MyPMErrorUtils: A few method to check / notify / register error conditions.
  */
 
 public enum MyPMErrorUtils {
