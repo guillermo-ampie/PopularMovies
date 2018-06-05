@@ -7,70 +7,70 @@ package com.ampie_guillermo.popularmovies.utils;
 public class UiErrorHelper {
 
 
-  private Boolean mErrorEnabled;
-  private Boolean mExceptionErrorConditionEnabled;
-  private int mErrorMsgResId;
-  private String mExceptionErrorMsg;
+  private Boolean errorEnabled;
+  private Boolean exceptionErrorConditionEnabled;
+  private int errorMsgResId;
+  private String exceptionErrorMsg;
 
   public UiErrorHelper() {
-    mErrorEnabled = Boolean.FALSE;
-    mExceptionErrorConditionEnabled = Boolean.FALSE;
-    mErrorMsgResId = -1;
-    mExceptionErrorMsg = "";
+    errorEnabled = Boolean.FALSE;
+    exceptionErrorConditionEnabled = Boolean.FALSE;
+    errorMsgResId = -1;
+    exceptionErrorMsg = "";
   }
 
   public UiErrorHelper(UiErrorHelper errorHelper) {
-    mErrorEnabled = errorHelper.mErrorEnabled;
-    mExceptionErrorConditionEnabled = errorHelper.mExceptionErrorConditionEnabled;
-    mErrorMsgResId = errorHelper.mErrorMsgResId;
-    mExceptionErrorMsg = errorHelper.mExceptionErrorMsg;
+    errorEnabled = errorHelper.errorEnabled;
+    exceptionErrorConditionEnabled = errorHelper.exceptionErrorConditionEnabled;
+    errorMsgResId = errorHelper.errorMsgResId;
+    exceptionErrorMsg = errorHelper.exceptionErrorMsg;
   }
 
   public UiErrorHelper(int errorMsgResId) {
-    mErrorEnabled = Boolean.TRUE;
-    mExceptionErrorConditionEnabled = Boolean.FALSE;
-    mErrorMsgResId = errorMsgResId;
-    mExceptionErrorMsg = "";
+    errorEnabled = Boolean.TRUE;
+    exceptionErrorConditionEnabled = Boolean.FALSE;
+    this.errorMsgResId = errorMsgResId;
+    exceptionErrorMsg = "";
   }
 
   public UiErrorHelper(int errorMsgResId, String exceptionErrorMsg) {
-    mErrorEnabled = Boolean.TRUE;
-    mExceptionErrorConditionEnabled = Boolean.TRUE;
-    mErrorMsgResId = errorMsgResId;
-    mExceptionErrorMsg = exceptionErrorMsg;
+    errorEnabled = Boolean.TRUE;
+    exceptionErrorConditionEnabled = Boolean.TRUE;
+    this.errorMsgResId = errorMsgResId;
+    this.exceptionErrorMsg = exceptionErrorMsg;
   }
 
   public void setErrorResId(int errorMsgResId) {
-    mErrorEnabled = Boolean.TRUE;
-    mErrorMsgResId = errorMsgResId;
+    errorEnabled = Boolean.TRUE;
+    this.errorMsgResId = errorMsgResId;
   }
 
   public void setExceptionErrorMsg(int errorMsgResId, String exceptionErrorMsg) {
     setErrorResId(errorMsgResId);
-    mExceptionErrorConditionEnabled = Boolean.TRUE;
-    mExceptionErrorMsg = exceptionErrorMsg;
+    exceptionErrorConditionEnabled = Boolean.TRUE;
+    this.exceptionErrorMsg = exceptionErrorMsg;
   }
 
   public void clear() {
-    mErrorEnabled = Boolean.FALSE;
-    mExceptionErrorConditionEnabled = Boolean.FALSE;
-    mErrorMsgResId = -1;
-    mExceptionErrorMsg = "";
+    errorEnabled = Boolean.FALSE;
+    exceptionErrorConditionEnabled = Boolean.FALSE;
+    errorMsgResId = -1;
+    exceptionErrorMsg = "";
   }
 
   public boolean isErrorEnabled() {
-    return mErrorEnabled.booleanValue();
+    return errorEnabled.booleanValue();
   }
 
   public boolean isExceptionErrorConditionEnabled() {
-    return mExceptionErrorConditionEnabled.booleanValue();
+    return exceptionErrorConditionEnabled.booleanValue();
   }
 
   public int getErrorMsgResId() {
-    return mErrorMsgResId;
+    return errorMsgResId;
   }
 
   public String getExceptionErrorMsg() {
-    return mExceptionErrorMsg;
+    return exceptionErrorMsg;
   }
 }

@@ -16,7 +16,7 @@ public enum MyPMErrorUtils {
 
   // TODO: 3/15/18 Review the @UiThread annotations process
   @UiThread
-  public static void showErrorMessage(String LogTag, Context context, int errorResId,
+  public static void showErrorMessage(String logTag, Context context, int errorResId,
       Exception exception) {
     String errorMessage = MessageFormat.format("{0}: {1}",
         context.getString(errorResId),
@@ -24,12 +24,12 @@ public enum MyPMErrorUtils {
 
     // Show & log error message
     Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
-    Log.e(LogTag, errorMessage);
+    Log.e(logTag, errorMessage);
 
   }
 
   @UiThread
-  public static void showErrorMessage(String LogTag, Context context, int errorResId,
+  public static void showErrorMessage(String logTag, Context context, int errorResId,
       String errorCondition) {
     String errorMessage = MessageFormat.format("{0}: {1}",
         context.getString(errorResId),
@@ -37,18 +37,18 @@ public enum MyPMErrorUtils {
 
     // Show & log error message
     Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
-    Log.e(LogTag, errorMessage);
+    Log.e(logTag, errorMessage);
 
   }
 
   @UiThread
-  public static void showErrorMessage(String LogTag, Context context, int errorResId) {
+  public static void showErrorMessage(String logTag, Context context, int errorResId) {
     String errorMessage = MessageFormat.format("{0}",
         context.getString(errorResId));
 
     // Show & log error message
     Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
-    Log.e(LogTag, errorMessage);
+    Log.e(logTag, errorMessage);
 
   }
 

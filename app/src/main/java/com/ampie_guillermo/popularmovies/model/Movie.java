@@ -76,7 +76,9 @@ public class Movie implements Parcelable {
     return mOverview;
   }
 
-  public Uri getPosterUri() { return mPosterUri; }
+  public Uri getPosterUri() {
+    return mPosterUri;
+  }
 
   public Uri getBackdropUri() {
     return mBackdropUri;

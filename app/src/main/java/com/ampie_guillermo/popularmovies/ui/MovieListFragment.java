@@ -310,8 +310,8 @@ public class MovieListFragment
   }
 
   private void showErrorDisplay() {
-  mRvMovieGrid.setVisibility(View.INVISIBLE);
-  mImageCloudOff.setVisibility(View.VISIBLE);
+    mRvMovieGrid.setVisibility(View.INVISIBLE);
+    mImageCloudOff.setVisibility(View.VISIBLE);
   }
 
   public static class PopularMovieListFragment extends MovieListFragment {
