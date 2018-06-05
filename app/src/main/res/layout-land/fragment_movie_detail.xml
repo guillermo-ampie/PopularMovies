@@ -1,4 +1,6 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/scroll_movie_detail_main"
   android:layout_width="match_parent"
@@ -107,6 +109,12 @@
           android:layout_gravity="start"
           android:textAppearance="?android:attr/textAppearanceLarge"
           tools:text="@sample/movie_data.json/results/vote_count"/>
+        <com.sdsmdg.harjot.vectormaster.VectorMasterView
+          android:id="@+id/vector_master_movie_detail_heart"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:contentDescription="@string/description_movie_detail_favourite_button"
+          app:vector_src="@drawable/ic_favorite_border_black_32dp"/>
 
       </LinearLayout>
 
@@ -167,11 +175,11 @@
     <!--This TextView will only appear when the movie does not have any trailer -->
     <TextView
       android:id="@+id/text_movie_detail_no_trailers"
+      android:textStyle="italic"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="start"
       android:text="@string/movie_detail_no_movie_trailers"
-      android:textStyle="italic"
       android:textAppearance="?android:attr/textAppearanceMedium"
       android:visibility="gone"/>
 
@@ -186,8 +194,8 @@
       android:layout_gravity="start"
       android:drawablePadding="@dimen/drawable_to_text_padding"
       android:drawableStart="@drawable/ic_rate_review_black_36dp_wrapper"
-      tools:text="@sample/movie_review.json/total_results"
-      android:textAppearance="?android:attr/textAppearanceMedium"/>
+      android:textAppearance="?android:attr/textAppearanceMedium"
+      tools:text="@sample/movie_review.json/total_results"/>
 
     <android.support.v7.widget.RecyclerView
       android:id="@+id/recycler_movie_detail_reviews"
@@ -201,11 +209,11 @@
     <!--This TextView will only appear when the movie does not have any reviews-->
     <TextView
       android:id="@+id/text_movie_detail_no_reviews"
+      android:textStyle="italic"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="start"
       android:text="@string/movie_detail_no_movie_reviews"
-      android:textStyle="italic"
       android:textAppearance="?android:attr/textAppearanceMedium"
       android:visibility="gone"/>
   </LinearLayout>
