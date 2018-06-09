@@ -11,17 +11,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.ampie_guillermo.popularmovies.BuildConfig;
 import com.ampie_guillermo.popularmovies.R;
+import com.ampie_guillermo.popularmovies.databinding.FragmentMovieDetailBinding;
 import com.ampie_guillermo.popularmovies.model.Movie;
 import com.ampie_guillermo.popularmovies.model.MovieReviewList;
 import com.ampie_guillermo.popularmovies.model.MovieTrailerList;
@@ -31,7 +28,6 @@ import com.ampie_guillermo.popularmovies.ui.adapter.MovieReviewAdapter;
 import com.ampie_guillermo.popularmovies.ui.adapter.MovieTrailerAdapter;
 import com.ampie_guillermo.popularmovies.utils.MyPMErrorUtils;
 import com.ampie_guillermo.popularmovies.utils.VectorAnimationSelectWithPath;
-import com.sdsmdg.harjot.vectormaster.VectorMasterView;
 import com.squareup.picasso.Picasso;
 import java.text.NumberFormat;
 import java.util.List;
@@ -72,10 +68,9 @@ public class MovieDetailFragment
 
   MovieTrailerList mTrailers;
   MovieReviewList mReviews;
-  View mRootView;
-  private RecyclerView mRvMovieTrailers;
+  FragmentMovieDetailBinding binding;
+
   private MovieTrailerAdapter mMovieTrailerAdapter;
-  private RecyclerView mRvMovieReviews;
   private MovieReviewAdapter mMovieReviewAdapter;
   private Call<MovieTrailerList> mCallTrailers;
   private Call<MovieReviewList> mCallReviews;
@@ -86,15 +81,14 @@ public class MovieDetailFragment
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+  public View onCreateView(LayoutInflater inflater,
+      ViewGroup container,
       Bundle savedInstanceState) {
 
-    mRootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
-
+    binding = FragmentMovieDetailBinding.inflate(inflater, container, false);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       // "ScrollIndicators" attribute is available since "Marshmallow (API 23)"
-      ScrollView sv = mRootView.findViewById(R.id.scroll_movie_detail_main);
-      sv.setScrollIndicators(View.SCROLL_INDICATOR_RIGHT);
+      binding.scrollMovieDetailMain.setScrollIndicators(View.SCROLL_INDICATOR_RIGHT);
     }
 
     final Intent intent = Objects.requireNonNull(getActivity()).getIntent();
@@ -105,11 +99,7 @@ public class MovieDetailFragment
         .getParcelable(getString(R.string.selected_movie));
     if (selectedMovie != null) {
       final Resources resources = getResources();
-      // we will reuse -tv- variable for all the TextView objects in this fragment
-      TextView tv = mRootView.findViewById(R.id.text_movie_detail_title);
-      tv.setText(selectedMovie.getOriginalTitle());
-
-      final ImageView moviePosterView = mRootView.findViewById(R.id.image_movie_detail_poster);
+      binding.textMovieDetailTitle.setText(selectedMovie.getOriginalTitle());
 
       // Show the movie poster
 
@@ -124,27 +114,28 @@ public class MovieDetailFragment
           .load(selectedMovie.getPosterUri())
           .placeholder(placeholderDrawable)
           .error(placeholderDrawableError)
-          .into(moviePosterView);
+          .into(binding.imageMovieDetailPoster);
 
-      tv = mRootView.findViewById(R.id.text_movie_detail_release_date_content);
-      tv.setText(selectedMovie.getReleaseDate());
+      // Set the movie release date
+      binding.textMovieDetailReleaseDateContent.setText(selectedMovie.getReleaseDate());
 
       // Rating & Votes values will be formatted based on the current locale's properties
-      NumberFormat numberFormat = NumberFormat.getNumberInstance();
+      final NumberFormat numberFormat = NumberFormat.getNumberInstance();
       numberFormat.setMaximumFractionDigits(1);
       final String rating = numberFormat.format((double) selectedMovie.getVoteAverage());
 
-      tv = mRootView.findViewById(R.id.text_movie_detail_rating_content);
-      tv.setText(rating);
+      // Set the movie rating
+      binding.textMovieDetailRatingContent.setText(rating);
 
       // Format the number using the current's locale grouping
       numberFormat.setGroupingUsed(true);
       final String votes = numberFormat.format((long) selectedMovie.getVoteCount());
-      tv = mRootView.findViewById(R.id.text_movie_detail_vote_count_content);
-      tv.setText(votes);
 
-      tv = mRootView.findViewById(R.id.text_movie_detail_overview_content);
-      tv.setText(selectedMovie.getOverview());
+      // Set the movie votes
+      binding.textMovieDetailVoteCountContent.setText(votes);
+
+      // Set the movie overview
+      binding.textMovieDetailOverviewContent.setText(selectedMovie.getOverview());
 
       /** Although the following (commented) code is correct, there is a workaround to all this,
        * that allow us to use drawables directly from XML in TextViews (in pre Lollipop API) using
@@ -178,13 +169,11 @@ public class MovieDetailFragment
 //      textMovieOverview.setCompoundDrawablePadding(drawableToTextPadding);
       // End of hack
 
-      final VectorMasterView vectorMasterFavourite =
-          mRootView.findViewById(R.id.vector_master_movie_detail_heart);
       final int startColor = resources.getColor(R.color.white);
       final int endColor = resources.getColor(R.color.red);
       final boolean isSelected = true;
       final VectorAnimationSelectWithPath vectorAnimation =
-          new VectorAnimationSelectWithPath(vectorMasterFavourite,
+          new VectorAnimationSelectWithPath(binding.vectorMasterMovieDetailHeart,
               getString(R.string.movie_detail_vector_path_name),
               startColor,
               endColor);
@@ -199,7 +188,8 @@ public class MovieDetailFragment
       // Get the movie reviews
       fetchReviews(selectedMovie, savedInstanceState);
     }
-    return mRootView;
+
+    return binding.getRoot();
   }
 
   /**
@@ -222,19 +212,15 @@ public class MovieDetailFragment
   }
 
   private void fetchTrailers(final Movie selectedMovie, final Bundle savedInstanceState) {
-
-    // Get a reference to the Trailer's RecyclerView
-    mRvMovieTrailers = mRootView.findViewById(R.id.recycler_movie_detail_trailers);
-
     // Set an -empty- adapter because the trailers have not been fetched
     mMovieTrailerAdapter = new MovieTrailerAdapter(this);
-    mRvMovieTrailers.setAdapter(mMovieTrailerAdapter);
+    binding.recyclerMovieDetailTrailers.setAdapter(mMovieTrailerAdapter);
 
     // We will show the movie trailers in just one row
-    mRvMovieTrailers.setLayoutManager(new LinearLayoutManager(getContext(),
+    binding.recyclerMovieDetailTrailers.setLayoutManager(new LinearLayoutManager(getContext(),
         LinearLayoutManager.HORIZONTAL,
         false));
-    mRvMovieTrailers.setHasFixedSize(true);
+    binding.recyclerMovieDetailTrailers.setHasFixedSize(true);
 
     if (savedInstanceState != null) {
       // We already have the trailers list, retrieve it and show it
@@ -271,7 +257,7 @@ public class MovieDetailFragment
           MyPMErrorUtils.showErrorMessage(LOG_TAG,
 //              getContext(),
 //              getActivity(),
-              mRootView.getContext(),
+              binding.getRoot().getContext(),
               R.string.error_contacting_server,
               t.getMessage());
         }
@@ -282,10 +268,10 @@ public class MovieDetailFragment
   void setupTrailersView() {
     if (mTrailers.getTrailerList().isEmpty()) {
       // We got no trailers, show "No trailers" text
-      TextView tvNoTrailers = mRootView.findViewById(R.id.text_movie_detail_no_trailers);
-      tvNoTrailers.setVisibility(View.VISIBLE);
+      binding.textMovieDetailNoTrailers.setVisibility(View.VISIBLE);
+
       // Hide the RecyclerView that shows the movie trailers
-      mRvMovieTrailers.setVisibility(View.GONE);
+      binding.recyclerMovieDetailTrailers.setVisibility(View.GONE);
     } else {
       // Set the data(trailers) we have just fetched
       mMovieTrailerAdapter.setMovieTrailerList(mTrailers);
@@ -293,24 +279,21 @@ public class MovieDetailFragment
   }
 
   private void fetchReviews(final Movie selectedMovie, final Bundle savedInstanceState) {
-
-    // Get a reference to the Trailer's RecyclerView
-    mRvMovieReviews = mRootView.findViewById(R.id.recycler_movie_detail_reviews);
-
     // Set an -empty- adapter because the reviews have not been fetched
     mMovieReviewAdapter = new MovieReviewAdapter();
-    mRvMovieReviews.setAdapter(mMovieReviewAdapter);
+    binding.recyclerMovieDetailReviews.setAdapter(mMovieReviewAdapter);
 
     // We will show the movie trailers in just one row
     final LinearLayoutManager layoutManager =
         new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-    mRvMovieReviews.setLayoutManager(layoutManager);
+    binding.recyclerMovieDetailReviews.setLayoutManager(layoutManager);
 
     // Set a divider line
     final DividerItemDecoration dividerLine =
-        new DividerItemDecoration(mRvMovieReviews.getContext(),
+        // TODO: check getContext() call
+        new DividerItemDecoration(binding.recyclerMovieDetailReviews.getContext(),
             layoutManager.getOrientation());
-    mRvMovieReviews.addItemDecoration(dividerLine);
+    binding.recyclerMovieDetailReviews.addItemDecoration(dividerLine);
 
     if (savedInstanceState != null) {
       // We already have the reviews list, retrieve it and show it
@@ -347,7 +330,7 @@ public class MovieDetailFragment
               // getContext() and getActivity() could be null
 //              getContext()
 //              getActivity(),
-              mRootView.getContext(),
+              binding.getRoot().getContext(),
               R.string.error_contacting_server,
               t.getMessage());
         }
@@ -356,21 +339,20 @@ public class MovieDetailFragment
   }
 
   void setupReviewsView() {
-    List<MovieReviewList.MovieReview> reviewList = mReviews.getReviewList();
+    final List<MovieReviewList.MovieReview> reviewList = mReviews.getReviewList();
 
     if (reviewList.isEmpty()) {
       // We got no reviews, show "No reviews" text
-      final TextView tvNoReviews = mRootView.findViewById(R.id.text_movie_detail_no_reviews);
-      tvNoReviews.setVisibility(View.VISIBLE);
+      binding.textMovieDetailNoReviews.setVisibility(View.VISIBLE);
+
       // Hide the RecyclerView that shows the movie reviews
-      mRvMovieReviews.setVisibility(View.GONE);
+      binding.recyclerMovieDetailReviews.setVisibility(View.GONE);
     } else {
-      // We got reviews, show them and their total
-      final TextView textReviewsTitle = mRootView.findViewById(R.id.text_movie_detail_reviews);
+      // We got reviews, show them and their total number
       final String totalReviews =
           '(' + String.valueOf(reviewList.size()) + ") "
               + getResources().getString(R.string.movie_detail_reviews);
-      textReviewsTitle.setText(totalReviews);
+      binding.textMovieDetailReviews.setText(totalReviews);
       // Set the data(reviews) we have just fetched
       mMovieReviewAdapter.setMovieReviewList(mReviews);
     }
@@ -378,7 +360,6 @@ public class MovieDetailFragment
 
   @Override
   public void onMovieTrailerItemClick(final int clickedItemIndex) {
-
     final List<MovieTrailerList.MovieTrailer> trailerList = mTrailers.getTrailerList();
 
     MyPMErrorUtils.validateIndexInCollection(clickedItemIndex, trailerList.size());
@@ -392,7 +373,6 @@ public class MovieDetailFragment
             .build();
 
     // Play the movie trailer on youtube.com
-    // TODO: Expand code to play trailer in youtube app if installed
     startActivity(new Intent(Intent.ACTION_VIEW, trailerUri));
   }
 
