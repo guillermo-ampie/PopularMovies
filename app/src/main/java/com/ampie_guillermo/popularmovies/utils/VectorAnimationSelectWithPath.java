@@ -44,11 +44,9 @@ public class VectorAnimationSelectWithPath {
   private void setupAnimation(final long duration) {
     // initialize valueAnimator and pass start and end color values
     final ValueAnimator valueAnimator;
-    if (mIsSelected) {
-      valueAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), mStartColor, mEndColor);
-    } else {
-      valueAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), mEndColor, mStartColor);
-    }
+    valueAnimator =
+        mIsSelected ? ValueAnimator.ofObject(new ArgbEvaluator(), mStartColor, mEndColor)
+            : ValueAnimator.ofObject(new ArgbEvaluator(), mEndColor, mStartColor);
     valueAnimator.setDuration(duration);
 
     valueAnimator.addUpdateListener(valueAnimator1 -> {
