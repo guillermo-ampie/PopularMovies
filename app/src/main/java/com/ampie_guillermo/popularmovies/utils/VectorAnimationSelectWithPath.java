@@ -73,6 +73,7 @@ public class VectorAnimationSelectWithPath {
     });
   }
 
+  @FunctionalInterface
   public interface OnSelectedEventListener {
 
     void onSelected(boolean isSelected);
