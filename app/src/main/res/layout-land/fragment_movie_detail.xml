@@ -113,7 +113,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             tools:text="@sample/movie_data.json/results/vote_count"/>
           <com.sdsmdg.harjot.vectormaster.VectorMasterView
-            android:id="@+id/vector_master_movie_detail_heart"
+            android:id="@+id/vector_master_movie_detail_favourite"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:contentDescription="@string/description_movie_detail_favourite_button"

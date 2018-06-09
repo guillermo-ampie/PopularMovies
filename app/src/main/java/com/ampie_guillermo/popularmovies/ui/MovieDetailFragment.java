@@ -173,7 +173,7 @@ public class MovieDetailFragment
       final int endColor = resources.getColor(R.color.red);
       final boolean isSelected = true;
       final VectorAnimationSelectWithPath vectorAnimation =
-          new VectorAnimationSelectWithPath(binding.vectorMasterMovieDetailHeart,
+          new VectorAnimationSelectWithPath(binding.vectorMasterMovieDetailFavourite,
               getString(R.string.movie_detail_vector_path_name),
               startColor,
               endColor);
