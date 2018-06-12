@@ -52,7 +52,7 @@ public class MovieListFragment
     MovieAdapter.MovieItemClickListener {
 
   private static final int MOVIE_LIST_LOADER_ID = 1000;
-  private static final String MOVIE_SORTING_METHOD_EXTRA = "sorting-method";
+  private static final String EXTRA_MOVIE_SORTING_METHOD = "EXTRA_MOVIE_SORTING_METHOD";
   private static final String LOG_TAG = MovieListFragment.class.getSimpleName();
   private static final int MOVIES_RESULT_SIZE = 20;
 
@@ -180,7 +180,7 @@ public class MovieListFragment
 
   protected void getMovies() {
     final Bundle bundle = new Bundle();
-    bundle.putString(MOVIE_SORTING_METHOD_EXTRA, mSortingMethodParam);
+    bundle.putString(EXTRA_MOVIE_SORTING_METHOD, mSortingMethodParam);
 
 //    LoaderManager lm = getLoaderManager();
 //    Loader<ArrayList<Movie>> loader = lm.getLoader(MOVIE_LIST_LOADER_ID);
@@ -296,7 +296,7 @@ public class MovieListFragment
     MyPMErrorUtils.validateIndexInCollection(clickedItemIndex, mMovieList.size());
     final Movie currentMovie = mMovieList.get(clickedItemIndex);
     final Intent intent = new Intent(getActivity(),
-        MovieDetailActivity.class).putExtra(getString(R.string.selected_movie), currentMovie);
+        MovieDetailActivity.class).putExtra(getString(R.string.EXTRA_SELECTED_MOVIE), currentMovie);
 
     startActivity(intent);
   }
@@ -374,7 +374,7 @@ public class MovieListFragment
     @Override
     public ArrayList<Movie> loadInBackground() {
       Log.v(MovieListLoader.LOG_TAG, "++++++++++ loadInBackground() ");
-      String sortingMethod = mArgs.getString(MOVIE_SORTING_METHOD_EXTRA);
+      String sortingMethod = mArgs.getString(EXTRA_MOVIE_SORTING_METHOD);
 
       if (TextUtils.isEmpty(sortingMethod)) {
         mUiError.setErrorResId(R.string.error_missing_sorting_method);

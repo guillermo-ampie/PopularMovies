@@ -50,11 +50,13 @@ public class MovieDetailFragment
 
   static final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
 
-  private static final String BUNDLE_IS_FAVOURITE = "BUNDLE_IS_FAVOURITE";
   // The BASE URL is the same for trailers & reviews
-  private static final String MOVIEDB_BASE_URL = "https://api.themoviedb.org";
-  private static final String MOVIE_TRAILER_LIST = "movie_trailer_list";
-  private static final String MOVIE_REVIEW_LIST = "movie_review_list";
+  private static final String MOVIE_DB_BASE_URL = "https://api.themoviedb.org";
+
+  // Keys for bundles
+  private static final String BUNDLE_IS_FAVOURITE = "BUNDLE_IS_FAVOURITE";
+  private static final String BUNDLE_MOVIE_TRAILER_LIST = "BUNDLE_MOVIE_TRAILER_LIST";
+  private static final String BUNDLE_MOVIE_REVIEW_LIST = "BUNDLE_MOVIE_REVIEW_LIST";
 
   private static final long ANIMATION_DURATION = 1000L;
   /**
@@ -63,7 +65,7 @@ public class MovieDetailFragment
    */
   private static final Retrofit RETROFIT =
       new Retrofit.Builder()
-          .baseUrl(MOVIEDB_BASE_URL)
+          .baseUrl(MOVIE_DB_BASE_URL)
           .addConverterFactory(GsonConverterFactory.create())
           .build();
 
@@ -98,7 +100,7 @@ public class MovieDetailFragment
     // Get the selected movie passed by Intent
     final Movie selectedMovie = Objects
         .requireNonNull(intent.getExtras())
-        .getParcelable(getString(R.string.selected_movie));
+        .getParcelable(getString(R.string.EXTRA_SELECTED_MOVIE));
     if (selectedMovie != null) {
       final Resources resources = getResources();
       binding.textMovieDetailTitle.setText(selectedMovie.getOriginalTitle());
@@ -245,8 +247,8 @@ public class MovieDetailFragment
   public void onSaveInstanceState(@NonNull Bundle outState) {
     super.onSaveInstanceState(outState);
 
-    outState.putParcelable(MOVIE_TRAILER_LIST, mTrailers);
-    outState.putParcelable(MOVIE_REVIEW_LIST, mReviews);
+    outState.putParcelable(BUNDLE_MOVIE_TRAILER_LIST, mTrailers);
+    outState.putParcelable(BUNDLE_MOVIE_REVIEW_LIST, mReviews);
     outState.putBoolean(BUNDLE_IS_FAVOURITE, isFavourite);
   }
 
@@ -275,7 +277,7 @@ public class MovieDetailFragment
 
     if (savedInstanceState != null) {
       // We already have the trailers list, retrieve it and show it
-      mTrailers = savedInstanceState.getParcelable(MOVIE_TRAILER_LIST);
+      mTrailers = savedInstanceState.getParcelable(BUNDLE_MOVIE_TRAILER_LIST);
       setupTrailersView();
     } else {
       // We have to fetch the trailers
@@ -348,7 +350,7 @@ public class MovieDetailFragment
 
     if (savedInstanceState != null) {
       // We already have the reviews list, retrieve it and show it
-      mReviews = savedInstanceState.getParcelable(MOVIE_REVIEW_LIST);
+      mReviews = savedInstanceState.getParcelable(BUNDLE_MOVIE_REVIEW_LIST);
       setupReviewsView();
     } else {
       // We have to fetch the trailers
@@ -422,7 +424,7 @@ public class MovieDetailFragment
     final int endColor = resources.getColor(R.color.red);
     final VectorAnimationSelectWithPath vectorAnimation =
         new VectorAnimationSelectWithPath(binding.vectorMasterMovieDetailFavourite,
-            getString(R.string.movie_detail_vector_path_name),
+            getString(R.string.vector_path_name),
             startColor,
             endColor);
     vectorAnimation.registerOnSelectedEventListener(this);

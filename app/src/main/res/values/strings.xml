@@ -27,8 +27,8 @@
   <string name="description_movie_detail_favourite_button">Add or Remove a movie from Favourite list</string>
 
   <!-- Non UI constant strings -->
-  <string name="selected_movie">selected-movie</string>
-  <string name="movie_detail_vector_path_name">outline</string>
+  <string name="EXTRA_SELECTED_MOVIE">selected-movie</string>
+  <string name="vector_path_name">outline</string>
 
   <!-- Error messages -->
   <string name="error_contacting_server">Error contacting themoviedb.org server</string>
