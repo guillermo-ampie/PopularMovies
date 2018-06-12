@@ -50,6 +50,7 @@ public class MovieDetailFragment
 
   static final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
 
+  private static final String BUNDLE_IS_FAVOURITE = "BUNDLE_IS_FAVOURITE";
   // The BASE URL is the same for trailers & reviews
   private static final String MOVIEDB_BASE_URL = "https://api.themoviedb.org";
   private static final String MOVIE_TRAILER_LIST = "movie_trailer_list";
@@ -68,8 +69,9 @@ public class MovieDetailFragment
 
   MovieTrailerList mTrailers;
   MovieReviewList mReviews;
-  FragmentMovieDetailBinding binding;
 
+  private boolean isFavourite;
+  private FragmentMovieDetailBinding binding;
   private MovieTrailerAdapter mMovieTrailerAdapter;
   private MovieReviewAdapter mMovieReviewAdapter;
   private Call<MovieTrailerList> mCallTrailers;
@@ -169,24 +171,13 @@ public class MovieDetailFragment
 //      textMovieOverview.setCompoundDrawablePadding(drawableToTextPadding);
       // End of hack
 
-      final int startColor = resources.getColor(R.color.white);
-      final int endColor = resources.getColor(R.color.red);
-      final boolean isSelected = true;
-      final VectorAnimationSelectWithPath vectorAnimation =
-          new VectorAnimationSelectWithPath(binding.vectorMasterMovieDetailFavourite,
-              getString(R.string.movie_detail_vector_path_name),
-              startColor,
-              endColor);
-      vectorAnimation.registerOnSelectedEventListener(this);
-      vectorAnimation.setStrokeColor(endColor);
-      vectorAnimation.setSelected(isSelected);
-      vectorAnimation.startAnimation(ANIMATION_DURATION);
+      setupFavouriteState(savedInstanceState, resources, selectedMovie);
 
       // Get the movie trailers
-      fetchTrailers(selectedMovie, savedInstanceState);
+      fetchTrailers(savedInstanceState, selectedMovie);
 
       // Get the movie reviews
-      fetchReviews(selectedMovie, savedInstanceState);
+      fetchReviews(savedInstanceState, selectedMovie);
     }
 
     return binding.getRoot();
@@ -209,9 +200,69 @@ public class MovieDetailFragment
     if (mCallReviews != null) {
       mCallReviews.cancel();
     }
+
+    // TODO: Save Favourite state "isFavourite" to DB
   }
 
-  private void fetchTrailers(final Movie selectedMovie, final Bundle savedInstanceState) {
+  @Override
+  public void onMovieTrailerItemClick(final int clickedItemIndex) {
+    final List<MovieTrailerList.MovieTrailer> trailerList = mTrailers.getTrailerList();
+
+    MyPMErrorUtils.validateIndexInCollection(clickedItemIndex, trailerList.size());
+    final MovieTrailerList.MovieTrailer trailer = trailerList.get(clickedItemIndex);
+    final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?";
+    final String VIDEO_PARAM = "v";
+    final Uri trailerUri =
+        Uri.parse(YOUTUBE_BASE_URL)
+            .buildUpon()
+            .appendQueryParameter(VIDEO_PARAM, trailer.getKey())
+            .build();
+
+    // Play the movie trailer on youtube.com
+    startActivity(new Intent(Intent.ACTION_VIEW, trailerUri));
+  }
+
+  /**
+   * Called to ask the fragment to save its current dynamic state, so it
+   * can later be reconstructed in a new instance of its process is
+   * restarted.  If a new instance of the fragment later needs to be
+   * created, the data you place in the Bundle here will be available
+   * in the Bundle given to {@link #onCreate(Bundle)},
+   * {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}, and
+   * {@link #onActivityCreated(Bundle)}.
+   *
+   * <p>This corresponds to {link Activity#onSaveInstanceState(Bundle outState)
+   * Activity.onSaveInstanceState(Bundle)} and most of the discussion there
+   * applies here as well.  Note however: <em>this method may be called
+   * at any time before {@link #onDestroy()}</em>.  There are many situations
+   * where a fragment may be mostly torn down (such as when placed on the
+   * back stack with no UI showing), but its state will not be saved until
+   * its owning activity actually needs to save its state.
+   *
+   * @param outState Bundle in which to place your saved state.
+   */
+  @Override
+  public void onSaveInstanceState(@NonNull Bundle outState) {
+    super.onSaveInstanceState(outState);
+
+    outState.putParcelable(MOVIE_TRAILER_LIST, mTrailers);
+    outState.putParcelable(MOVIE_REVIEW_LIST, mReviews);
+    outState.putBoolean(BUNDLE_IS_FAVOURITE, isFavourite);
+  }
+
+  @Override
+  public void onSelected(boolean isSelected) {
+    // Save new state
+    isFavourite = isSelected;
+
+    // Actually, favourite state is saved into the DB until Fragment's onStop()
+    final String message =
+        isSelected ? getString(R.string.movie_detail_add_movie)
+            : getString(R.string.movie_detail_remove_movie);
+    Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+  }
+
+  private void fetchTrailers(final Bundle savedInstanceState, final Movie selectedMovie) {
     // Set an -empty- adapter because the trailers have not been fetched
     mMovieTrailerAdapter = new MovieTrailerAdapter(this);
     binding.recyclerMovieDetailTrailers.setAdapter(mMovieTrailerAdapter);
@@ -278,7 +329,7 @@ public class MovieDetailFragment
     }
   }
 
-  private void fetchReviews(final Movie selectedMovie, final Bundle savedInstanceState) {
+  private void fetchReviews(final Bundle savedInstanceState, final Movie selectedMovie) {
     // Set an -empty- adapter because the reviews have not been fetched
     mMovieReviewAdapter = new MovieReviewAdapter();
     binding.recyclerMovieDetailReviews.setAdapter(mMovieReviewAdapter);
@@ -358,57 +409,32 @@ public class MovieDetailFragment
     }
   }
 
-  @Override
-  public void onMovieTrailerItemClick(final int clickedItemIndex) {
-    final List<MovieTrailerList.MovieTrailer> trailerList = mTrailers.getTrailerList();
+  private void setupFavouriteState(final Bundle savedInstanceState,
+      final Resources resources,
+      final Movie selectedMovie) {
 
-    MyPMErrorUtils.validateIndexInCollection(clickedItemIndex, trailerList.size());
-    final MovieTrailerList.MovieTrailer trailer = trailerList.get(clickedItemIndex);
-    final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?";
-    final String VIDEO_PARAM = "v";
-    final Uri trailerUri =
-        Uri.parse(YOUTUBE_BASE_URL)
-            .buildUpon()
-            .appendQueryParameter(VIDEO_PARAM, trailer.getKey())
-            .build();
+    // Set Favourite's button initial state
+    isFavourite = (savedInstanceState == null) ? isFavourite(selectedMovie)
+        : savedInstanceState.getBoolean(BUNDLE_IS_FAVOURITE);
 
-    // Play the movie trailer on youtube.com
-    startActivity(new Intent(Intent.ACTION_VIEW, trailerUri));
+    // Setup animation for favourite button
+    final int startColor = resources.getColor(R.color.white);
+    final int endColor = resources.getColor(R.color.red);
+    final VectorAnimationSelectWithPath vectorAnimation =
+        new VectorAnimationSelectWithPath(binding.vectorMasterMovieDetailFavourite,
+            getString(R.string.movie_detail_vector_path_name),
+            startColor,
+            endColor);
+    vectorAnimation.registerOnSelectedEventListener(this);
+    vectorAnimation.setStrokeColor(endColor);
+    vectorAnimation.setSelected(isFavourite);
+    vectorAnimation.startAnimation(ANIMATION_DURATION);
   }
 
-  /**
-   * Called to ask the fragment to save its current dynamic state, so it
-   * can later be reconstructed in a new instance of its process is
-   * restarted.  If a new instance of the fragment later needs to be
-   * created, the data you place in the Bundle here will be available
-   * in the Bundle given to {@link #onCreate(Bundle)},
-   * {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}, and
-   * {@link #onActivityCreated(Bundle)}.
-   *
-   * <p>This corresponds to {link Activity#onSaveInstanceState(Bundle outState)
-   * Activity.onSaveInstanceState(Bundle)} and most of the discussion there
-   * applies here as well.  Note however: <em>this method may be called
-   * at any time before {@link #onDestroy()}</em>.  There are many situations
-   * where a fragment may be mostly torn down (such as when placed on the
-   * back stack with no UI showing), but its state will not be saved until
-   * its owning activity actually needs to save its state.
-   *
-   * @param outState Bundle in which to place your saved state.
-   */
-  @Override
-  public void onSaveInstanceState(@NonNull Bundle outState) {
-    super.onSaveInstanceState(outState);
-
-    outState.putParcelable(MOVIE_TRAILER_LIST, mTrailers);
-    outState.putParcelable(MOVIE_REVIEW_LIST, mReviews);
+  private boolean isFavourite(final Movie selectedMovie) {
+    // TODO: Read from DB
+    return true;
   }
 
-  @Override
-  public void onSelected(boolean isSelected) {
-    final String message =
-        isSelected ? getString(R.string.movie_detail_add_movie)
-            : getString(R.string.movie_detail_remove_movie);
-    Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-  }
 }
 
