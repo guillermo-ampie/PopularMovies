@@ -27,8 +27,8 @@
   <string name="description_movie_detail_favourite_button">Add or Remove a movie from Favourite list</string>
 
   <!-- Non UI constant strings -->
-  <string name="EXTRA_SELECTED_MOVIE">selected-movie</string>
-  <string name="vector_path_name">outline</string>
+  <string name="EXTRA_SELECTED_MOVIE" translatable="false">selected-movie</string>
+  <string name="vector_path_name" translatable="false">outline</string>
 
   <!-- Error messages -->
   <string name="error_contacting_server">Error contacting themoviedb.org server</string>
@@ -38,6 +38,7 @@
   <string name="error_missing_sorting_method">Missing sorting method in https query</string>
   <string name="error_processing_json_response">Error processing the JSON response</string>
   <string name="error_internal_program_error">Internal program error!</string>
+  <string name="error_forbidden_call">Use of constructor is not allowed, call getInstance() instead</string>
 
 
 </resources>
