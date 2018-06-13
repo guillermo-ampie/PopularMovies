@@ -27,6 +27,7 @@
     android:paddingEnd="@dimen/padding_fat_horizontal_material"
     android:paddingLeft="@dimen/padding_fat_horizontal_material"
     android:paddingRight="@dimen/padding_fat_horizontal_material"
+    android:lineSpacingExtra="2sp"
     android:textAppearance="?android:attr/textAppearanceSmall"
     tools:text="@sample/movie_review.json/results/content"/>
 

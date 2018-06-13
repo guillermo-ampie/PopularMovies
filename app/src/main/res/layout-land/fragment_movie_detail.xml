@@ -146,6 +146,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
+            android:lineSpacingExtra="2sp"
             android:textAppearance="?android:attr/textAppearanceSmall"
             tools:text="@sample/movie_data.json/results/overview"/>
 
