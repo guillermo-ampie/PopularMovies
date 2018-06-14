@@ -1,9 +1,7 @@
 package com.ampie_guillermo.popularmovies.ui.adapter;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import com.ampie_guillermo.popularmovies.R;
 import com.ampie_guillermo.popularmovies.model.MovieTrailerList;
+import com.ampie_guillermo.popularmovies.utils.DrawablePlaceholderSingleton;
 import com.squareup.picasso.Picasso;
 
 
@@ -24,7 +23,7 @@ public class MovieTrailerAdapter extends
   static MovieTrailerItemClickListener sOnClickListener;
   private MovieTrailerList mMovieTrailerList;
 
-  public MovieTrailerAdapter(MovieTrailerItemClickListener onClickListener) {
+  public MovieTrailerAdapter(final MovieTrailerItemClickListener onClickListener) {
     // TODO: Check the assignment to "sOnClickListener": can this cause a memory leak?
     sOnClickListener = onClickListener;
   }
@@ -50,10 +49,8 @@ public class MovieTrailerAdapter extends
    */
   @Override
   public MovieTrailerAdapter.TrailerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-    Context context = parent.getContext();
-    LayoutInflater inflater = LayoutInflater.from(context);
-    View view = inflater.inflate(R.layout.item_movie_trailer_thumbnail, parent, false);
+    final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+    final View view = inflater.inflate(R.layout.item_movie_trailer_thumbnail, parent, false);
 
     return new MovieTrailerAdapter.TrailerViewHolder(view);
   }
@@ -80,8 +77,7 @@ public class MovieTrailerAdapter extends
    */
   @Override
   public void onBindViewHolder(MovieTrailerAdapter.TrailerViewHolder holder, int position) {
-    Uri thumbnailUri
-        = Uri.withAppendedPath(Uri.parse(THUMBNAIL_BASE_URL),
+    final Uri thumbnailUri = Uri.withAppendedPath(Uri.parse(THUMBNAIL_BASE_URL),
         mMovieTrailerList.getTrailerList().get(position).getKey()
             + THUMBNAIL_IMAGE_TYPE);
 
@@ -100,7 +96,7 @@ public class MovieTrailerAdapter extends
     return (mMovieTrailerList != null) ? mMovieTrailerList.getTrailerList().size() : 0;
   }
 
-  public void setMovieTrailerList(MovieTrailerList trailerList) {
+  public void setMovieTrailerList(final MovieTrailerList trailerList) {
     // set the new data & update the UI
     mMovieTrailerList = trailerList;
     notifyDataSetChanged();
@@ -116,24 +112,23 @@ public class MovieTrailerAdapter extends
   static class TrailerViewHolder extends RecyclerView.ViewHolder
       implements View.OnClickListener {
 
+    private final Drawable drawablePlaceholder;
+    private final Drawable drawableErrorPlaceHolder;
+
     // This class uses "implements View.OnClickListener" instead of member variables as in
     // MovieAdapter.MovieViewHolder
     private final ImageView mTrailerThumbnailView;
-    // TODO: can this placeholders be static or singleton?
-    private final Drawable mPlaceholderDrawable;
-    private final Drawable mPlaceholderDrawableError;
-
 
     TrailerViewHolder(View view) {
       super(view);
+
+      final DrawablePlaceholderSingleton placeholders =
+          DrawablePlaceholderSingleton.getInstance(itemView.getResources());
+
+      drawablePlaceholder = placeholders.getDrawablePlaceHolder();
+      drawableErrorPlaceHolder = placeholders.getDrawablePlaceHolder();
       mTrailerThumbnailView =
           view.findViewById(R.id.image_movie_trailer_thumbnail_trailer_thumbnail);
-      mPlaceholderDrawable = ResourcesCompat
-          .getDrawable(itemView.getResources(), R.drawable.ic_movie_black_237x180dp, null);
-      mPlaceholderDrawableError = ResourcesCompat.getDrawable(itemView.getResources(),
-          R.drawable.ic_broken_image_black_237x180dp,
-          null);
-
       view.setOnClickListener(this);
     }
 
@@ -143,16 +138,13 @@ public class MovieTrailerAdapter extends
       sOnClickListener.onMovieTrailerItemClick(getAdapterPosition());
     }
 
-    void setupItemView(Uri trailerThumbnailUri) {
-      // See comment in MovieAdapter::MovieViewHolder() to allow vector drawables in
+    void setupItemView(final Uri trailerThumbnailUri) {
+      // See comment in DrawablePlaceholderSingleton() to allow vector drawables in
       // API level < 21 (Lollipop)
-
-      // itemView is a member of class ViewHolder
-//      Picasso.with(itemView.getContext())
       Picasso.get()
           .load(trailerThumbnailUri)
-          .placeholder(mPlaceholderDrawable)
-          .error(mPlaceholderDrawableError)
+          .placeholder(drawablePlaceholder)
+          .error(drawableErrorPlaceHolder)
           .fit()
           .into(mTrailerThumbnailView);
     }

@@ -1,7 +1,6 @@
 package com.ampie_guillermo.popularmovies.ui.adapter;
 
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.recyclerview.extensions.ListAdapter;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +12,7 @@ import android.widget.ListView;
 import com.ampie_guillermo.popularmovies.R;
 import com.ampie_guillermo.popularmovies.model.Movie;
 import com.ampie_guillermo.popularmovies.ui.adapter.MovieAdapter.MovieViewHolder;
+import com.ampie_guillermo.popularmovies.utils.DrawablePlaceholderSingleton;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -62,9 +62,8 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
    */
   @Override
   public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-    LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-    View view = inflater.inflate(R.layout.item_movie_poster, parent, false);
+    final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+    final View view = inflater.inflate(R.layout.item_movie_poster, parent, false);
 
     return new MovieViewHolder(view, mOnClickListener);
   }
@@ -93,9 +92,8 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
   public void onBindViewHolder(MovieViewHolder holder, int position) {
 
 //    Movie currentMovie = get(position);
-    Movie currentMovie = getItem(position);
+    final Movie currentMovie = getItem(position);
     holder.setupItemView(currentMovie);
-
   }
 
 //  /**
@@ -123,39 +121,34 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
 
   // The View Holder used for each movie poster
   static class MovieViewHolder extends RecyclerView.ViewHolder {
+    private final Drawable drawablePlaceholder;
+    private final Drawable drawableErrorPlaceHolder;
+    private final MovieItemClickListener onClickListener;
+    private final ImageView movieThumbnailView;
 
-    private final Drawable mPlaceholderDrawable;
-    private final Drawable mPlaceholderDrawableError;
-    private final MovieItemClickListener mOnClickListener;
-    private final ImageView mMovieThumbnailView;
-
-    MovieViewHolder(View view, MovieItemClickListener onClickListener) {
+    MovieViewHolder(final View view, final MovieItemClickListener onItemClickListener) {
       super(view);
-      mMovieThumbnailView = view.findViewById(R.id.image_movie_poster_movie_poster);
-      mOnClickListener = onClickListener;
-      /*
-        The hack with the variable "mPlaceholderDrawable" and "mPlaceholderDrawableError" is needed
-        to support -vector drawables- on API level < 21 (Lollipop)
-        Reference: https://github.com/square/picasso/issues/1109, see
-        entry: "ncornette commented on Jun 27, 2016"
-      */
-      mPlaceholderDrawable = ResourcesCompat
-          .getDrawable(itemView.getResources(), R.drawable.ic_movie_black_237x180dp, null);
-      mPlaceholderDrawableError = ResourcesCompat.getDrawable(itemView.getResources(),
-          R.drawable.ic_broken_image_black_237x180dp,
-          null);
 
-      mMovieThumbnailView.setOnClickListener(
-          v -> mOnClickListener.onMovieItemClick(getAdapterPosition()));
+      final DrawablePlaceholderSingleton placeholders =
+          DrawablePlaceholderSingleton.getInstance(itemView.getResources());
+
+      drawablePlaceholder = placeholders.getDrawablePlaceHolder();
+      drawableErrorPlaceHolder = placeholders.getDrawablePlaceHolder();
+      movieThumbnailView = view.findViewById(R.id.image_movie_poster_movie_poster);
+
+      onClickListener = onItemClickListener;
+      movieThumbnailView.setOnClickListener(
+          v -> onClickListener.onMovieItemClick(getAdapterPosition()));
     }
 
-    void setupItemView(Movie currentMovie) {
+    void setupItemView(final Movie currentMovie) {
+      // See comment in DrawablePlaceholderSingleton() to allow vector drawables in
+      // API level < 21 (Lollipop)
       Picasso.get()
-//      Picasso.with(itemView.getContext())
           .load(currentMovie.getPosterUri())
-          .placeholder(mPlaceholderDrawable)
-          .error(mPlaceholderDrawableError)
-          .into(mMovieThumbnailView);
+          .placeholder(drawablePlaceholder)
+          .error(drawableErrorPlaceHolder)
+          .into(movieThumbnailView);
     }
   }
 }

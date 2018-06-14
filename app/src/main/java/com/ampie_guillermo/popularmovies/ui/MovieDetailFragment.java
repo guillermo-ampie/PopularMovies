@@ -2,13 +2,11 @@ package com.ampie_guillermo.popularmovies.ui;
 
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
@@ -26,6 +24,7 @@ import com.ampie_guillermo.popularmovies.network.MovieReviewService;
 import com.ampie_guillermo.popularmovies.network.MovieTrailerService;
 import com.ampie_guillermo.popularmovies.ui.adapter.MovieReviewAdapter;
 import com.ampie_guillermo.popularmovies.ui.adapter.MovieTrailerAdapter;
+import com.ampie_guillermo.popularmovies.utils.DrawablePlaceholderSingleton;
 import com.ampie_guillermo.popularmovies.utils.MyPMErrorUtils;
 import com.ampie_guillermo.popularmovies.utils.VectorAnimationSelectWithPath;
 import com.squareup.picasso.Picasso;
@@ -71,9 +70,9 @@ public class MovieDetailFragment
 
   MovieTrailerList mTrailers;
   MovieReviewList mReviews;
+  FragmentMovieDetailBinding binding;
 
   private boolean isFavourite;
-  private FragmentMovieDetailBinding binding;
   private MovieTrailerAdapter mMovieTrailerAdapter;
   private MovieReviewAdapter mMovieReviewAdapter;
   private Call<MovieTrailerList> mCallTrailers;
@@ -105,19 +104,16 @@ public class MovieDetailFragment
       final Resources resources = getResources();
       binding.textMovieDetailTitle.setText(selectedMovie.getOriginalTitle());
 
-      // Show the movie poster
-
       // See comment in MovieAdapter::setupItemView to allow vector drawables in
       // API level < 21 (Lollipop)
-      final Drawable placeholderDrawable = ResourcesCompat
-          .getDrawable(resources, R.drawable.ic_movie_black_237x180dp, null);
-      final Drawable placeholderDrawableError = ResourcesCompat
-          .getDrawable(resources, R.drawable.ic_broken_image_black_237x180dp, null);
-//      Picasso.with(getContext())
+
+      // Show the movie poster
+      final DrawablePlaceholderSingleton placeholders =
+          DrawablePlaceholderSingleton.getInstance(resources);
       Picasso.get()
           .load(selectedMovie.getPosterUri())
-          .placeholder(placeholderDrawable)
-          .error(placeholderDrawableError)
+          .placeholder(placeholders.getDrawablePlaceHolder())
+          .error(placeholders.getDrawableErrorPlaceholder())
           .into(binding.imageMovieDetailPoster);
 
       // Set the movie release date
@@ -154,7 +150,7 @@ public class MovieDetailFragment
        *  answered on Jan 8 at 8:28
        */
       // The following hack is to allow the use of vector drawables directly in TextViews in API
-      // level < 21 (Lollipop), see comment in MovieAdapter::setupItemView. The code here is to
+      // level < 21 (Lollipop), see comment in DrawablePlaceholderSingleton. The code here is to
       // support vector drawables in TextViews (Compound Text Drawables) because CTD are not
       // working anymore directly from XML in pre Lollipop, i.e: "android:drawableStart" and
       // related attributes are not working anymore
@@ -203,7 +199,11 @@ public class MovieDetailFragment
       mCallReviews.cancel();
     }
 
-    // TODO: Save Favourite state "isFavourite" to DB
+    if (isFavourite) {
+      // TODO: INSERT movie into DB
+    } else {
+      // TODO: DELETE movie from DB
+    }
   }
 
   @Override
@@ -253,7 +253,7 @@ public class MovieDetailFragment
   }
 
   @Override
-  public void onSelected(boolean isSelected) {
+  public void onSelected(final boolean isSelected) {
     // Save new state
     isFavourite = isSelected;
 
