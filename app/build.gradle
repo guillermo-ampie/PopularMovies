@@ -26,7 +26,7 @@ android {
         }
     }
     // Enable Data Binding
-    dataBinding.enabled = true;
+    dataBinding.enabled = true
 
     buildTypes.each {
         it.buildConfigField 'String', 'MOVIE_DB_API_KEY', MyTheMovieDBApiKey
@@ -58,7 +58,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.android.support:support-annotations:28.0.0-alpha3'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation 'com.sdsmdg.harjot:vectormaster:1.1.3'
 }
 
