@@ -1,5 +1,6 @@
 package com.ampie_guillermo.popularmovies.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -353,6 +354,25 @@ public class MovieListFragment
        * in the database)
        * }
        */
+    }
+
+
+    /**
+     * Called when the fragment is visible to the user and actively running.
+     * This is generally
+     * tied to {@link Activity#onResume() Activity.onResume} of the containing
+     * Activity's lifecycle.
+     */
+    @Override
+    public void onResume() {
+      super.onResume();
+      // Re-query the DB after the Fragment/Activity has been -paused-: Any time we leave the
+      // MainActivity / MovieListFragment and return(when we go and get back from
+      // MovieDetailActivity / MovieDetailFragment where the selected movie could have been marked
+      // as favourite / not favourite
+
+      // restart the loader!
+
     }
   }
 
