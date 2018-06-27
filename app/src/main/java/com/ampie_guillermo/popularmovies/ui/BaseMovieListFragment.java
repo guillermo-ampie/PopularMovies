@@ -196,5 +196,4 @@ public class BaseMovieListFragment
     void setupRecyclerViewAdapter();
 
   }
-
 }
