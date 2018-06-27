@@ -39,7 +39,7 @@ public class MovieListFragment
     implements LoaderManager.LoaderCallbacks<ArrayList<Movie>>,
     FetchMoviesListener {
 
-  private static final String LOG_TAG = com.ampie_guillermo.popularmovies.ui.MovieListFragment.class.getSimpleName();
+  private static final String LOG_TAG = MovieListFragment.class.getSimpleName();
   private static final int MOVIES_RESULT_SIZE = 20;
   private static final int MOVIE_LIST_LOADER_ID = 1000;
   private ArrayList<Movie> mMovieList;
@@ -67,7 +67,13 @@ public class MovieListFragment
    */
   @Override
   public Loader<ArrayList<Movie>> onCreateLoader(int id, Bundle args) {
-    return new MovieListLoader(getActivity(), args);
+
+    switch (id) {
+      case MOVIE_LIST_LOADER_ID:
+        return new MovieListLoader(getActivity(), args);
+      default:
+      throw new RuntimeException(getString(R.string.error_unknown_loader_id) + id);
+    }
   }
 
   /**
@@ -191,7 +197,7 @@ public class MovieListFragment
     MovieListLoader(Context context, Bundle args) {
       super(context);
       mArgs = args;
-      mCachedMovieList = new ArrayList<>(com.ampie_guillermo.popularmovies.ui.MovieListFragment.MOVIES_RESULT_SIZE);
+      mCachedMovieList = new ArrayList<>(MovieListFragment.MOVIES_RESULT_SIZE);
       mUiError = new UiErrorHelper();
     }
 

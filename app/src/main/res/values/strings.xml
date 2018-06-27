@@ -39,5 +39,6 @@
   <string name="error_processing_json_response">Error processing the JSON response</string>
   <string name="error_internal_program_error">Internal program error!</string>
   <string name="error_forbidden_call">Use of constructor is not allowed, call getInstance() instead</string>
+  <string name="error_unknown_loader_id">Unknown loader id:</string>
 
 </resources>
