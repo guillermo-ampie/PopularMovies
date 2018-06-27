@@ -12,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import com.ampie_guillermo.popularmovies.BuildConfig;
 import com.ampie_guillermo.popularmovies.R;
-import com.ampie_guillermo.popularmovies.ui.BaseMovieListFragment.FavouriteMovieListFragment;
 import com.ampie_guillermo.popularmovies.ui.MovieListFragment.PopularMovieListFragment;
 import com.ampie_guillermo.popularmovies.ui.MovieListFragment.RatedMovieListFragment;
 import com.ampie_guillermo.popularmovies.ui.adapter.ViewPagerAdapter;
