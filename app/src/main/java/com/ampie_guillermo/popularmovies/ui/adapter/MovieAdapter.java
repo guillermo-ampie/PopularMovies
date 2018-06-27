@@ -107,10 +107,4 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
     submitList(movieList);
   }
 
-  @FunctionalInterface
-  public interface MovieItemClickListener {
-
-    void onMovieItemClick(int clickedItemIndex);
-  }
-
 }
