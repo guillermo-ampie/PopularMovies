@@ -12,6 +12,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import com.ampie_guillermo.popularmovies.BuildConfig;
 import com.ampie_guillermo.popularmovies.R;
+import com.ampie_guillermo.popularmovies.ui.BaseMovieListFragment.FavouriteMovieListFragment;
+import com.ampie_guillermo.popularmovies.ui.MovieListFragment.PopularMovieListFragment;
+import com.ampie_guillermo.popularmovies.ui.MovieListFragment.RatedMovieListFragment;
 import com.ampie_guillermo.popularmovies.ui.adapter.ViewPagerAdapter;
 
 
@@ -23,7 +26,7 @@ import com.ampie_guillermo.popularmovies.ui.adapter.ViewPagerAdapter;
 public class MainActivity extends AppCompatActivity {
 
   private static final String LOG_TAG = MainActivity.class.getSimpleName();
-  private static final String SELECTED_TAB = "sel-tab";
+  private static final String BUNDLE_SELECTED_TAB = "BUNDLE_SELECTED_TAB";
 
   private ViewPager mViewPager;
   private TabLayout mTabLayout;
@@ -102,11 +105,11 @@ public class MainActivity extends AppCompatActivity {
 
     setContentView(R.layout.activity_main);
 
-    Toolbar toolbar = findViewById(R.id.toolbar_movie_detail_toolbar);
+    final Toolbar toolbar = findViewById(R.id.toolbar_movie_detail_toolbar);
     setSupportActionBar(toolbar);
 
     mViewPager = findViewById(R.id.viewpager_main_viewpager);
-    ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+    final ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
     /**
      * We will have THREE TABS, in this case it seems OK to "preload" them for the sake of
@@ -115,19 +118,19 @@ public class MainActivity extends AppCompatActivity {
      *   - 2nd. Movies by Rating
      *   - 3rd. Favorites movies
      */
-    MovieListFragment.PopularMovieListFragment popularMoviesPage
-        = new MovieListFragment.PopularMovieListFragment();
+    final PopularMovieListFragment popularMoviesPage
+        = new PopularMovieListFragment();
 
-    MovieListFragment.RatedMovieListFragment ratedMoviesPage
-        = new MovieListFragment.RatedMovieListFragment();
+    final RatedMovieListFragment ratedMoviesPage
+        = new RatedMovieListFragment();
 
-    MovieListFragment.FavoriteMovieListFragment favoriteMoviesPage
-        = new MovieListFragment.FavoriteMovieListFragment();
+    final FavouriteMovieListFragment favouriteMoviesPage
+        = new FavouriteMovieListFragment();
 
     viewPagerAdapter
-        .addFragmentPage(popularMoviesPage, getString(R.string.sort_by_popularity))
-        .addFragmentPage(ratedMoviesPage, getString(R.string.sort_by_rating))
-        .addFragmentPage(favoriteMoviesPage, getString(R.string.favorite_movies));
+        .addFragmentPage(popularMoviesPage, getString(R.string.main_popularity_tab_title))
+        .addFragmentPage(ratedMoviesPage, getString(R.string.main_rating_tab_title))
+        .addFragmentPage(favouriteMoviesPage, getString(R.string.main_favourite_tab_title));
 
     // Attach the adapter to the View Pager
     mViewPager.setAdapter(viewPagerAdapter);
@@ -153,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
     super.onSaveInstanceState(outState);
 
     // Save TabLayout state: selected tab
-    outState.putInt(SELECTED_TAB, mTabLayout.getSelectedTabPosition());
+    outState.putInt(BUNDLE_SELECTED_TAB, mTabLayout.getSelectedTabPosition());
   }
 
   /**
@@ -179,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
     super.onRestoreInstanceState(savedInstanceState);
 
     // Get & set TabLayout state: selected tab
-    mViewPager.setCurrentItem(savedInstanceState.getInt(SELECTED_TAB));
+    mViewPager.setCurrentItem(savedInstanceState.getInt(BUNDLE_SELECTED_TAB));
   }
 }
 
