@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.ImageView;
 import com.ampie_guillermo.popularmovies.R;
 import com.ampie_guillermo.popularmovies.model.Movie;
-import com.ampie_guillermo.popularmovies.ui.adapter.MovieAdapter.MovieItemClickListener;
 import com.ampie_guillermo.popularmovies.utils.DrawablePlaceholderSingleton;
 import com.squareup.picasso.Picasso;
 
