@@ -50,14 +50,6 @@ public class MovieListFragment
     registerFetchMoviesListener(this);
   }
 
-
-  @Override
-  public void setupRecyclerViewAdapter() {
-    // Set an empty adapter because the movies have not been fetched yet
-    mMovieAdapter = new MovieAdapter(this);
-    mRvMovieGrid.setAdapter(mMovieAdapter);
-  }
-
   /**
    * Instantiate and return a new Loader for the given ID.
    *
@@ -185,6 +177,13 @@ public class MovieListFragment
   @Override
   public int movieListSize() {
     return mMovieList.size();
+  }
+
+  @Override
+  public void setupRecyclerViewAdapter() {
+    // Set an empty adapter because the movies have not been fetched yet
+    mMovieAdapter = new MovieAdapter(this);
+    mRvMovieGrid.setAdapter(mMovieAdapter);
   }
 
   private static class MovieListLoader extends AsyncTaskLoader<ArrayList<Movie>> {
