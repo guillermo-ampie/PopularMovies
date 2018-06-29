@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             .detectLeakedRegistrationObjects()
             .detectLeakedSqlLiteObjects();
       }
-      StrictMode.setVmPolicy(policyBuilder.penaltyLog().penaltyDeath().build());
+      StrictMode.setVmPolicy(policyBuilder.penaltyLog().penaltyLog().build());
     }
 
     setContentView(R.layout.activity_main);
