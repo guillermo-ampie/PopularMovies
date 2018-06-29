@@ -28,9 +28,9 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
         }
       };
   //  private ArrayList<Movie> mMovieList;
-  private final MovieItemClickListener mOnClickListener;
+  private final MovieItemOnClickListener mOnClickListener;
 
-  public MovieAdapter(MovieItemClickListener onClickListener) {
+  public MovieAdapter(MovieItemOnClickListener onClickListener) {
     super(DIFF_CALLBACK);
     mOnClickListener = onClickListener;
   }

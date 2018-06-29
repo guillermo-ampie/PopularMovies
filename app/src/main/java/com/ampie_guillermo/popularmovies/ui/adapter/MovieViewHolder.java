@@ -13,10 +13,10 @@ import com.squareup.picasso.Picasso;
 public class MovieViewHolder extends RecyclerView.ViewHolder {
   private final Drawable drawablePlaceholder;
   private final Drawable drawableErrorPlaceHolder;
-  private final MovieItemClickListener onClickListener;
+  private final MovieItemOnClickListener onClickListener;
   private final ImageView movieThumbnailView;
 
-  MovieViewHolder(final View view, final MovieItemClickListener onItemClickListener) {
+  MovieViewHolder(final View view, final MovieItemOnClickListener onItemClickListener) {
     super(view);
 
     final DrawablePlaceholderSingleton placeholders =

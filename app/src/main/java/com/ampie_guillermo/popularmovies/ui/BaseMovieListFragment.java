@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import com.ampie_guillermo.popularmovies.R;
 import com.ampie_guillermo.popularmovies.model.Movie;
-import com.ampie_guillermo.popularmovies.ui.adapter.MovieItemClickListener;
+import com.ampie_guillermo.popularmovies.ui.adapter.MovieItemOnClickListener;
 import com.ampie_guillermo.popularmovies.utils.MyPMErrorUtils;
 
 /**
@@ -23,7 +23,7 @@ import com.ampie_guillermo.popularmovies.utils.MyPMErrorUtils;
  */
 public class BaseMovieListFragment
     extends Fragment
-    implements MovieItemClickListener {
+    implements MovieItemOnClickListener {
 
   protected static final String EXTRA_MOVIE_SORTING_METHOD = "EXTRA_MOVIE_SORTING_METHOD";
   private static final String LOG_TAG = BaseMovieListFragment.class.getSimpleName();
