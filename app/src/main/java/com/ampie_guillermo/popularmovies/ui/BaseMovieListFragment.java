@@ -3,6 +3,7 @@ package com.ampie_guillermo.popularmovies.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.Group;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,10 +29,11 @@ public class BaseMovieListFragment
   private static final String LOG_TAG = BaseMovieListFragment.class.getSimpleName();
 
   protected RecyclerView mRvMovieGrid;
-
+  private Group mGroupErrorDisplay;
+  private Group mGroupNoFavouriteDisplay;
+  private ImageView mImageNoFavourites;
   private ProgressBar mLoadingIndicator;
-  private ImageView mImageCloudOff;
-  //  private MovieAdapter mMovieAdapter;
+
   private String mSortingMethodParam;
   private FetchMoviesListener moviesFetchListener;
 
@@ -101,8 +103,10 @@ public class BaseMovieListFragment
       Bundle savedInstanceState) {
     final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-    mImageCloudOff = rootView.findViewById(R.id.image_main_no_connection);
     mLoadingIndicator = rootView.findViewById(R.id.progressbar_main_base);
+    mGroupErrorDisplay = rootView.findViewById(R.id.group_main_no_connection);
+    mGroupNoFavouriteDisplay = rootView.findViewById(R.id.group_main_no_favourite_movies);
+
     showLoadingIndicator();
 
     // Get a reference to the RecyclerView (the movie grid), and attach the movie adapter to it.
@@ -175,7 +179,14 @@ public class BaseMovieListFragment
 
   protected void showErrorDisplay() {
     mRvMovieGrid.setVisibility(View.INVISIBLE);
-    mImageCloudOff.setVisibility(View.VISIBLE);
+    mGroupErrorDisplay.setVisibility(View.VISIBLE);
+    mGroupErrorDisplay.requestLayout(); // I don't like this...
+  }
+
+  protected void showNoFavouritesDisplay() {
+    mRvMovieGrid.setVisibility(View.INVISIBLE);
+    mGroupNoFavouriteDisplay.setVisibility(View.VISIBLE);
+    mGroupNoFavouriteDisplay.requestLayout(); // I don't like this...
   }
 
   protected final void registerFetchMoviesListener(final FetchMoviesListener listener) {

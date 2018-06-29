@@ -39,12 +39,58 @@
     android:id="@+id/image_main_no_connection"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:contentDescription="@string/error_contacting_server"
     android:visibility="invisible"
+    android:contentDescription="@string/error_contacting_server"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintWidth_percent="0.5"
     app:srcCompat="@drawable/ic_cloud_off_black_180x180dp"/>
+  <TextView
+    android:id="@+id/text_main_no_connection"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:visibility="invisible"
+    android:text="@string/error_contacting_server"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/image_main_no_connection"/>
+  <ImageView
+    android:id="@+id/image_main_no_favourites_movies"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:contentDescription="@string/description_main_no_favourite_movies"
+    android:visibility="invisible"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintWidth_percent="0.5"
+    app:srcCompat="@drawable/ic_favorite_black_180x180dp"/>
+  <TextView
+    android:id="@+id/text_main_no_favourite_movies"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:visibility="invisible"
+    android:text="@string/main_no_favourite_movies"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/image_main_no_favourites_movies"/>
+  <android.support.constraint.Group
+    android:id="@+id/group_main_no_connection"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:visibility="invisible"
+    app:constraint_referenced_ids="image_main_no_connection,text_main_no_connection"/>
+  <android.support.constraint.Group
+    android:id="@+id/group_main_no_favourite_movies"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:visibility="invisible"
+    app:constraint_referenced_ids="image_main_no_favourites_movies,text_main_no_favourite_movies"/>
 </android.support.constraint.ConstraintLayout>
