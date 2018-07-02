@@ -189,6 +189,12 @@ public class BaseMovieListFragment
     mGroupNoFavouriteDisplay.requestLayout(); // I don't like this...
   }
 
+  protected void showFavouriteMovieListDisplay() {
+    mRvMovieGrid.setVisibility(View.VISIBLE);
+    mGroupNoFavouriteDisplay.setVisibility(View.INVISIBLE);
+    mGroupNoFavouriteDisplay.requestLayout(); // I don't like this...
+  }
+
   protected void registerFetchMoviesListener(final FetchMoviesListener listener) {
     moviesFetchListener = listener;
   }
