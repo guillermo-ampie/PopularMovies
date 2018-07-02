@@ -65,7 +65,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_favorite_border_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_favorite_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -77,11 +77,11 @@
                           <map>
                             <entry key="autoMirrored" value="true" />
                             <entry key="color" value="bbbbbb" />
-                            <entry key="height" value="32" />
-                            <entry key="outputName" value="ic_favorite_border_black_32dp" />
+                            <entry key="height" value="180" />
+                            <entry key="outputName" value="ic_favorite_black_180x180dp" />
                             <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="$USER_HOME$" />
-                            <entry key="width" value="32" />
+                            <entry key="width" value="180" />
                           </map>
                         </option>
                       </PersistentState>
