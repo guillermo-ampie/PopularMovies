@@ -183,6 +183,13 @@ public class BaseMovieListFragment
     mGroupErrorDisplay.requestLayout(); // I don't like this...
   }
 
+  protected void showMovieListDisplay() {
+    mRvMovieGrid.setVisibility(View.VISIBLE);
+    mGroupErrorDisplay.setVisibility(View.INVISIBLE);
+    mGroupErrorDisplay.requestLayout(); // I don't like this...
+
+  }
+
   protected void showNoFavouritesDisplay() {
     mRvMovieGrid.setVisibility(View.INVISIBLE);
     mGroupNoFavouriteDisplay.setVisibility(View.VISIBLE);
