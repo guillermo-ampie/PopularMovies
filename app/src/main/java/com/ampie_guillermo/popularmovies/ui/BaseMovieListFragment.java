@@ -189,7 +189,7 @@ public class BaseMovieListFragment
     mGroupNoFavouriteDisplay.requestLayout(); // I don't like this...
   }
 
-  protected final void registerFetchMoviesListener(final FetchMoviesListener listener) {
+  protected void registerFetchMoviesListener(final FetchMoviesListener listener) {
     moviesFetchListener = listener;
   }
 
