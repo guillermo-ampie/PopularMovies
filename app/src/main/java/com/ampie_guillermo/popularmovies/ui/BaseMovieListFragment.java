@@ -10,7 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import com.ampie_guillermo.popularmovies.R;
 import com.ampie_guillermo.popularmovies.model.Movie;
@@ -29,13 +29,12 @@ public class BaseMovieListFragment
   private static final String LOG_TAG = BaseMovieListFragment.class.getSimpleName();
 
   protected RecyclerView mRvMovieGrid;
+  protected FetchMoviesListener moviesFetchListener;
+
   private Group mGroupErrorDisplay;
   private Group mGroupNoFavouriteDisplay;
-  private ImageView mImageNoFavourites;
   private ProgressBar mLoadingIndicator;
-
   private String mSortingMethodParam;
-  private FetchMoviesListener moviesFetchListener;
 
   public BaseMovieListFragment() {
   }
@@ -104,6 +103,18 @@ public class BaseMovieListFragment
     final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
     mLoadingIndicator = rootView.findViewById(R.id.progressbar_main_base);
+    final Button buttonRetry = rootView.findViewById(R.id.button_main_try_again);
+    buttonRetry.setOnClickListener(new View.OnClickListener() {
+      /**
+       * Called when a view has been clicked.
+       *
+       * @param v The view that was clicked.
+       */
+      @Override
+      public void onClick(View v) {
+        moviesFetchListener.onClickRetry(v);
+      }
+    });
     mGroupErrorDisplay = rootView.findViewById(R.id.group_main_no_connection);
     mGroupNoFavouriteDisplay = rootView.findViewById(R.id.group_main_no_favourite_movies);
 
@@ -219,5 +230,6 @@ public class BaseMovieListFragment
      */
     void setupRecyclerViewAdapter();
 
+    void onClickRetry(View view);
   }
 }

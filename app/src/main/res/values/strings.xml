@@ -8,6 +8,7 @@
   <string name="main_rating_tab_title">Ranking</string>
   <string name="main_favourite_tab_title">Favourites</string>
   <string name="main_no_favourite_movies">@string/description_main_no_favourite_movies</string>
+  <string name="main_try_again_button">Try again</string>
 
   <!-- MovieDetailActivity -->
   <string name="movie_detail_release_date">Year:</string>

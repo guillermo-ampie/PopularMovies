@@ -11,6 +11,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
+import android.view.View;
 import android.widget.CursorAdapter;
 import com.ampie_guillermo.popularmovies.R;
 import com.ampie_guillermo.popularmovies.database.MovieColumns;
@@ -82,6 +83,11 @@ public class FavouriteMovieListFragment
     favouriteMovieAdapter = new FavouriteMovieAdapter(this);
     mRvMovieGrid.setAdapter(favouriteMovieAdapter);
 
+  }
+
+  @Override
+  public void onClickRetry(View view) {
+    // In FavouriteMovieListFragment we do nothing here
   }
 
   /**

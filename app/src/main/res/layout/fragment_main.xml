@@ -39,8 +39,8 @@
     android:id="@+id/image_main_no_connection"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:visibility="invisible"
     android:contentDescription="@string/error_contacting_server"
+    android:visibility="invisible"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -51,13 +51,28 @@
     android:id="@+id/text_main_no_connection"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:visibility="invisible"
     android:text="@string/error_contacting_server"
     android:textAppearance="?android:attr/textAppearanceMedium"
+    android:visibility="invisible"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/image_main_no_connection"/>
+  <Button
+    android:id="@+id/button_main_try_again"
+    style="@style/Widget.AppCompat.Button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/padding_thin_vertical_material"
+    android:background="@color/colorPrimary"
+    android:text="@string/main_try_again_button"
+    android:textColor="@color/colorPrimaryLight"
+    android:visibility="invisible"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/text_main_no_connection"/>
+
   <ImageView
     android:id="@+id/image_main_no_favourites_movies"
     android:layout_width="0dp"
@@ -74,19 +89,22 @@
     android:id="@+id/text_main_no_favourite_movies"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:visibility="invisible"
     android:text="@string/main_no_favourite_movies"
     android:textAppearance="?android:attr/textAppearanceMedium"
-    app:layout_constraintBottom_toBottomOf="parent"
+    android:visibility="invisible"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/image_main_no_favourites_movies"/>
+
+  <!-- This Group contains the error display -->
   <android.support.constraint.Group
     android:id="@+id/group_main_no_connection"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:visibility="invisible"
-    app:constraint_referenced_ids="image_main_no_connection,text_main_no_connection"/>
+    app:constraint_referenced_ids="image_main_no_connection,text_main_no_connection,button_main_try_again"/>
+
+  <!--This Group contains the "You do not have favourite movies" display -->
   <android.support.constraint.Group
     android:id="@+id/group_main_no_favourite_movies"
     android:layout_width="wrap_content"

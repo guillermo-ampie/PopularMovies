@@ -11,6 +11,7 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.CursorAdapter;
 import com.ampie_guillermo.popularmovies.BuildConfig;
 import com.ampie_guillermo.popularmovies.R;
@@ -48,6 +49,15 @@ public class MovieListFragment
   public MovieListFragment() {
     mMovieList = new ArrayList<>(MOVIES_RESULT_SIZE);
     registerFetchMoviesListener(this);
+  }
+
+  public void onClickRetry(View view) {
+    if (mMovieList.isEmpty()) {
+      final Bundle bundle = new Bundle();
+      bundle.putString(EXTRA_MOVIE_SORTING_METHOD, getSortingMethodParam());
+      Log.v(LOG_TAG, "++++++++++onResume(): restarting LOADER");
+      getLoaderManager().restartLoader(MOVIE_LIST_LOADER_ID, bundle, this);
+    }
   }
 
   /**
@@ -104,6 +114,7 @@ public class MovieListFragment
     Log.v(LOG_TAG, "++++++++++ onLoadFinished()");
     if (data != null) {
       Log.v(LOG_TAG, "++++++++++ Adding the new data fetched");
+      showMovieListDisplay();
       mMovieList = new ArrayList<>(data);
       mMovieAdapter.setMovieList(data);
     } else {
@@ -138,6 +149,7 @@ public class MovieListFragment
    */
   @Override
   public void onLoaderReset(Loader<ArrayList<Movie>> loader) {
+//    mMovieAdapter.setMovieList(null);
   }
 
   @Override
