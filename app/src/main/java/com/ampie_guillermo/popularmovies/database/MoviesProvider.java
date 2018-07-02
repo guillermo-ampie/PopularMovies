@@ -47,10 +47,10 @@ public final class MoviesProvider {
     @InexactContentUri(name = "MOVIE_ID",
         path = Path.MOVIES + "/#",
         type = "vnd.android.cursor.item/movie",
-        whereColumn = MovieColumns.ID,
+        whereColumn = MovieColumns.MOVIE_ID,
         pathSegment = 1)
-    public static Uri withId(long id) {
-      return buildUri(Path.MOVIES, String.valueOf(id));
+    public static Uri withId(String id) {
+      return buildUri(Path.MOVIES, id);
     }
   }
 }
