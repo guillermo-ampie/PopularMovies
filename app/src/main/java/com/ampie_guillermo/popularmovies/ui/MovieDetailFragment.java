@@ -1,7 +1,11 @@
 package com.ampie_guillermo.popularmovies.ui;
 
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +20,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import com.ampie_guillermo.popularmovies.BuildConfig;
 import com.ampie_guillermo.popularmovies.R;
+import com.ampie_guillermo.popularmovies.database.MovieColumns;
+import com.ampie_guillermo.popularmovies.database.MoviesProvider;
+import com.ampie_guillermo.popularmovies.database.MoviesProvider.Movies;
 import com.ampie_guillermo.popularmovies.databinding.FragmentMovieDetailBinding;
 import com.ampie_guillermo.popularmovies.model.Movie;
 import com.ampie_guillermo.popularmovies.model.MovieReviewList;
@@ -68,15 +75,18 @@ public class MovieDetailFragment
           .addConverterFactory(GsonConverterFactory.create())
           .build();
 
-  MovieTrailerList mTrailers;
-  MovieReviewList mReviews;
-  FragmentMovieDetailBinding binding;
-
-  private boolean isFavourite;
   private MovieTrailerAdapter mMovieTrailerAdapter;
   private MovieReviewAdapter mMovieReviewAdapter;
   private Call<MovieTrailerList> mCallTrailers;
   private Call<MovieReviewList> mCallReviews;
+
+  protected Movie selectedMovie;
+  protected boolean isFavourite;
+
+  MovieTrailerList mTrailers;
+  MovieReviewList mReviews;
+  FragmentMovieDetailBinding binding;
+
 
   public MovieDetailFragment() {
     mTrailers = new MovieTrailerList();
@@ -97,7 +107,7 @@ public class MovieDetailFragment
     final Intent intent = Objects.requireNonNull(getActivity()).getIntent();
 
     // Get the selected movie passed by Intent
-    final Movie selectedMovie = Objects
+    selectedMovie = Objects
         .requireNonNull(intent.getExtras())
         .getParcelable(getString(R.string.EXTRA_SELECTED_MOVIE));
     if (selectedMovie != null) {
@@ -169,13 +179,13 @@ public class MovieDetailFragment
 //      textMovieOverview.setCompoundDrawablePadding(drawableToTextPadding);
       // End of hack
 
-      setupFavouriteState(savedInstanceState, resources, selectedMovie);
+      setupFavouriteState(savedInstanceState, resources);
 
       // Get the movie trailers
-      fetchTrailers(savedInstanceState, selectedMovie);
+      fetchTrailers(savedInstanceState);
 
       // Get the movie reviews
-      fetchReviews(savedInstanceState, selectedMovie);
+      fetchReviews(savedInstanceState);
     }
 
     return binding.getRoot();
@@ -183,13 +193,12 @@ public class MovieDetailFragment
 
   /**
    * Called when the Fragment is no longer started.  This is generally
-   * tied to { Activity#onStop() Activity.onStop} of the containing
+   * tied to {@link Activity#onStop() Activity.onStop} of the containing
    * Activity's lifecycle.
    */
   @Override
   public void onStop() {
     super.onStop();
-
     // Cancel the request if the HTTP scheduler has not executed it already...
     if (mCallTrailers != null) {
       mCallTrailers.cancel();
@@ -199,11 +208,52 @@ public class MovieDetailFragment
       mCallReviews.cancel();
     }
 
-    if (isFavourite) {
-      // TODO: INSERT movie into DB
-    } else {
-      // TODO: DELETE movie from DB
-    }
+    final ContentResolver resolver = getActivity().getApplicationContext().getContentResolver();
+
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        try (Cursor data = resolver.query(MoviesProvider.Movies.withId(selectedMovie.getId()),
+            new String[]{MovieColumns.MOVIE_ID},
+            null,
+            null,
+            null)) {
+
+          final boolean isMovieInDB = (data != null) && data.moveToFirst();
+
+          if (isFavourite) {
+            if (!isMovieInDB) {
+              // The movie is selected as favourite and is not present in the DB --> insert it
+              // into DB
+
+              final ContentValues cv = new ContentValues();
+
+              cv.put(MovieColumns.MOVIE_ID, selectedMovie.getId());
+              cv.put(MovieColumns.ORIGINAL_TILE, selectedMovie.getOriginalTitle());
+              cv.put(MovieColumns.RELEASE_YEAR, selectedMovie.getReleaseDate());
+              cv.put(MovieColumns.OVERVIEW, selectedMovie.getOverview());
+              cv.put(MovieColumns.POSTER_URI, selectedMovie.getPosterUri().toString());
+              cv.put(MovieColumns.BACKDROP_URI, selectedMovie.getBackdropUri().toString());
+              cv.put(MovieColumns.VOTE_AVERAGE, selectedMovie.getVoteAverage());
+              cv.put(MovieColumns.VOTE_COUNT, selectedMovie.getVoteCount());
+
+              resolver.insert(MoviesProvider.Movies.CONTENT_URI, cv);
+              // TODO: 7/1/18 Report if the INSERT was not successful
+            }
+            // Movie is selected as favourite and is already present in the DB --> do nothing
+          } else {
+            if (isMovieInDB) {
+              // Movie finished as -not selected as Favourite- and is in DB --> delete it
+              resolver.delete(MoviesProvider.Movies.withId(selectedMovie.getId()),
+                  null,
+                  null);
+              // TODO: 7/1/18 Report if the DELETE was not successful
+            }
+            // Movie finished as -not selected as Favourite- and -is not in the DB- --> do nothing
+          }
+        }
+      }
+    }).start();
   }
 
   @Override
@@ -257,14 +307,15 @@ public class MovieDetailFragment
     // Save new state
     isFavourite = isSelected;
 
-    // Actually, favourite state is saved into the DB until Fragment's onStop()
+    // The Favorite button's state recording is deferred until Fragment's onStop(), so the
+    // "click-addicts" of the Favourite button will not generate a performance impact
     final String message =
         isSelected ? getString(R.string.movie_detail_add_movie)
             : getString(R.string.movie_detail_remove_movie);
     Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
   }
 
-  private void fetchTrailers(final Bundle savedInstanceState, final Movie selectedMovie) {
+  private void fetchTrailers(final Bundle savedInstanceState) {
     // Set an -empty- adapter because the trailers have not been fetched
     mMovieTrailerAdapter = new MovieTrailerAdapter(this);
     binding.recyclerMovieDetailTrailers.setAdapter(mMovieTrailerAdapter);
@@ -284,7 +335,8 @@ public class MovieDetailFragment
       final MovieTrailerService movieTrailerService = RETROFIT.create(MovieTrailerService.class);
 
       // Create a call instance for looking up the movie's list of trailers
-      mCallTrailers = movieTrailerService.get(selectedMovie.getId(), BuildConfig.MOVIE_DB_API_KEY);
+      mCallTrailers = movieTrailerService
+          .get(selectedMovie.getId(), BuildConfig.MOVIE_DB_API_KEY);
 
       // Fetch the trailers
       mCallTrailers.enqueue(new Callback<MovieTrailerList>() {
@@ -331,7 +383,7 @@ public class MovieDetailFragment
     }
   }
 
-  private void fetchReviews(final Bundle savedInstanceState, final Movie selectedMovie) {
+  private void fetchReviews(final Bundle savedInstanceState) {
     // Set an -empty- adapter because the reviews have not been fetched
     mMovieReviewAdapter = new MovieReviewAdapter();
     binding.recyclerMovieDetailReviews.setAdapter(mMovieReviewAdapter);
@@ -411,14 +463,38 @@ public class MovieDetailFragment
     }
   }
 
-  private void setupFavouriteState(final Bundle savedInstanceState,
-      final Resources resources,
-      final Movie selectedMovie) {
+  private void setupFavouriteState(final Bundle savedInstanceState, final Resources resources) {
+    if (savedInstanceState == null) {
+      // First time this Fragment is created, get the Favourite Button's state from DB
+//      new Thread(new Runnable() {
+//        @Override
+//        public void run() {
 
-    // Set Favourite's button initial state
-    isFavourite = (savedInstanceState == null) ? isFavourite(selectedMovie)
-        : savedInstanceState.getBoolean(BUNDLE_IS_FAVOURITE);
+          try (Cursor data = getActivity()
+              .getApplicationContext()
+              .getContentResolver()
+              .query(Movies.withId(selectedMovie.getId()),
+                  new String[]{MovieColumns.MOVIE_ID},
+                  null,
+                  null,
+                  null)) {
 
+            // If the movie is in the DB --> movie had been marked as Favourite
+            isFavourite = (data != null) && data.moveToFirst();
+          }
+          // TODO: 7/1/18 Report if QUERY was not successful
+//        }
+//      }).start();
+
+    } else {
+      // Retrieve the Favourite Button's state from a previously fragment's instance
+      isFavourite = savedInstanceState.getBoolean(BUNDLE_IS_FAVOURITE);
+    }
+    // TODO: 7/1/18 Potential bug here, the working thread could have not set isFavourite value yet
+    setupFavouriteButtonAnimation(resources);
+  }
+
+  protected void setupFavouriteButtonAnimation(Resources resources) {
     // Setup animation for favourite button
     final int startColor = resources.getColor(R.color.white);
     final int endColor = resources.getColor(R.color.red);
@@ -432,11 +508,5 @@ public class MovieDetailFragment
     vectorAnimation.setSelected(isFavourite);
     vectorAnimation.startAnimation(ANIMATION_DURATION);
   }
-
-  private boolean isFavourite(final Movie selectedMovie) {
-    // TODO: Read from DB
-    return true;
-  }
-
 }
 
