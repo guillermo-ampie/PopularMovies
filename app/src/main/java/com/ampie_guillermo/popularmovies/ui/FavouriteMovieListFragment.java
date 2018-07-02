@@ -99,9 +99,6 @@ public class FavouriteMovieListFragment
     // not favourite
 
     // restart the loader!
-    // TODO: 7/1/18 Check for case: From no fav. movies to the first one
-    // and hide the NO FAV Movies display
-
     getLoaderManager().restartLoader(FAVOURITE_MOVIE_LIST_LOADER_ID, null, this);
   }
 
