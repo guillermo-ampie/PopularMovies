@@ -229,7 +229,7 @@ public class MovieDetailFragment
               final ContentValues cv = new ContentValues();
 
               cv.put(MovieColumns.MOVIE_ID, selectedMovie.getId());
-              cv.put(MovieColumns.ORIGINAL_TILE, selectedMovie.getOriginalTitle());
+              cv.put(MovieColumns.ORIGINAL_TITLE, selectedMovie.getOriginalTitle());
               cv.put(MovieColumns.RELEASE_YEAR, selectedMovie.getReleaseDate());
               cv.put(MovieColumns.OVERVIEW, selectedMovie.getOverview());
               cv.put(MovieColumns.POSTER_URI, selectedMovie.getPosterUri().toString());

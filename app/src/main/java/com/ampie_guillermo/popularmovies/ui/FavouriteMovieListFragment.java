@@ -27,7 +27,7 @@ public class FavouriteMovieListFragment
 
   private static final String[] MOVIE_COLUMNS_PROJECTION = {
       MovieColumns.MOVIE_ID,
-      MovieColumns.ORIGINAL_TILE,
+      MovieColumns.ORIGINAL_TITLE,
       MovieColumns.RELEASE_YEAR,
       MovieColumns.OVERVIEW,
       MovieColumns.POSTER_URI,
@@ -37,7 +37,7 @@ public class FavouriteMovieListFragment
   };
 
   public static final int MOVIE_ID_INDEX = 0;
-  public static final int ORIGINAL_TILE_INDEX = 1;
+  public static final int ORIGINAL_TITLE_INDEX = 1;
   public static final int RELEASE_YEAR_INDEX = 2;
   public static final int OVERVIEW_INDEX = 3;
   public static final int POSTER_URI_INDEX = 4;

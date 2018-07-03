@@ -21,7 +21,7 @@ public interface MovieColumns {
   String MOVIE_ID = "movie_id";
 
   @DataType(DataType.Type.TEXT)
-  String ORIGINAL_TILE = "original_title";
+  String ORIGINAL_TITLE = "original_title";
 
   @DataType(DataType.Type.TEXT)
   String RELEASE_YEAR = "release_year";

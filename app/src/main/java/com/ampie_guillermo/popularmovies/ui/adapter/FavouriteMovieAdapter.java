@@ -106,7 +106,7 @@ public class FavouriteMovieAdapter extends RecyclerView.Adapter<MovieViewHolder>
 
     // Get columns from cursor to build up the selected Movie
     final String id = cursor.getString(FavouriteMovieListFragment.MOVIE_ID_INDEX);
-    final String originalTitle = cursor.getString(FavouriteMovieListFragment.ORIGINAL_TILE_INDEX);
+    final String originalTitle = cursor.getString(FavouriteMovieListFragment.ORIGINAL_TITLE_INDEX);
     final String releaseYear = cursor.getString(FavouriteMovieListFragment.RELEASE_YEAR_INDEX);
     final String overview = cursor.getString(FavouriteMovieListFragment.OVERVIEW_INDEX);
     final Uri posterCompleteUri =
