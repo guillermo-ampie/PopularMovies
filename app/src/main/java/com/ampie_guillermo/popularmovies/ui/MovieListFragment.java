@@ -74,7 +74,7 @@ public class MovieListFragment
       case MOVIE_LIST_LOADER_ID:
         return new MovieListLoader(getActivity(), args);
       default:
-      throw new RuntimeException(getString(R.string.error_unknown_loader_id) + id);
+        throw new IllegalArgumentException(getString(R.string.error_unknown_loader_id) + id);
     }
   }
 

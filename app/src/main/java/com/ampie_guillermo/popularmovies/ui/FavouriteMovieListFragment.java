@@ -130,7 +130,7 @@ public class FavouriteMovieListFragment
             null, // selection args
             null); // sort order
       default:
-        throw new RuntimeException(getString(R.string.error_unknown_loader_id) + id);
+        throw new IllegalArgumentException(getString(R.string.error_unknown_loader_id) + id);
     }
   }
 
