@@ -19,7 +19,7 @@ import com.ampie_guillermo.popularmovies.model.Movie;
 import com.ampie_guillermo.popularmovies.ui.BaseMovieListFragment.FetchMoviesListener;
 import com.ampie_guillermo.popularmovies.ui.adapter.MovieAdapter;
 import com.ampie_guillermo.popularmovies.utils.MyPMErrorUtils;
-import com.ampie_guillermo.popularmovies.utils.UiErrorHelper;
+import com.ampie_guillermo.popularmovies.utils.UIErrorHelper;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -121,7 +121,7 @@ public class MovieListFragment
       showErrorDisplay();
       // We could have an error, inspect the loader in order to get the error an give feedback
       // to the user
-      final UiErrorHelper uiErrorHelper = new UiErrorHelper(
+      final UIErrorHelper uiErrorHelper = new UIErrorHelper(
           ((MovieListLoader) loader).getUiError());
       if (uiErrorHelper.isErrorEnabled()) {
         if (uiErrorHelper.isExceptionErrorConditionEnabled()) {
@@ -202,17 +202,17 @@ public class MovieListFragment
 
     private static final String LOG_TAG = MovieListLoader.class.getSimpleName();
     private final Bundle mArgs;
-    private final UiErrorHelper mUiError;
+    private final UIErrorHelper mUiError;
     private ArrayList<Movie> mCachedMovieList;
 
     MovieListLoader(Context context, Bundle args) {
       super(context);
       mArgs = args;
       mCachedMovieList = new ArrayList<>(MovieListFragment.MOVIES_RESULT_SIZE);
-      mUiError = new UiErrorHelper();
+      mUiError = new UIErrorHelper();
     }
 
-    UiErrorHelper getUiError() {
+    UIErrorHelper getUiError() {
       return mUiError;
     }
 
