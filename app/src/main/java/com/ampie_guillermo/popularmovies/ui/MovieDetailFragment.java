@@ -3,9 +3,11 @@ package com.ampie_guillermo.popularmovies.ui;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,6 +41,7 @@ import com.ampie_guillermo.popularmovies.utils.DrawablePlaceholderSingleton;
 import com.ampie_guillermo.popularmovies.utils.MyPMErrorUtils;
 import com.ampie_guillermo.popularmovies.utils.VectorAnimationSelectWithPath;
 import com.squareup.picasso.Picasso;
+import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Objects;
@@ -209,8 +212,8 @@ public class MovieDetailFragment
       mCallReviews.cancel();
     }
 
-    final ContentResolver resolver
-        = Objects.requireNonNull(getActivity()).getApplicationContext().getContentResolver();
+    final Context context = Objects.requireNonNull(getActivity()).getApplicationContext();
+    final ContentResolver resolver = context.getContentResolver();
     final String movieId = selectedMovie.getId();
     new Thread(new Runnable() {
       @Override
@@ -229,14 +232,15 @@ public class MovieDetailFragment
             if (!isMovieInDB) {
               // The movie is selected as favourite and is not present in the DB --> insert it
               // into DB
-              insertMovie(resolver);
+              insertMovie(context, resolver); // TODO: 7/4/18 Review ContentProviderOperation
               // Insert its trailers & reviews
-              insertTrailersAndReviews(resolver);
+              insertTrailersAndReviews(context, resolver);
             }
             // Movie is selected as favourite and is already present in the DB --> do nothing
           } else {
             if (isMovieInDB) {
-              // Movie finished as -not selected as Favourite- and is in DB --> delete it
+              // Movie finished as -not selected as Favourite- and is in the DB --> delete it
+              // TODO: 7/4/18 Review ContentProviderOperation in this case
               resolver.delete(Movies.withId(movieId),
                   null,
                   null);
@@ -247,11 +251,14 @@ public class MovieDetailFragment
               resolver.delete(MovieReviews.fromMovie(movieId),
                   null,
                   null);
-
-              // TODO: 7/1/18 Report if the DELETE was not successful
             }
             // Movie finished as -not selected as Favourite- and -is not in the DB- --> do nothing
           }
+        } catch (SQLException | IllegalArgumentException e) {
+          // TODO: 7/4/18 Improve MyPMErrorUtils to use it in this case
+          Log.e(LOG_TAG, MessageFormat
+              .format("{0}: {1}", context.getString(R.string.error_accessing_sqlite_db),
+                  e.getMessage()));
         }
       }
     }).start();
@@ -357,7 +364,7 @@ public class MovieDetailFragment
 
         @Override
         public void onFailure(Call<MovieTrailerList> call, Throwable t) {
-          //TODO: in onFailure() a call to getContext() or getActivity() can return null.
+          //TODO: Review: in onFailure() a call to getContext() or getActivity() can return null.
           // When does this happen ?
           Log.v(LOG_TAG, "++++++++++ onFailure");
           MyPMErrorUtils.showErrorMessage(LOG_TAG,
@@ -396,7 +403,7 @@ public class MovieDetailFragment
 
     // Set a divider line
     final DividerItemDecoration dividerLine =
-        // TODO: check getContext() call
+        // TODO: Review getContext() call
         new DividerItemDecoration(binding.recyclerMovieDetailReviews.getContext(),
             layoutManager.getOrientation());
     binding.recyclerMovieDetailReviews.addItemDecoration(dividerLine);
@@ -471,10 +478,10 @@ public class MovieDetailFragment
 //        @Override
 //        public void run() {
 
-      try (Cursor data = getActivity()
-          .getApplicationContext()
+      final Context context = Objects.requireNonNull(getActivity()).getApplicationContext();
+      try (Cursor data = context
           .getContentResolver()
-          .query(Movies.withId(selectedMovie.getId()),
+          .query(MoviesProvider.Movies.withId(selectedMovie.getId()),
               new String[]{MovieColumns.MOVIE_ID},
               null,
               null,
@@ -482,8 +489,12 @@ public class MovieDetailFragment
 
         // If the movie is in the DB --> movie had been marked as Favourite
         isFavourite = (data != null) && data.moveToFirst();
+      } catch (SQLException | IllegalArgumentException e) {
+        // TODO: 7/4/18 Improve MyPMErrorUtils to use it in this case
+        Log.e(LOG_TAG, MessageFormat
+            .format("{0}: {1}", context.getString(R.string.error_accessing_sqlite_db),
+                e.getMessage()));
       }
-      // TODO: 7/1/18 Report if QUERY was not successful
 //        }
 //      }).start();
 
@@ -510,7 +521,7 @@ public class MovieDetailFragment
     vectorAnimation.startAnimation(ANIMATION_DURATION);
   }
 
-  protected void insertMovie(final ContentResolver resolver) {
+  protected void insertMovie(final Context context, final ContentResolver resolver) {
     final ContentValues cv = new ContentValues();
 
     cv.put(MovieColumns.MOVIE_ID, selectedMovie.getId());
@@ -522,12 +533,18 @@ public class MovieDetailFragment
     cv.put(MovieColumns.VOTE_AVERAGE, selectedMovie.getVoteAverage());
     cv.put(MovieColumns.VOTE_COUNT, selectedMovie.getVoteCount());
 
-    resolver.insert(MoviesProvider.Movies.CONTENT_URI, cv);
-    // TODO: 7/1/18 Report if the INSERT was not successful
+    try {
+      resolver.insert(MoviesProvider.Movies.CONTENT_URI, cv);
+    } catch (SQLException | IllegalArgumentException e) {
+      // TODO: 7/4/18 Improve MyPMErrorUtils to use it in this case
+      Log.e(LOG_TAG, MessageFormat
+          .format("{0}: {1}", context.getString(R.string.error_accessing_sqlite_db),
+              e.getMessage()));
+    }
   }
 
   // TODO: 7/4/18 Refactor this into more JAVA-8 style
-  protected void insertTrailersAndReviews(final ContentResolver resolver) {
+  protected void insertTrailersAndReviews(final Context context, final ContentResolver resolver) {
     final String movieId = selectedMovie.getId();
 
     // Build the Trailer array values
@@ -542,14 +559,22 @@ public class MovieDetailFragment
 
       trailerBulkValues[i] = trailerValues;
     }
-    // Insert the trailers
-    resolver.bulkInsert(MoviesProvider.MovieTrailers.fromMovie(movieId), trailerBulkValues);
-    // TODO: 7/4/18 Report if the bulkInsert() was not successful
+
+    try {
+      // Insert the trailers
+      resolver.bulkInsert(MoviesProvider.MovieTrailers.fromMovie(movieId), trailerBulkValues);
+    } catch (SQLException | IllegalArgumentException e) {
+      // TODO: 7/4/18 Improve MyPMErrorUtils to use it in this case
+      Log.e(LOG_TAG, MessageFormat
+          .format("{0}: {1}", context.getString(R.string.error_accessing_sqlite_db),
+              e.getMessage()));
+    }
 
     // Build the Review array values
     final List<MovieReviewList.MovieReview> reviewList = mReviews.getReviewList();
     final int reviewsCount = reviewList.size();
     final ContentValues[] reviewBulkValues = new ContentValues[reviewsCount];
+
     for (int j = 0; j < reviewsCount; ++j) {
       final ContentValues reviewValues = new ContentValues();
       reviewValues.put(MovieReviewColumns.MOVIE_ID, movieId);
@@ -558,9 +583,16 @@ public class MovieDetailFragment
 
       reviewBulkValues[j] = reviewValues;
     }
-    // Insert the reviews
-    resolver.bulkInsert(MoviesProvider.MovieReviews.fromMovie(movieId), reviewBulkValues);
-    // TODO: 7/4/18 Report if the bulkInsert() was not successful
+
+    try {
+      // Insert the reviews
+      resolver.bulkInsert(MoviesProvider.MovieReviews.fromMovie(movieId), reviewBulkValues);
+    } catch (SQLException | IllegalArgumentException e) {
+      // TODO: 7/4/18 Improve MyPMErrorUtils to use it in this case
+      Log.e(LOG_TAG, MessageFormat
+          .format("{0}: {1}", context.getString(R.string.error_accessing_sqlite_db),
+              e.getMessage()));
+    }
   }
 }
 
