@@ -179,7 +179,6 @@ public class FavouriteMovieListFragment
     hideLoadingIndicator();
     // Set the new data
     favouriteMovieAdapter.swapCursor(data);
-    // TODO: 6/28/18 Handle the case for data and no data
     if (data.getCount() == 0) {
       // There are not favourite movies
       showNoFavouritesDisplay();
