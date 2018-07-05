@@ -1,16 +1,20 @@
 package com.ampie_guillermo.popularmovies.ui;
 
 import android.app.Activity;
+import android.content.ContentProviderOperation;
+import android.content.ContentProviderResult;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -26,9 +30,6 @@ import com.ampie_guillermo.popularmovies.database.MovieColumns;
 import com.ampie_guillermo.popularmovies.database.MovieReviewColumns;
 import com.ampie_guillermo.popularmovies.database.MovieTrailerColumns;
 import com.ampie_guillermo.popularmovies.database.MoviesProvider;
-import com.ampie_guillermo.popularmovies.database.MoviesProvider.MovieReviews;
-import com.ampie_guillermo.popularmovies.database.MoviesProvider.MovieTrailers;
-import com.ampie_guillermo.popularmovies.database.MoviesProvider.Movies;
 import com.ampie_guillermo.popularmovies.databinding.FragmentMovieDetailBinding;
 import com.ampie_guillermo.popularmovies.model.Movie;
 import com.ampie_guillermo.popularmovies.model.MovieReviewList;
@@ -41,8 +42,8 @@ import com.ampie_guillermo.popularmovies.utils.DrawablePlaceholderSingleton;
 import com.ampie_guillermo.popularmovies.utils.MyPMErrorUtils;
 import com.ampie_guillermo.popularmovies.utils.VectorAnimationSelectWithPath;
 import com.squareup.picasso.Picasso;
-import java.text.MessageFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import retrofit2.Call;
@@ -218,7 +219,7 @@ public class MovieDetailFragment
     new Thread(new Runnable() {
       @Override
       public void run() {
-        try (Cursor data = resolver.query(Movies.withId(movieId),
+        try (Cursor data = resolver.query(MoviesProvider.Movies.withId(movieId),
             new String[]{MovieColumns.MOVIE_ID},
             null,
             null,
@@ -232,33 +233,20 @@ public class MovieDetailFragment
             if (!isMovieInDB) {
               // The movie is selected as favourite and is not present in the DB --> insert it
               // into DB
-              insertMovie(context, resolver); // TODO: 7/4/18 Review ContentProviderOperation
-              // Insert its trailers & reviews
-              insertTrailersAndReviews(context, resolver);
+              insertMovieBatch(context, resolver, movieId);
             }
             // Movie is selected as favourite and is already present in the DB --> do nothing
           } else {
             if (isMovieInDB) {
               // Movie finished as -not selected as Favourite- and is in the DB --> delete it
-              // TODO: 7/4/18 Review ContentProviderOperation in this case
-              resolver.delete(Movies.withId(movieId),
-                  null,
-                  null);
-              // Delete trailers & reviews
-              resolver.delete(MovieTrailers.fromMovie(movieId),
-                  null,
-                  null);
-              resolver.delete(MovieReviews.fromMovie(movieId),
-                  null,
-                  null);
+              deleteMovieBatch(context, resolver, movieId);
             }
             // Movie finished as -not selected as Favourite- and -is not in the DB- --> do nothing
           }
-        } catch (SQLException | IllegalArgumentException e) {
-          // TODO: 7/4/18 Improve MyPMErrorUtils to use it in this case
-          Log.e(LOG_TAG, MessageFormat
-              .format("{0}: {1}", context.getString(R.string.error_accessing_sqlite_db),
-                  e.getMessage()));
+        } catch (SQLException | IllegalArgumentException | RemoteException
+            | OperationApplicationException e) {
+          MyPMErrorUtils.logErrorMessage(LOG_TAG, context, R.string.error_accessing_sqlite_db,
+              e.getMessage());
         }
       }
     }).start();
@@ -490,10 +478,8 @@ public class MovieDetailFragment
         // If the movie is in the DB --> movie had been marked as Favourite
         isFavourite = (data != null) && data.moveToFirst();
       } catch (SQLException | IllegalArgumentException e) {
-        // TODO: 7/4/18 Improve MyPMErrorUtils to use it in this case
-        Log.e(LOG_TAG, MessageFormat
-            .format("{0}: {1}", context.getString(R.string.error_accessing_sqlite_db),
-                e.getMessage()));
+        MyPMErrorUtils
+            .logErrorMessage(LOG_TAG, context, R.string.error_accessing_sqlite_db, e.getMessage());
       }
 //        }
 //      }).start();
@@ -521,7 +507,47 @@ public class MovieDetailFragment
     vectorAnimation.startAnimation(ANIMATION_DURATION);
   }
 
-  protected void insertMovie(final Context context, final ContentResolver resolver) {
+  protected void insertMovieBatch(final Context context,
+      final ContentResolver resolver, final String movieId) {
+
+    final ContentValues movieValues = buildMovieValues();
+    final ContentValues[] trailersBulkValues = buildTrailersBulkValues(movieId);
+    final ContentValues[] reviewsBulkValues = buildReviewsBulkValues(movieId);
+
+    // Insert the movie
+    resolver.insert(MoviesProvider.Movies.CONTENT_URI, movieValues);
+
+    // Insert the trailers
+    resolver.bulkInsert(MoviesProvider.MovieTrailers.fromMovie(movieId), trailersBulkValues);
+
+    // Insert the reviews
+    resolver.bulkInsert(MoviesProvider.MovieReviews.fromMovie(movieId), reviewsBulkValues);
+  }
+
+  protected ContentProviderResult[] deleteMovieBatch(final Context context,
+      final ContentResolver resolver, final String movieId)
+      throws RemoteException, OperationApplicationException {
+
+    // Using a batch of ContentProvider operations for better performance
+    final ArrayList<ContentProviderOperation> deleteOperations = new ArrayList<>();
+
+    deleteOperations.add(ContentProviderOperation
+        .newDelete(MoviesProvider.Movies.withId(movieId)) // Delete the movie
+        .withYieldAllowed(true)
+        .build());
+    deleteOperations.add(ContentProviderOperation
+        .newDelete(MoviesProvider.MovieTrailers.fromMovie(movieId)) // Delete its trailers
+        .withYieldAllowed(true)
+        .build());
+    deleteOperations.add(ContentProviderOperation
+        .newDelete(MoviesProvider.MovieReviews.fromMovie(movieId)) // Delete its reviews
+        .withYieldAllowed(true)
+        .build());
+
+    return resolver.applyBatch(MoviesProvider.AUTHORITY, deleteOperations);
+  }
+
+  private ContentValues buildMovieValues() {
     final ContentValues cv = new ContentValues();
 
     cv.put(MovieColumns.MOVIE_ID, selectedMovie.getId());
@@ -533,19 +559,11 @@ public class MovieDetailFragment
     cv.put(MovieColumns.VOTE_AVERAGE, selectedMovie.getVoteAverage());
     cv.put(MovieColumns.VOTE_COUNT, selectedMovie.getVoteCount());
 
-    try {
-      resolver.insert(MoviesProvider.Movies.CONTENT_URI, cv);
-    } catch (SQLException | IllegalArgumentException e) {
-      // TODO: 7/4/18 Improve MyPMErrorUtils to use it in this case
-      Log.e(LOG_TAG, MessageFormat
-          .format("{0}: {1}", context.getString(R.string.error_accessing_sqlite_db),
-              e.getMessage()));
-    }
+    return cv;
   }
 
   // TODO: 7/4/18 Refactor this into more JAVA-8 style
-  protected void insertTrailersAndReviews(final Context context, final ContentResolver resolver) {
-    final String movieId = selectedMovie.getId();
+  private ContentValues[] buildTrailersBulkValues(final String movieId) {
 
     // Build the Trailer array values
     final List<MovieTrailerList.MovieTrailer> trailerList = mTrailers.getTrailerList();
@@ -559,16 +577,10 @@ public class MovieDetailFragment
 
       trailerBulkValues[i] = trailerValues;
     }
+    return trailerBulkValues;
+  }
 
-    try {
-      // Insert the trailers
-      resolver.bulkInsert(MoviesProvider.MovieTrailers.fromMovie(movieId), trailerBulkValues);
-    } catch (SQLException | IllegalArgumentException e) {
-      // TODO: 7/4/18 Improve MyPMErrorUtils to use it in this case
-      Log.e(LOG_TAG, MessageFormat
-          .format("{0}: {1}", context.getString(R.string.error_accessing_sqlite_db),
-              e.getMessage()));
-    }
+  private ContentValues[] buildReviewsBulkValues(final String movieId) {
 
     // Build the Review array values
     final List<MovieReviewList.MovieReview> reviewList = mReviews.getReviewList();
@@ -583,16 +595,7 @@ public class MovieDetailFragment
 
       reviewBulkValues[j] = reviewValues;
     }
-
-    try {
-      // Insert the reviews
-      resolver.bulkInsert(MoviesProvider.MovieReviews.fromMovie(movieId), reviewBulkValues);
-    } catch (SQLException | IllegalArgumentException e) {
-      // TODO: 7/4/18 Improve MyPMErrorUtils to use it in this case
-      Log.e(LOG_TAG, MessageFormat
-          .format("{0}: {1}", context.getString(R.string.error_accessing_sqlite_db),
-              e.getMessage()));
-    }
+    return reviewBulkValues;
   }
 }
 
