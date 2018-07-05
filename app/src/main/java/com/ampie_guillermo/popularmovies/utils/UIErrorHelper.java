@@ -4,7 +4,7 @@ package com.ampie_guillermo.popularmovies.utils;
  * UiErrorHelper: A super simple class to store an error that will be shown in the UI.
  */
 
-public class UiErrorHelper {
+public class UIErrorHelper {
 
 
   private Boolean errorEnabled;
@@ -12,28 +12,28 @@ public class UiErrorHelper {
   private int errorMsgResId;
   private String exceptionErrorMsg;
 
-  public UiErrorHelper() {
+  public UIErrorHelper() {
     errorEnabled = Boolean.FALSE;
     exceptionErrorConditionEnabled = Boolean.FALSE;
     errorMsgResId = -1;
     exceptionErrorMsg = "";
   }
 
-  public UiErrorHelper(UiErrorHelper errorHelper) {
+  public UIErrorHelper(UIErrorHelper errorHelper) {
     errorEnabled = errorHelper.errorEnabled;
     exceptionErrorConditionEnabled = errorHelper.exceptionErrorConditionEnabled;
     errorMsgResId = errorHelper.errorMsgResId;
     exceptionErrorMsg = errorHelper.exceptionErrorMsg;
   }
 
-  public UiErrorHelper(int errorMsgResId) {
+  public UIErrorHelper(int errorMsgResId) {
     errorEnabled = Boolean.TRUE;
     exceptionErrorConditionEnabled = Boolean.FALSE;
     this.errorMsgResId = errorMsgResId;
     exceptionErrorMsg = "";
   }
 
-  public UiErrorHelper(int errorMsgResId, String exceptionErrorMsg) {
+  public UIErrorHelper(int errorMsgResId, String exceptionErrorMsg) {
     errorEnabled = Boolean.TRUE;
     exceptionErrorConditionEnabled = Boolean.TRUE;
     this.errorMsgResId = errorMsgResId;
