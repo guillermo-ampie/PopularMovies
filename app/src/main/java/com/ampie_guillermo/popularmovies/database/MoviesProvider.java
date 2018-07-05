@@ -21,7 +21,7 @@ public final class MoviesProvider {
   private MoviesProvider() {
   }
 
-  static Uri buildUri(String... paths) {
+  static Uri buildUri(final String... paths) {
     Uri.Builder builder = BASE_CONTENT_URI.buildUpon();
     for (String path : paths) {
       builder.appendPath(path);
@@ -32,25 +32,64 @@ public final class MoviesProvider {
   interface Path {
 
     String MOVIES = "movies";
+    String FROM_MOVIE = "frommovie";
+    String REVIEWS = "reviews";
+    String TRAILERS = "trailers";
   }
 
   @TableEndpoint(table = MoviesDatabase.MOVIES_TABLE)
   public static final class Movies {
 
-    private Movies() {
-    }
-
-    @ContentUri(path = Path.MOVIES,
+    @ContentUri(
+        path = Path.MOVIES,
         type = "vnd.android.cursor.dir/movie")
     public static final Uri CONTENT_URI = buildUri(Path.MOVIES);
 
-    @InexactContentUri(name = "MOVIE_ID",
+    private Movies() {
+    }
+
+    @InexactContentUri(
+        name = "MOVIE_ID",
         path = Path.MOVIES + "/#",
         type = "vnd.android.cursor.item/movie",
         whereColumn = MovieColumns.MOVIE_ID,
         pathSegment = 1)
-    public static Uri withId(String id) {
+    public static Uri withId(final String id) {
       return buildUri(Path.MOVIES, id);
+    }
+  }
+
+  @TableEndpoint(table = MoviesDatabase.MOVIE_REVIEWS_TABLE)
+  public static final class MovieReviews {
+
+    private MovieReviews() {
+    }
+
+    @InexactContentUri(
+        name = "REVIEWS_FROM_MOVIE",
+        path = Path.REVIEWS + "/" + Path.FROM_MOVIE + "/#",
+        type = "vnd.android.cursor.dir/review",
+        whereColumn = MovieReviewColumns.MOVIE_ID,
+        pathSegment = 2)
+    public static Uri fromMovie(final String id) {
+      return buildUri(Path.REVIEWS, Path.FROM_MOVIE, id);
+    }
+  }
+
+  @TableEndpoint(table = MoviesDatabase.MOVIE_TRAILERS_TABLE)
+  public static final class MovieTrailers {
+
+    private MovieTrailers() {
+    }
+
+    @InexactContentUri(
+        name = "TRAILERS_FROM_MOVIE",
+        path = Path.TRAILERS + "/" + Path.FROM_MOVIE + "/#",
+        type = "vnd.android.cursor.dir/trailer",
+        whereColumn = MovieReviewColumns.MOVIE_ID,
+        pathSegment = 2)
+    public static Uri fromMovie(final String id) {
+      return buildUri(Path.TRAILERS, Path.FROM_MOVIE, id);
     }
   }
 }

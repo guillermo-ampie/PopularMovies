@@ -21,7 +21,11 @@ import android.widget.Toast;
 import com.ampie_guillermo.popularmovies.BuildConfig;
 import com.ampie_guillermo.popularmovies.R;
 import com.ampie_guillermo.popularmovies.database.MovieColumns;
+import com.ampie_guillermo.popularmovies.database.MovieReviewColumns;
+import com.ampie_guillermo.popularmovies.database.MovieTrailerColumns;
 import com.ampie_guillermo.popularmovies.database.MoviesProvider;
+import com.ampie_guillermo.popularmovies.database.MoviesProvider.MovieReviews;
+import com.ampie_guillermo.popularmovies.database.MoviesProvider.MovieTrailers;
 import com.ampie_guillermo.popularmovies.database.MoviesProvider.Movies;
 import com.ampie_guillermo.popularmovies.databinding.FragmentMovieDetailBinding;
 import com.ampie_guillermo.popularmovies.model.Movie;
@@ -74,18 +78,15 @@ public class MovieDetailFragment
           .baseUrl(MOVIE_DB_BASE_URL)
           .addConverterFactory(GsonConverterFactory.create())
           .build();
-
+  protected Movie selectedMovie;
+  protected boolean isFavourite;
+  MovieTrailerList mTrailers;
+  MovieReviewList mReviews;
+  FragmentMovieDetailBinding binding;
   private MovieTrailerAdapter mMovieTrailerAdapter;
   private MovieReviewAdapter mMovieReviewAdapter;
   private Call<MovieTrailerList> mCallTrailers;
   private Call<MovieReviewList> mCallReviews;
-
-  protected Movie selectedMovie;
-  protected boolean isFavourite;
-
-  MovieTrailerList mTrailers;
-  MovieReviewList mReviews;
-  FragmentMovieDetailBinding binding;
 
 
   public MovieDetailFragment() {
@@ -208,45 +209,45 @@ public class MovieDetailFragment
       mCallReviews.cancel();
     }
 
-    final ContentResolver resolver = getActivity().getApplicationContext().getContentResolver();
-
+    final ContentResolver resolver
+        = Objects.requireNonNull(getActivity()).getApplicationContext().getContentResolver();
+    final String movieId = selectedMovie.getId();
     new Thread(new Runnable() {
       @Override
       public void run() {
-        try (Cursor data = resolver.query(MoviesProvider.Movies.withId(selectedMovie.getId()),
+        try (Cursor data = resolver.query(Movies.withId(movieId),
             new String[]{MovieColumns.MOVIE_ID},
             null,
             null,
             null)) {
 
           final boolean isMovieInDB = (data != null) && data.moveToFirst();
-
+          // TODO: 7/4/18 The following DB operations are kind of inefficient, -all- the movies
+          //       (popular / best rated / favourites) should be inserted into the DB and not only
+          //       the favourite ones: Migrate to the complete scheme!!
           if (isFavourite) {
             if (!isMovieInDB) {
               // The movie is selected as favourite and is not present in the DB --> insert it
               // into DB
-
-              final ContentValues cv = new ContentValues();
-
-              cv.put(MovieColumns.MOVIE_ID, selectedMovie.getId());
-              cv.put(MovieColumns.ORIGINAL_TITLE, selectedMovie.getOriginalTitle());
-              cv.put(MovieColumns.RELEASE_YEAR, selectedMovie.getReleaseDate());
-              cv.put(MovieColumns.OVERVIEW, selectedMovie.getOverview());
-              cv.put(MovieColumns.POSTER_URI, selectedMovie.getPosterUri().toString());
-              cv.put(MovieColumns.BACKDROP_URI, selectedMovie.getBackdropUri().toString());
-              cv.put(MovieColumns.VOTE_AVERAGE, selectedMovie.getVoteAverage());
-              cv.put(MovieColumns.VOTE_COUNT, selectedMovie.getVoteCount());
-
-              resolver.insert(MoviesProvider.Movies.CONTENT_URI, cv);
-              // TODO: 7/1/18 Report if the INSERT was not successful
+              insertMovie(resolver);
+              // Insert its trailers & reviews
+              insertTrailersAndReviews(resolver);
             }
             // Movie is selected as favourite and is already present in the DB --> do nothing
           } else {
             if (isMovieInDB) {
               // Movie finished as -not selected as Favourite- and is in DB --> delete it
-              resolver.delete(MoviesProvider.Movies.withId(selectedMovie.getId()),
+              resolver.delete(Movies.withId(movieId),
                   null,
                   null);
+              // Delete trailers & reviews
+              resolver.delete(MovieTrailers.fromMovie(movieId),
+                  null,
+                  null);
+              resolver.delete(MovieReviews.fromMovie(movieId),
+                  null,
+                  null);
+
               // TODO: 7/1/18 Report if the DELETE was not successful
             }
             // Movie finished as -not selected as Favourite- and -is not in the DB- --> do nothing
@@ -470,19 +471,19 @@ public class MovieDetailFragment
 //        @Override
 //        public void run() {
 
-          try (Cursor data = getActivity()
-              .getApplicationContext()
-              .getContentResolver()
-              .query(Movies.withId(selectedMovie.getId()),
-                  new String[]{MovieColumns.MOVIE_ID},
-                  null,
-                  null,
-                  null)) {
+      try (Cursor data = getActivity()
+          .getApplicationContext()
+          .getContentResolver()
+          .query(Movies.withId(selectedMovie.getId()),
+              new String[]{MovieColumns.MOVIE_ID},
+              null,
+              null,
+              null)) {
 
-            // If the movie is in the DB --> movie had been marked as Favourite
-            isFavourite = (data != null) && data.moveToFirst();
-          }
-          // TODO: 7/1/18 Report if QUERY was not successful
+        // If the movie is in the DB --> movie had been marked as Favourite
+        isFavourite = (data != null) && data.moveToFirst();
+      }
+      // TODO: 7/1/18 Report if QUERY was not successful
 //        }
 //      }).start();
 
@@ -507,6 +508,59 @@ public class MovieDetailFragment
     vectorAnimation.setStrokeColor(endColor);
     vectorAnimation.setSelected(isFavourite);
     vectorAnimation.startAnimation(ANIMATION_DURATION);
+  }
+
+  protected void insertMovie(final ContentResolver resolver) {
+    final ContentValues cv = new ContentValues();
+
+    cv.put(MovieColumns.MOVIE_ID, selectedMovie.getId());
+    cv.put(MovieColumns.ORIGINAL_TITLE, selectedMovie.getOriginalTitle());
+    cv.put(MovieColumns.RELEASE_YEAR, selectedMovie.getReleaseDate());
+    cv.put(MovieColumns.OVERVIEW, selectedMovie.getOverview());
+    cv.put(MovieColumns.POSTER_URI, selectedMovie.getPosterUri().toString());
+    cv.put(MovieColumns.BACKDROP_URI, selectedMovie.getBackdropUri().toString());
+    cv.put(MovieColumns.VOTE_AVERAGE, selectedMovie.getVoteAverage());
+    cv.put(MovieColumns.VOTE_COUNT, selectedMovie.getVoteCount());
+
+    resolver.insert(MoviesProvider.Movies.CONTENT_URI, cv);
+    // TODO: 7/1/18 Report if the INSERT was not successful
+  }
+
+  // TODO: 7/4/18 Refactor this into more JAVA-8 style
+  protected void insertTrailersAndReviews(final ContentResolver resolver) {
+    final String movieId = selectedMovie.getId();
+
+    // Build the Trailer array values
+    final List<MovieTrailerList.MovieTrailer> trailerList = mTrailers.getTrailerList();
+    final int trailersCount = trailerList.size();
+    final ContentValues[] trailerBulkValues = new ContentValues[trailersCount];
+
+    for (int i = 0; i < trailersCount; ++i) {
+      final ContentValues trailerValues = new ContentValues();
+      trailerValues.put(MovieTrailerColumns.MOVIE_ID, movieId);
+      trailerValues.put(MovieTrailerColumns.TRAILER_KEY, trailerList.get(i).getKey());
+
+      trailerBulkValues[i] = trailerValues;
+    }
+    // Insert the trailers
+    resolver.bulkInsert(MoviesProvider.MovieTrailers.fromMovie(movieId), trailerBulkValues);
+    // TODO: 7/4/18 Report if the bulkInsert() was not successful
+
+    // Build the Review array values
+    final List<MovieReviewList.MovieReview> reviewList = mReviews.getReviewList();
+    final int reviewsCount = reviewList.size();
+    final ContentValues[] reviewBulkValues = new ContentValues[reviewsCount];
+    for (int j = 0; j < reviewsCount; ++j) {
+      final ContentValues reviewValues = new ContentValues();
+      reviewValues.put(MovieReviewColumns.MOVIE_ID, movieId);
+      reviewValues.put(MovieReviewColumns.AUTHOR, reviewList.get(j).getAuthor());
+      reviewValues.put(MovieReviewColumns.CONTENT, reviewList.get(j).getContent());
+
+      reviewBulkValues[j] = reviewValues;
+    }
+    // Insert the reviews
+    resolver.bulkInsert(MoviesProvider.MovieReviews.fromMovie(movieId), reviewBulkValues);
+    // TODO: 7/4/18 Report if the bulkInsert() was not successful
   }
 }
 
