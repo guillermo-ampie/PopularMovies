@@ -14,31 +14,30 @@ import java.text.MessageFormat;
 public enum MyPMErrorUtils {
   ;
 
-  // TODO: 3/15/18 Review the @UiThread annotations process
-  @UiThread
-  public static void showErrorMessage(String logTag, Context context, int errorResId,
-      Exception exception) {
-    String errorMessage = MessageFormat.format("{0}: {1}",
-        context.getString(errorResId),
-        exception.getMessage());
+  public static String logErrorMessage(final String logTag,
+      final Context context,
+      final int errorResId,
+      final String exceptionMessage) {
 
-    // Show & log error message
-    Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
+    final String errorMessage =
+        buildErrorMessage(context.getString(errorResId), exceptionMessage);
+
     Log.e(logTag, errorMessage);
-
+    return errorMessage;
   }
 
+  // TODO: 3/15/18 Review the @UiThread annotations process
+
   @UiThread
-  public static void showErrorMessage(String logTag, Context context, int errorResId,
-      String errorCondition) {
-    String errorMessage = MessageFormat.format("{0}: {1}",
-        context.getString(errorResId),
-        errorCondition);
+  public static void showErrorMessage(final String logTag,
+      final Context context,
+      final int errorResId,
+      final String errorConditionMessage) {
 
-    // Show & log error message
+    final String errorMessage =
+        logErrorMessage(logTag, context, errorResId, errorConditionMessage);
+
     Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
-    Log.e(logTag, errorMessage);
-
   }
 
   @UiThread
@@ -49,7 +48,6 @@ public enum MyPMErrorUtils {
     // Show & log error message
     Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
     Log.e(logTag, errorMessage);
-
   }
 
   public static void validateIndexInCollection(int index, int size) {
@@ -61,5 +59,10 @@ public enum MyPMErrorUtils {
         throw new AssertionError();
       }
     }
+  }
+
+  private static String buildErrorMessage(final String ErrorMessage,
+      final String ExceptionMessage) {
+    return MessageFormat.format("{0}: {1}", ErrorMessage, ExceptionMessage);
   }
 }
