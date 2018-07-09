@@ -16,13 +16,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CursorAdapter;
 import android.widget.Toast;
 import com.ampie_guillermo.popularmovies.BuildConfig;
 import com.ampie_guillermo.popularmovies.R;
@@ -58,20 +64,18 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class MovieDetailFragment
     extends Fragment
-    implements
+    implements LoaderManager.LoaderCallbacks<Cursor>,
     MovieTrailerAdapter.MovieTrailerItemClickListener,
     VectorAnimationSelectWithPath.OnSelectedEventListener {
 
+  public static final int SELECTED_MOVIE_LOADER_ID = 1200;
   static final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
-
   // The BASE URL is the same for trailers & reviews
   private static final String MOVIE_DB_BASE_URL = "https://api.themoviedb.org";
-
   // Keys for bundles
   private static final String BUNDLE_IS_FAVOURITE = "BUNDLE_IS_FAVOURITE";
   private static final String BUNDLE_MOVIE_TRAILER_LIST = "BUNDLE_MOVIE_TRAILER_LIST";
   private static final String BUNDLE_MOVIE_REVIEW_LIST = "BUNDLE_MOVIE_REVIEW_LIST";
-
   private static final long ANIMATION_DURATION = 1000L;
   /**
    * Just avoid creating the RETROFIT object with every instantiation of the
@@ -84,6 +88,7 @@ public class MovieDetailFragment
           .build();
   protected Movie selectedMovie;
   protected boolean isFavourite;
+  protected boolean isMovieInDb;
   MovieTrailerList mTrailers;
   MovieReviewList mReviews;
   FragmentMovieDetailBinding binding;
@@ -184,7 +189,8 @@ public class MovieDetailFragment
 //      textMovieOverview.setCompoundDrawablePadding(drawableToTextPadding);
       // End of hack
 
-      setupFavouriteState(savedInstanceState, resources);
+      // Setup if the Movie is Favourite one or not
+      setupFavouriteState();
 
       // Get the movie trailers
       fetchTrailers(savedInstanceState);
@@ -219,25 +225,19 @@ public class MovieDetailFragment
     new Thread(new Runnable() {
       @Override
       public void run() {
-        try (Cursor data = resolver.query(MoviesProvider.Movies.withId(movieId),
-            new String[]{MovieColumns.MOVIE_ID},
-            null,
-            null,
-            null)) {
-
-          final boolean isMovieInDB = (data != null) && data.moveToFirst();
+        try {
           // TODO: 7/4/18 The following DB operations are kind of inefficient, -all- the movies
           //       (popular / best rated / favourites) should be inserted into the DB and not only
           //       the favourite ones: Migrate to the complete scheme!!
           if (isFavourite) {
-            if (!isMovieInDB) {
-              // The movie is selected as favourite and is not present in the DB --> insert it
+            if (!isMovieInDb) {
+              // The movie finished selected as favourite and is not present in the DB --> insert it
               // into DB
               insertMovieBatch(context, resolver, movieId);
             }
             // Movie is selected as favourite and is already present in the DB --> do nothing
           } else {
-            if (isMovieInDB) {
+            if (isMovieInDb) {
               // Movie finished as -not selected as Favourite- and is in the DB --> delete it
               deleteMovieBatch(context, resolver, movieId);
             }
@@ -309,6 +309,122 @@ public class MovieDetailFragment
         isSelected ? getString(R.string.movie_detail_add_movie)
             : getString(R.string.movie_detail_remove_movie);
     Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+  }
+
+  /**
+   * Called when a previously created loader has finished its load.  Note
+   * that normally an application is <em>not</em> allowed to commit fragment
+   * transactions while in this call, since it can happen after an
+   * activity's state is saved.  See {@link FragmentManager#beginTransaction()
+   * FragmentManager.openTransaction()} for further discussion on this.
+   *
+   * <p>This function is guaranteed to be called prior to the release of
+   * the last data that was supplied for this Loader.  At this point
+   * you should remove all use of the old data (since it will be released
+   * soon), but should not do your own release of the data since its Loader
+   * owns it and will take care of that.  The Loader will take care of
+   * management of its data so you don't have to.  In particular:
+   *
+   * <ul>
+   * <li> <p>The Loader will monitor for changes to the data, and report
+   * them to you through new calls here.  You should not monitor the
+   * data yourself.  For example, if the data is a {@link Cursor}
+   * and you place it in a {@link CursorAdapter}, use
+   * the {@link CursorAdapter##CursorAdapter(Context, * Cursor, int)} constructor <em>without</em> passing
+   * in either {@link CursorAdapter#FLAG_AUTO_REQUERY}
+   * or {@link CursorAdapter#FLAG_REGISTER_CONTENT_OBSERVER}
+   * (that is, use 0 for the flags argument).  This prevents the CursorAdapter
+   * from doing its own observing of the Cursor, which is not needed since
+   * when a change happens you will get a new Cursor throw another call
+   * here.
+   * <li> The Loader will release the data once it knows the application
+   * is no longer using it.  For example, if the data is
+   * a {@link Cursor} from a {@link CursorLoader},
+   * you should not call close() on it yourself.  If the Cursor is being placed in a
+   * {@link CursorAdapter}, you should use the
+   * {@link CursorAdapter#swapCursor(Cursor)}
+   * method so that the old Cursor is not closed.
+   * </ul>
+   *
+   * <p>This will always be called from the process's main thread.
+   *
+   * @param loader The Loader that has finished.
+   * @param data The data generated by the Loader.
+   */
+  @Override
+  public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+
+    // If the Movie is in the DB --> it is a Favourite one
+    isMovieInDb = (data != null) && data.moveToFirst();
+    isFavourite = isMovieInDb;
+    // Initialize the favourite button's state
+    setupFavouriteButtonAnimation(getResources());
+
+    // Get trailers & reviews
+    if (isFavourite) {
+      // Get them from DB
+    } else {
+      // Get them from network
+    }
+  }
+
+  /**
+   * Instantiate and return a new Loader for the given ID.
+   *
+   * <p>This will always be called from the process's main thread.
+   *
+   * @param id The ID whose loader is to be created.
+   * @param args Any arguments supplied by the caller.
+   * @return Return a new Loader instance that is ready to start loading.
+   */
+  @NonNull
+  @Override
+  public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+    switch (id) {
+      case SELECTED_MOVIE_LOADER_ID:
+        return new CursorLoader(Objects.requireNonNull(getActivity()), // context
+            MoviesProvider.Movies.withId(selectedMovie.getId()), // content URI
+            new String[]{MovieColumns.MOVIE_ID}, // projection
+            null, // selection
+            null, // selection args
+            null); // sort order
+      default:
+        throw new IllegalArgumentException(getString(R.string.error_unknown_loader_id) + id);
+    }
+  }
+
+  /**
+   * Called when a previously created loader is being reset, and thus
+   * making its data unavailable.  The application should at this point
+   * remove any references it has to the Loader's data.
+   *
+   * <p>This will always be called from the process's main thread.
+   *
+   * @param loader The Loader that is being reset.
+   */
+  @Override
+  public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+    // Nothing to do in this case
+  }
+
+  private void setupFavouriteState() {
+
+    getLoaderManager().initLoader(SELECTED_MOVIE_LOADER_ID, null, this);
+  }
+
+  protected void setupFavouriteButtonAnimation(final Resources resources) {
+    // Setup animation for favourite button
+    final int startColor = resources.getColor(R.color.white);
+    final int endColor = resources.getColor(R.color.red);
+    final VectorAnimationSelectWithPath vectorAnimation =
+        new VectorAnimationSelectWithPath(binding.vectorMasterMovieDetailFavourite,
+            getString(R.string.vector_path_name),
+            startColor,
+            endColor);
+    vectorAnimation.registerOnSelectedEventListener(this);
+    vectorAnimation.setStrokeColor(endColor);
+    vectorAnimation.setSelected(isFavourite);
+    vectorAnimation.startAnimation(ANIMATION_DURATION);
   }
 
   private void fetchTrailers(final Bundle savedInstanceState) {
@@ -457,54 +573,6 @@ public class MovieDetailFragment
       // Set the data(reviews) we have just fetched
       mMovieReviewAdapter.setMovieReviewList(mReviews);
     }
-  }
-
-  private void setupFavouriteState(final Bundle savedInstanceState, final Resources resources) {
-    if (savedInstanceState == null) {
-      // First time this Fragment is created, get the Favourite Button's state from DB
-//      new Thread(new Runnable() {
-//        @Override
-//        public void run() {
-
-      final Context context = Objects.requireNonNull(getActivity()).getApplicationContext();
-      try (Cursor data = context
-          .getContentResolver()
-          .query(MoviesProvider.Movies.withId(selectedMovie.getId()),
-              new String[]{MovieColumns.MOVIE_ID},
-              null,
-              null,
-              null)) {
-
-        // If the movie is in the DB --> movie had been marked as Favourite
-        isFavourite = (data != null) && data.moveToFirst();
-      } catch (SQLException | IllegalArgumentException e) {
-        MyPMErrorUtils
-            .logErrorMessage(LOG_TAG, context, R.string.error_accessing_sqlite_db, e.getMessage());
-      }
-//        }
-//      }).start();
-
-    } else {
-      // Retrieve the Favourite Button's state from a previously fragment's instance
-      isFavourite = savedInstanceState.getBoolean(BUNDLE_IS_FAVOURITE);
-    }
-    // TODO: 7/1/18 Potential bug here, the working thread could have not set isFavourite value yet
-    setupFavouriteButtonAnimation(resources);
-  }
-
-  protected void setupFavouriteButtonAnimation(Resources resources) {
-    // Setup animation for favourite button
-    final int startColor = resources.getColor(R.color.white);
-    final int endColor = resources.getColor(R.color.red);
-    final VectorAnimationSelectWithPath vectorAnimation =
-        new VectorAnimationSelectWithPath(binding.vectorMasterMovieDetailFavourite,
-            getString(R.string.vector_path_name),
-            startColor,
-            endColor);
-    vectorAnimation.registerOnSelectedEventListener(this);
-    vectorAnimation.setStrokeColor(endColor);
-    vectorAnimation.setSelected(isFavourite);
-    vectorAnimation.startAnimation(ANIMATION_DURATION);
   }
 
   protected void insertMovieBatch(final Context context,
