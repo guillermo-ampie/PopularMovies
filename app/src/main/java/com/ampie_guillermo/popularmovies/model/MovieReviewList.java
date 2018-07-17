@@ -27,7 +27,7 @@ public class MovieReviewList implements Parcelable {
   @SerializedName("id")
   private final String mMovieId;
   @SerializedName("results")
-  private final ArrayList<MovieReviewList.MovieReview> mReviewList;
+  private ArrayList<MovieReviewList.MovieReview> mReviewList;
 
   public MovieReviewList() {
     // TODO: Check this assignment....
@@ -42,6 +42,10 @@ public class MovieReviewList implements Parcelable {
 
   public List<MovieReview> getReviewList() {
     return Collections.unmodifiableList(mReviewList);
+  }
+
+  public void setReviewList(final ArrayList<MovieReview> reviewList) {
+    mReviewList = new ArrayList<>(reviewList);
   }
 
   public String getMovieId() {
