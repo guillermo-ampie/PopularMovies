@@ -62,7 +62,7 @@ public class FavouriteMovieAdapter extends RecyclerView.Adapter<MovieViewHolder>
    * Note that unlike {@link ListView}, RecyclerView will not call this method
    * again if the position of the item changes in the data set unless the item itself is
    * invalidated or the new position cannot be determined. For this reason, you should only
-   * use the <code>position</code> parameter while acquiring the related data item inside
+   * use the {@code position} parameter while acquiring the related data item inside
    * this method and should not keep a copy of it. If you need the position of an item later
    * on (e.g. in a click listener), use {@link ViewHolder#getAdapterPosition()} which will
    * have the updated adapter position.
@@ -95,12 +95,12 @@ public class FavouriteMovieAdapter extends RecyclerView.Adapter<MovieViewHolder>
    *
    * @param newCursor: the new cursor to use in the RecyclerView's adapter
    */
-  public void swapCursor(Cursor newCursor) {
+  public void swapCursor(final Cursor newCursor) {
     cursor = newCursor;
     notifyDataSetChanged();
   }
 
-  public Movie getItem( int position) {
+  public Movie getItem(final int position) {
     // Move cursor to item's index
     cursor.moveToPosition(position);
 
