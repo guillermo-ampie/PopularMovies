@@ -66,7 +66,7 @@ public class FavouriteMovieListFragment
   }
 
   @Override
-  public Movie getSelectedMovie(int clickedItemIndex) {
+  public Movie getSelectedMovie(final int clickedItemIndex) {
   // Get Movie from Cursor
     return favouriteMovieAdapter.getItem(clickedItemIndex);
   }
@@ -130,7 +130,8 @@ public class FavouriteMovieListFragment
             null, // selection args
             null); // sort order
       default:
-        throw new IllegalArgumentException(getString(R.string.error_unknown_loader_id) + id);
+        throw new IllegalArgumentException(
+            String.format("%s: %d", getString(R.string.error_unknown_loader_id), id));
     }
   }
 
