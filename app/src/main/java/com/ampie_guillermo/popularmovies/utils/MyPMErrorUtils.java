@@ -41,8 +41,8 @@ public enum MyPMErrorUtils {
   }
 
   @UiThread
-  public static void showErrorMessage(String logTag, Context context, int errorResId) {
-    String errorMessage = MessageFormat.format("{0}",
+  public static void showErrorMessage(final String logTag, final Context context, final int errorResId) {
+    final String errorMessage = MessageFormat.format("{0}",
         context.getString(errorResId));
 
     // Show & log error message
@@ -50,7 +50,7 @@ public enum MyPMErrorUtils {
     Log.e(logTag, errorMessage);
   }
 
-  public static void validateIndexInCollection(int index, int size) {
+  public static void validateIndexInCollection(final int index, final int size) {
     // The collection must contain at least one element
     if (BuildConfig.DEBUG) {
       if (!((size >= 1) && ((index >= 0) && (index <= (size - 1))))) {
