@@ -27,7 +27,7 @@ public class MovieTrailerList implements Parcelable {
   @SerializedName("id")
   private final String mMovieId;
   @SerializedName("results")
-  private final ArrayList<MovieTrailerList.MovieTrailer> mTrailerList;
+  private ArrayList<MovieTrailerList.MovieTrailer> mTrailerList;
 
   public MovieTrailerList() {
     mMovieId = "";
@@ -41,6 +41,10 @@ public class MovieTrailerList implements Parcelable {
 
   public List<MovieTrailer> getTrailerList() {
     return Collections.unmodifiableList(mTrailerList);
+  }
+
+  public void setTrailerList(final ArrayList<MovieTrailer> trailerList) {
+    mTrailerList = new ArrayList<>(trailerList);
   }
 
   public String getMovieId() {
