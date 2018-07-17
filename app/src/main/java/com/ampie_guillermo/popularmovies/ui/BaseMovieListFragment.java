@@ -39,64 +39,6 @@ public class BaseMovieListFragment
   public BaseMovieListFragment() {
   }
 
-  /**
-   * Called to ask the fragment to save its current dynamic state, so it
-   * can later be reconstructed in a new instance of its process is
-   * restarted.  If a new instance of the fragment later needs to be
-   * created, the data you place in the Bundle here will be available
-   * in the Bundle given to {@link #onCreate(Bundle)},
-   * #onCreateView(LayoutInflater, ViewGroup, Bundle)}, and
-   * {@link #onActivityCreated(Bundle)}.
-   * This corresponds to  Activity onSaveInstanceState(Bundle)
-   * Activity onSaveInstanceState(Bundle)} and most of the discussion there
-   * applies here as well.  Note however: <em>this method may be called
-   * at any time before {@link #onDestroy()}</em>.  There are many situations
-   * where a fragment may be mostly torn down (such as when placed on the
-   * back stack with no UI showing), but its state will not be saved until
-   * its owning activity actually needs to save its state.
-   *
-   * @param outState Bundle in which to place your saved state.
-   */
-  @Override
-  public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-
-    /**
-     * There is no need to use savedInstanceState because mCachedMovieList is managed by the
-     * AsyncTaskLoader on configuration changes
-     */
-//    if (!mCachedMovieList.isEmpty()) {
-//      outState.putParcelableArrayList(MOVIE_LIST, mCachedMovieList);
-//    }
-  }
-
-  /**
-   * Called to do initial creation of a fragment.  This is called after
-   * {@link #onAttach (Activity)} and before
-   * {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
-   * Note that this can be called while the fragment's activity is
-   * still in the process of being created.  As such, you can not rely
-   * on things like the activity's content divider_view_1 hierarchy being initialized
-   * at this point.  If you want to do work once the activity itself is
-   * created, see {@link #onActivityCreated(Bundle)}.
-   *
-   * @param savedInstanceState If the fragment is being re-created from a previous saved state, this
-   * is the state.
-   */
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    /**
-     * There is no need to use savedInstanceState() because the movie list fetched is persisted
-     * / cached by the AsyncTaskLoader's subclass MovieListLoader upon configuration changes
-     */
-//    if ((savedInstanceState != null) && savedInstanceState.containsKey(MOVIE_LIST)) {
-//      // Let's get the saved movie list array from a saved state
-//      mCachedMovieList = savedInstanceState.getParcelableArrayList(MOVIE_LIST);
-//    }
-  }
-
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
