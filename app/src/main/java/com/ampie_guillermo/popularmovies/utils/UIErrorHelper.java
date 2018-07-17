@@ -19,33 +19,33 @@ public class UIErrorHelper {
     exceptionErrorMsg = "";
   }
 
-  public UIErrorHelper(UIErrorHelper errorHelper) {
+  public UIErrorHelper(final UIErrorHelper errorHelper) {
     errorEnabled = errorHelper.errorEnabled;
     exceptionErrorConditionEnabled = errorHelper.exceptionErrorConditionEnabled;
     errorMsgResId = errorHelper.errorMsgResId;
     exceptionErrorMsg = errorHelper.exceptionErrorMsg;
   }
 
-  public UIErrorHelper(int errorMsgResId) {
+  public UIErrorHelper(final int errorMsgResId) {
     errorEnabled = Boolean.TRUE;
     exceptionErrorConditionEnabled = Boolean.FALSE;
     this.errorMsgResId = errorMsgResId;
     exceptionErrorMsg = "";
   }
 
-  public UIErrorHelper(int errorMsgResId, String exceptionErrorMsg) {
+  public UIErrorHelper(final int errorMsgResId, final String exceptionErrorMsg) {
     errorEnabled = Boolean.TRUE;
     exceptionErrorConditionEnabled = Boolean.TRUE;
     this.errorMsgResId = errorMsgResId;
     this.exceptionErrorMsg = exceptionErrorMsg;
   }
 
-  public void setErrorResId(int errorMsgResId) {
+  public void setErrorResId(final int errorMsgResId) {
     errorEnabled = Boolean.TRUE;
     this.errorMsgResId = errorMsgResId;
   }
 
-  public void setExceptionErrorMsg(int errorMsgResId, String exceptionErrorMsg) {
+  public void setExceptionErrorMsg(final int errorMsgResId, final String exceptionErrorMsg) {
     setErrorResId(errorMsgResId);
     exceptionErrorConditionEnabled = Boolean.TRUE;
     this.exceptionErrorMsg = exceptionErrorMsg;
