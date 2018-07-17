@@ -74,7 +74,8 @@ public class MovieListFragment
       case MOVIE_LIST_LOADER_ID:
         return new MovieListLoader(getActivity(), args);
       default:
-        throw new IllegalArgumentException(getString(R.string.error_unknown_loader_id) + id);
+        throw new IllegalArgumentException(
+            String.format("%s: %d", getString(R.string.error_unknown_loader_id), id));
     }
   }
 
@@ -182,7 +183,7 @@ public class MovieListFragment
   }
 
   @Override
-  public Movie getSelectedMovie(int clickedItemIndex) {
+  public Movie getSelectedMovie(final int clickedItemIndex) {
     return mMovieList.get(clickedItemIndex);
   }
 
@@ -205,7 +206,7 @@ public class MovieListFragment
     private final UIErrorHelper mUiError;
     private ArrayList<Movie> mCachedMovieList;
 
-    MovieListLoader(Context context, Bundle args) {
+    MovieListLoader(final Context context, final Bundle args) {
       super(context);
       mArgs = args;
       mCachedMovieList = new ArrayList<>(MovieListFragment.MOVIES_RESULT_SIZE);
@@ -220,7 +221,7 @@ public class MovieListFragment
     @Override
     public ArrayList<Movie> loadInBackground() {
       Log.v(MovieListLoader.LOG_TAG, "++++++++++ loadInBackground() ");
-      String sortingMethod = mArgs.getString(EXTRA_MOVIE_SORTING_METHOD);
+      final String sortingMethod = mArgs.getString(EXTRA_MOVIE_SORTING_METHOD);
 
       if (TextUtils.isEmpty(sortingMethod)) {
         mUiError.setErrorResId(R.string.error_missing_sorting_method);
@@ -234,7 +235,7 @@ public class MovieListFragment
 
       // The raw JSON response as a string
       String movieJsonStr;
-
+      // TODO: 7/17/18  Check the nested "try" and the catch statements and the various "return"
       try {
         // Construct the URL for TheMovieDB query
         final String GET = "GET";
@@ -260,7 +261,7 @@ public class MovieListFragment
 
         // Read the input stream into a String
         try (InputStream inputStream = urlConnection.getInputStream()) {
-          StringBuilder buffer = new StringBuilder();
+          final StringBuilder buffer = new StringBuilder();
 //        if (inputStream == null) {
 //          mUiError.setErrorResId(R.string.error_empty_response);
 //          return null;
@@ -346,7 +347,8 @@ public class MovieListFragment
       super.deliverResult(data);
     }
 
-    private ArrayList<Movie> getMoviesDataFromJson(String moviesJsonStr) throws JSONException {
+    private ArrayList<Movie> getMoviesDataFromJson(final String moviesJsonStr)
+        throws JSONException {
 
 //      /** Obsolete code!:
 //       * We need to specify in the HTTPS request and the XML files
