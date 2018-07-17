@@ -68,12 +68,17 @@ public class MovieDetailFragment
     MovieTrailerAdapter.MovieTrailerItemClickListener,
     VectorAnimationSelectWithPath.OnSelectedEventListener {
 
-  public static final int SELECTED_MOVIE_LOADER_ID = 1200;
   static final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
+  private static final int SELECTED_MOVIE_LOADER_ID = 1200;
+  private static final int TRAILERS_LOADER_ID = 1300;
+  private static final int REVIEWS_LOADER_ID = 1400;
   // The BASE URL is the same for trailers & reviews
   private static final String MOVIE_DB_BASE_URL = "https://api.themoviedb.org";
+  // Keys for Bundle args
+  private static final String EXTRA_MOVIE_ID = "EXTRA_MOVIE_ID";
   // Keys for bundles
-  private static final String BUNDLE_IS_FAVOURITE = "BUNDLE_IS_FAVOURITE";
+  private static final String BUNDLE_IS_MOVIE_IN_DB = "BUNDLE_IS_MOVIE_IN_DB";
+  private static final String BUNDLE_IS_MOVIE_FAVOURITE = "BUNDLE_IS_MOVIE_FAVOURITE";
   private static final String BUNDLE_MOVIE_TRAILER_LIST = "BUNDLE_MOVIE_TRAILER_LIST";
   private static final String BUNDLE_MOVIE_REVIEW_LIST = "BUNDLE_MOVIE_REVIEW_LIST";
   private static final long ANIMATION_DURATION = 1000L;
@@ -86,12 +91,12 @@ public class MovieDetailFragment
           .baseUrl(MOVIE_DB_BASE_URL)
           .addConverterFactory(GsonConverterFactory.create())
           .build();
-  protected Movie selectedMovie;
-  protected boolean isFavourite;
-  protected boolean isMovieInDb;
+  boolean isFavourite;
+  boolean isMovieInDb;
   MovieTrailerList mTrailers;
   MovieReviewList mReviews;
   FragmentMovieDetailBinding binding;
+  private Movie selectedMovie;
   private MovieTrailerAdapter mMovieTrailerAdapter;
   private MovieReviewAdapter mMovieReviewAdapter;
   private Call<MovieTrailerList> mCallTrailers;
@@ -101,6 +106,67 @@ public class MovieDetailFragment
   public MovieDetailFragment() {
     mTrailers = new MovieTrailerList();
     mReviews = new MovieReviewList();
+  }
+
+  private static ArrayList<MovieTrailerList.MovieTrailer> buildTrailerList(
+      @NonNull final Cursor cursor) {
+    // Build the list of trailers from DB
+    final int TRAILER_KEY_INDEX = 0;
+    final int TRAILER_NAME_INDEX = 1;
+    final ArrayList<MovieTrailerList.MovieTrailer> trailerList = new ArrayList<>(cursor.getCount());
+
+    while (cursor.moveToNext()) {
+      final String trailerKey = cursor.getString(TRAILER_KEY_INDEX);
+      final String trailerName = cursor.getString(TRAILER_NAME_INDEX);
+
+      trailerList.add(new MovieTrailerList.MovieTrailer(trailerKey, trailerName));
+    }
+    return trailerList;
+  }
+
+  private static ArrayList<MovieReviewList.MovieReview> buildReviewList(
+      @NonNull final Cursor cursor) {
+    // Build the list of reviews from DB
+    final int REVIEW_ID_INDEX = 0;
+    final int REVIEW_AUTHOR_INDEX = 1;
+    final int REVIEW_CONTENT_INDEX = 2;
+    final ArrayList<MovieReviewList.MovieReview> reviewList = new ArrayList<>(cursor.getCount());
+
+    while (cursor.moveToNext()) {
+      final String reviewId = cursor.getString(REVIEW_ID_INDEX);
+      final String reviewAuthor = cursor.getString(REVIEW_AUTHOR_INDEX);
+      final String reviewContent = cursor.getString(REVIEW_CONTENT_INDEX);
+
+      reviewList.add(new MovieReviewList.MovieReview(reviewId, reviewAuthor, reviewContent));
+    }
+    return reviewList;
+  }
+
+  static ContentProviderResult[] deleteMovieBatch(final ContentResolver resolver,
+      final String movieId)
+      throws RemoteException, OperationApplicationException {
+
+    // Using a batch of ContentProvider operations for better performance
+    final ArrayList<ContentProviderOperation> deleteOperations = new ArrayList<>();
+
+    // Delete the trailers
+    deleteOperations.add(ContentProviderOperation
+        .newDelete(MoviesProvider.MovieTrailers.fromMovie(movieId))
+        .withYieldAllowed(true)
+        .build());
+
+    // Delete the reviews
+    deleteOperations.add(ContentProviderOperation
+        .newDelete(MoviesProvider.MovieReviews.fromMovie(movieId))
+        .withYieldAllowed(true)
+        .build());
+    // Delete the movie: because of referential integrity we must delete the movie at the last
+    deleteOperations.add(ContentProviderOperation
+        .newDelete(MoviesProvider.Movies.withId(movieId))
+        .withYieldAllowed(true)
+        .build());
+
+    return resolver.applyBatch(MoviesProvider.AUTHORITY, deleteOperations);
   }
 
   @Override
@@ -142,14 +208,14 @@ public class MovieDetailFragment
       // Rating & Votes values will be formatted based on the current locale's properties
       final NumberFormat numberFormat = NumberFormat.getNumberInstance();
       numberFormat.setMaximumFractionDigits(1);
-      final String rating = numberFormat.format((double) selectedMovie.getVoteAverage());
+      final String rating = numberFormat.format(selectedMovie.getVoteAverage());
 
       // Set the movie rating
       binding.textMovieDetailRatingContent.setText(rating);
 
       // Format the number using the current's locale grouping
       numberFormat.setGroupingUsed(true);
-      final String votes = numberFormat.format((long) selectedMovie.getVoteCount());
+      final String votes = numberFormat.format(selectedMovie.getVoteCount());
 
       // Set the movie votes
       binding.textMovieDetailVoteCountContent.setText(votes);
@@ -157,17 +223,18 @@ public class MovieDetailFragment
       // Set the movie overview
       binding.textMovieDetailOverviewContent.setText(selectedMovie.getOverview());
 
-      /** Although the following (commented) code is correct, there is a workaround to all this,
-       * that allow us to use drawables directly from XML in TextViews (in pre Lollipop API) using
-       * a "selector":  wrap up the vector drawable in a selector file and you can specify
-       * "android:drawableStart=@drawable/drawable_wrapper" attribute (and related) in the
-       * TextView xml specification.
-       *  Note: See comment in MovieAdapter::MovieViewHolder
-       *  Reference: https://stackoverflow.com/questions/35761636/
-       *  is-it-possible-to-use-vectordrawable-in-buttons-and
-       *  -textviews-using-androiddraw/40250753#40250753
-       *  See entry from: https://stackoverflow.com/users/4513962/amit-tumkur
-       *  answered on Jan 8 at 8:28
+      /*
+        Although the following (commented) code is correct, there is a workaround to all this,
+        that allow us to use drawables directly from XML in TextViews (in pre Lollipop API) using
+        a "selector":  wrap up the vector drawable in a selector file and you can specify
+        "android:drawableStart=@drawable/drawable_wrapper" attribute (and related) in the
+        TextView xml specification.
+        Note: See comment in MovieAdapter::MovieViewHolder
+        Reference: https://stackoverflow.com/questions/35761636/
+        is-it-possible-to-use-vectordrawable-in-buttons-and
+        -textviews-using-androiddraw/40250753#40250753
+        See entry from: https://stackoverflow.com/users/4513962/amit-tumkur
+        answered on Jan 8 at 8:28
        */
       // The following hack is to allow the use of vector drawables directly in TextViews in API
       // level < 21 (Lollipop), see comment in DrawablePlaceholderSingleton. The code here is to
@@ -189,17 +256,63 @@ public class MovieDetailFragment
 //      textMovieOverview.setCompoundDrawablePadding(drawableToTextPadding);
       // End of hack
 
-      // Setup if the Movie is Favourite one or not
-      setupFavouriteState();
+      // Set Trailers view: begin
+      // Set an -empty- adapter because the trailers have not been fetched
+      mMovieTrailerAdapter = new MovieTrailerAdapter(this);
+      binding.recyclerMovieDetailTrailers.setAdapter(mMovieTrailerAdapter);
 
-      // Get the movie trailers
-      fetchTrailers(savedInstanceState);
+      // We will show the movie trailers in just one row
+      binding.recyclerMovieDetailTrailers.setLayoutManager(new LinearLayoutManager(getContext(),
+          LinearLayoutManager.HORIZONTAL,
+          false));
+      binding.recyclerMovieDetailTrailers.setHasFixedSize(true);
+      // Set Trailers view: end
 
-      // Get the movie reviews
-      fetchReviews(savedInstanceState);
+      // Set Reviews view: begin
+      // Set an -empty- adapter because the reviews have not been fetched
+      mMovieReviewAdapter = new MovieReviewAdapter();
+      binding.recyclerMovieDetailReviews.setAdapter(mMovieReviewAdapter);
+
+      // We will show the movie trailers in just one row
+      final LinearLayoutManager layoutManager =
+          new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+      binding.recyclerMovieDetailReviews.setLayoutManager(layoutManager);
+
+      // Set a divider line
+      final DividerItemDecoration dividerLine =
+          // TODO: Review getContext() call
+          new DividerItemDecoration(binding.recyclerMovieDetailReviews.getContext(),
+              layoutManager.getOrientation());
+      binding.recyclerMovieDetailReviews.addItemDecoration(dividerLine);
+      // Set Reviews view: end
+
+      if (savedInstanceState != null) {
+        // There is a prior instance of the Fragment where we saved the selected movie's state,
+        // its trailers and reviews, retrieve and show them
+
+        mTrailers = savedInstanceState.getParcelable(BUNDLE_MOVIE_TRAILER_LIST);
+        mReviews = savedInstanceState.getParcelable(BUNDLE_MOVIE_REVIEW_LIST);
+        isMovieInDb = savedInstanceState.getBoolean(BUNDLE_IS_MOVIE_IN_DB);
+        isFavourite = savedInstanceState.getBoolean(BUNDLE_IS_MOVIE_FAVOURITE);
+
+        // Initialize the favourite button's state
+        setupFavouriteButtonAnimation(getResources());
+
+        showTrailersView();
+        showReviewsView();
+      } else {
+        // From the Intent we have almost all the movie data but is missing: Favourite state,
+        // trailers and reviews
+        completeMovieData();
+      }
     }
-
     return binding.getRoot();
+  }
+
+  private void completeMovieData() {
+
+    // Check whether the selected movie is in the DB and fetch the remaining data
+    getLoaderManager().initLoader(SELECTED_MOVIE_LOADER_ID, null, this);
   }
 
   /**
@@ -233,13 +346,19 @@ public class MovieDetailFragment
             if (!isMovieInDb) {
               // The movie finished selected as favourite and is not present in the DB --> insert it
               // into DB
-              insertMovieBatch(context, resolver, movieId);
+              Log.v(LOG_TAG, "++++++++++onStop(): BEGIN --> movie INSERTED");
+              isMovieInDb = true;
+              insertMovieBatch(resolver, movieId);
+              Log.v(LOG_TAG, "++++++++++onStop():      END --> movie INSERTED");
             }
             // Movie is selected as favourite and is already present in the DB --> do nothing
           } else {
             if (isMovieInDb) {
               // Movie finished as -not selected as Favourite- and is in the DB --> delete it
-              deleteMovieBatch(context, resolver, movieId);
+              Log.v(LOG_TAG, "++++++++++onStop(): BEGIN --> MOVIE DELETED");
+              isMovieInDb = false;
+              deleteMovieBatch(resolver, movieId);
+              Log.v(LOG_TAG, "++++++++++onStop():      END --> MOVIE DELETED");
             }
             // Movie finished as -not selected as Favourite- and -is not in the DB- --> do nothing
           }
@@ -295,7 +414,8 @@ public class MovieDetailFragment
 
     outState.putParcelable(BUNDLE_MOVIE_TRAILER_LIST, mTrailers);
     outState.putParcelable(BUNDLE_MOVIE_REVIEW_LIST, mReviews);
-    outState.putBoolean(BUNDLE_IS_FAVOURITE, isFavourite);
+    outState.putBoolean(BUNDLE_IS_MOVIE_FAVOURITE, isFavourite);
+    outState.putBoolean(BUNDLE_IS_MOVIE_IN_DB, isMovieInDb);
   }
 
   @Override
@@ -330,7 +450,7 @@ public class MovieDetailFragment
    * them to you through new calls here.  You should not monitor the
    * data yourself.  For example, if the data is a {@link Cursor}
    * and you place it in a {@link CursorAdapter}, use
-   * the {@link CursorAdapter##CursorAdapter(Context, * Cursor, int)} constructor <em>without</em> passing
+   * the {@link CursorAdapter(Context, Cursor, int)} constructor <em>without</em> passing
    * in either {@link CursorAdapter#FLAG_AUTO_REQUERY}
    * or {@link CursorAdapter#FLAG_REGISTER_CONTENT_OBSERVER}
    * (that is, use 0 for the flags argument).  This prevents the CursorAdapter
@@ -354,17 +474,48 @@ public class MovieDetailFragment
   @Override
   public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
 
-    // If the Movie is in the DB --> it is a Favourite one
-    isMovieInDb = (data != null) && data.moveToFirst();
-    isFavourite = isMovieInDb;
-    // Initialize the favourite button's state
-    setupFavouriteButtonAnimation(getResources());
+    final int loaderId = loader.getId();
+    switch (loaderId) {
 
-    // Get trailers & reviews
-    if (isFavourite) {
-      // Get them from DB
-    } else {
-      // Get them from network
+      case SELECTED_MOVIE_LOADER_ID:
+        // If the Movie is in the DB --> it is a Favourite one
+        isMovieInDb = (data != null) && data.moveToFirst();
+        isFavourite = isMovieInDb;
+
+        // Initialize the favourite button's state
+        setupFavouriteButtonAnimation(getResources());
+
+        // Get movie trailers & reviews
+        if (isMovieInDb) {
+          // Get them from DB
+          final Bundle bundle = new Bundle();
+          bundle.putString(EXTRA_MOVIE_ID, selectedMovie.getId());
+          getLoaderManager().initLoader(TRAILERS_LOADER_ID, bundle, this);
+          getLoaderManager().initLoader(REVIEWS_LOADER_ID, bundle, this);
+        } else {
+          // Get them from network
+          fetchTrailersFromNetwork();
+          fetchReviewsFromNetwork();
+        }
+        break;
+
+      case TRAILERS_LOADER_ID:
+        // Set up the trailer list from DB
+        mTrailers.setTrailerList(buildTrailerList(data));
+        // Show the movie trailers
+        showTrailersView();
+        break;
+
+      case REVIEWS_LOADER_ID:
+        // Set the reviews from the DB
+        mReviews.setReviewList(buildReviewList(data));
+        // Show the movie reviews
+        showReviewsView();
+        break;
+
+      default:
+        throw new IllegalArgumentException(
+            String.format("%s: %d", getString(R.string.error_unknown_loader_id), loaderId));
     }
   }
 
@@ -380,6 +531,8 @@ public class MovieDetailFragment
   @NonNull
   @Override
   public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+    final String movieId;
+
     switch (id) {
       case SELECTED_MOVIE_LOADER_ID:
         return new CursorLoader(Objects.requireNonNull(getActivity()), // context
@@ -388,8 +541,31 @@ public class MovieDetailFragment
             null, // selection
             null, // selection args
             null); // sort order
+
+      case TRAILERS_LOADER_ID:
+        movieId = Objects.requireNonNull(args).getString(EXTRA_MOVIE_ID);
+        return new CursorLoader(Objects.requireNonNull(getActivity()), // context
+            MoviesProvider.MovieTrailers.fromMovie(movieId), // content URI
+            new String[]{MovieTrailerColumns.KEY, // projection
+                MovieTrailerColumns.NAME},
+            null, // selection
+            null, // selection args
+            null); // sort order
+
+      case REVIEWS_LOADER_ID:
+        movieId = Objects.requireNonNull(args).getString(EXTRA_MOVIE_ID);
+        return new CursorLoader(Objects.requireNonNull(getActivity()), // context
+            MoviesProvider.MovieReviews.fromMovie(movieId), // content URI
+            new String[]{MovieReviewColumns.REVIEW_ID, // projection
+                MovieReviewColumns.AUTHOR,
+                MovieReviewColumns.CONTENT},
+            null, // selection
+            null, // selection args
+            null); // sort order
+
       default:
-        throw new IllegalArgumentException(getString(R.string.error_unknown_loader_id) + id);
+        throw new IllegalArgumentException(
+            String.format("%s: %d", getString(R.string.error_unknown_loader_id), id));
     }
   }
 
@@ -407,12 +583,7 @@ public class MovieDetailFragment
     // Nothing to do in this case
   }
 
-  private void setupFavouriteState() {
-
-    getLoaderManager().initLoader(SELECTED_MOVIE_LOADER_ID, null, this);
-  }
-
-  protected void setupFavouriteButtonAnimation(final Resources resources) {
+  private void setupFavouriteButtonAnimation(final Resources resources) {
     // Setup animation for favourite button
     final int startColor = resources.getColor(R.color.white);
     final int endColor = resources.getColor(R.color.red);
@@ -427,62 +598,44 @@ public class MovieDetailFragment
     vectorAnimation.startAnimation(ANIMATION_DURATION);
   }
 
-  private void fetchTrailers(final Bundle savedInstanceState) {
-    // Set an -empty- adapter because the trailers have not been fetched
-    mMovieTrailerAdapter = new MovieTrailerAdapter(this);
-    binding.recyclerMovieDetailTrailers.setAdapter(mMovieTrailerAdapter);
+  private void fetchTrailersFromNetwork() {
+    final MovieTrailerService movieTrailerService = RETROFIT.create(MovieTrailerService.class);
 
-    // We will show the movie trailers in just one row
-    binding.recyclerMovieDetailTrailers.setLayoutManager(new LinearLayoutManager(getContext(),
-        LinearLayoutManager.HORIZONTAL,
-        false));
-    binding.recyclerMovieDetailTrailers.setHasFixedSize(true);
+    // Create a call instance for looking up the movie's list of trailers
+    mCallTrailers = movieTrailerService.get(selectedMovie.getId(), BuildConfig.MOVIE_DB_API_KEY);
 
-    if (savedInstanceState != null) {
-      // We already have the trailers list, retrieve it and show it
-      mTrailers = savedInstanceState.getParcelable(BUNDLE_MOVIE_TRAILER_LIST);
-      setupTrailersView();
-    } else {
-      // We have to fetch the trailers
-      final MovieTrailerService movieTrailerService = RETROFIT.create(MovieTrailerService.class);
-
-      // Create a call instance for looking up the movie's list of trailers
-      mCallTrailers = movieTrailerService
-          .get(selectedMovie.getId(), BuildConfig.MOVIE_DB_API_KEY);
-
-      // Fetch the trailers
-      mCallTrailers.enqueue(new Callback<MovieTrailerList>() {
-        @Override
-        public void onResponse(Call<MovieTrailerList> call, Response<MovieTrailerList> response) {
-          if (response.isSuccessful()) {
-            // Here we get the movie trailer list!
-            mTrailers = response.body();
-            setupTrailersView();
-          } else {
-            MyPMErrorUtils.showErrorMessage(LOG_TAG,
-                Objects.requireNonNull(getActivity()),
-                R.string.error_bad_response,
-                response.message());
-          }
-        }
-
-        @Override
-        public void onFailure(Call<MovieTrailerList> call, Throwable t) {
-          //TODO: Review: in onFailure() a call to getContext() or getActivity() can return null.
-          // When does this happen ?
-          Log.v(LOG_TAG, "++++++++++ onFailure");
+    // Fetch the trailers
+    mCallTrailers.enqueue(new Callback<MovieTrailerList>() {
+      @Override
+      public void onResponse(Call<MovieTrailerList> call, Response<MovieTrailerList> response) {
+        if (response.isSuccessful()) {
+          // Here we get the movie trailer list!
+          mTrailers = response.body();
+          showTrailersView();
+        } else {
           MyPMErrorUtils.showErrorMessage(LOG_TAG,
+              Objects.requireNonNull(getActivity()),
+              R.string.error_bad_response,
+              response.message());
+        }
+      }
+
+      @Override
+      public void onFailure(Call<MovieTrailerList> call, Throwable t) {
+        //TODO: Review: in onFailure() a call to getContext() or getActivity() can return null.
+        // When does this happen ?
+        Log.v(LOG_TAG, "++++++++++ onFailure");
+        MyPMErrorUtils.showErrorMessage(LOG_TAG,
 //              getContext(),
 //              getActivity(),
-              binding.getRoot().getContext(),
-              R.string.error_contacting_server,
-              t.getMessage());
-        }
-      });
-    }
+            binding.getRoot().getContext(),
+            R.string.error_contacting_server,
+            t.getMessage());
+      }
+    });
   }
 
-  void setupTrailersView() {
+  void showTrailersView() {
     if (mTrailers.getTrailerList().isEmpty()) {
       // We got no trailers, show "No trailers" text
       binding.textMovieDetailNoTrailers.setVisibility(View.VISIBLE);
@@ -495,67 +648,43 @@ public class MovieDetailFragment
     }
   }
 
-  private void fetchReviews(final Bundle savedInstanceState) {
-    // Set an -empty- adapter because the reviews have not been fetched
-    mMovieReviewAdapter = new MovieReviewAdapter();
-    binding.recyclerMovieDetailReviews.setAdapter(mMovieReviewAdapter);
+  private void fetchReviewsFromNetwork() {
+    final MovieReviewService movieReviewService = RETROFIT.create(MovieReviewService.class);
 
-    // We will show the movie trailers in just one row
-    final LinearLayoutManager layoutManager =
-        new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-    binding.recyclerMovieDetailReviews.setLayoutManager(layoutManager);
+    // Create a call instance for looking up the movie's list of reviews
+    mCallReviews = movieReviewService.get(selectedMovie.getId(), BuildConfig.MOVIE_DB_API_KEY);
 
-    // Set a divider line
-    final DividerItemDecoration dividerLine =
-        // TODO: Review getContext() call
-        new DividerItemDecoration(binding.recyclerMovieDetailReviews.getContext(),
-            layoutManager.getOrientation());
-    binding.recyclerMovieDetailReviews.addItemDecoration(dividerLine);
-
-    if (savedInstanceState != null) {
-      // We already have the reviews list, retrieve it and show it
-      mReviews = savedInstanceState.getParcelable(BUNDLE_MOVIE_REVIEW_LIST);
-      setupReviewsView();
-    } else {
-      // We have to fetch the trailers
-      final MovieReviewService movieReviewService = RETROFIT.create(MovieReviewService.class);
-
-      // Create a call instance for looking up the movie's list of reviews
-      mCallReviews = movieReviewService.get(selectedMovie.getId(),
-          BuildConfig.MOVIE_DB_API_KEY);
-
-      // Fetch the Reviews
-      mCallReviews.enqueue(new Callback<MovieReviewList>() {
-        @Override
-        public void onResponse(Call<MovieReviewList> call, Response<MovieReviewList> response) {
-          if (response.isSuccessful()) {
-            // Here we get the movie review list!
-            mReviews = response.body();
-            setupReviewsView();
-          } else {
-            MyPMErrorUtils.showErrorMessage(LOG_TAG,
-                Objects.requireNonNull(getActivity()),
-                R.string.error_bad_response,
-                response.message());
-          }
-        }
-
-        @Override
-        public void onFailure(Call<MovieReviewList> call, Throwable t) {
-          Log.v(LOG_TAG, "++++++++++ onFailure");
+    // Fetch the Reviews
+    mCallReviews.enqueue(new Callback<MovieReviewList>() {
+      @Override
+      public void onResponse(Call<MovieReviewList> call, Response<MovieReviewList> response) {
+        if (response.isSuccessful()) {
+          // Here we get the movie review list!
+          mReviews = response.body();
+          showReviewsView();
+        } else {
           MyPMErrorUtils.showErrorMessage(LOG_TAG,
-              // getContext() and getActivity() could be null
+              Objects.requireNonNull(getActivity()),
+              R.string.error_bad_response,
+              response.message());
+        }
+      }
+
+      @Override
+      public void onFailure(Call<MovieReviewList> call, Throwable t) {
+        Log.v(LOG_TAG, "++++++++++ onFailure");
+        MyPMErrorUtils.showErrorMessage(LOG_TAG,
+            // getContext() and getActivity() could be null
 //              getContext()
 //              getActivity(),
-              binding.getRoot().getContext(),
-              R.string.error_contacting_server,
-              t.getMessage());
-        }
-      });
-    }
+            binding.getRoot().getContext(),
+            R.string.error_contacting_server,
+            t.getMessage());
+      }
+    });
   }
 
-  void setupReviewsView() {
+  void showReviewsView() {
     final List<MovieReviewList.MovieReview> reviewList = mReviews.getReviewList();
 
     if (reviewList.isEmpty()) {
@@ -567,52 +696,27 @@ public class MovieDetailFragment
     } else {
       // We got reviews, show them and their total number
       final String totalReviews =
-          '(' + String.valueOf(reviewList.size()) + ") "
-              + getResources().getString(R.string.movie_detail_reviews);
+          String.format("(%s) %s", String.valueOf(reviewList.size()),
+              getResources().getString(R.string.movie_detail_reviews));
       binding.textMovieDetailReviews.setText(totalReviews);
       // Set the data(reviews) we have just fetched
       mMovieReviewAdapter.setMovieReviewList(mReviews);
     }
   }
 
-  protected void insertMovieBatch(final Context context,
-      final ContentResolver resolver, final String movieId) {
+  void insertMovieBatch(final ContentResolver resolver, final String movieId) {
 
     final ContentValues movieValues = buildMovieValues();
     final ContentValues[] trailersBulkValues = buildTrailersBulkValues(movieId);
     final ContentValues[] reviewsBulkValues = buildReviewsBulkValues(movieId);
 
-    // Insert the movie
+    // Insert the movie: because of referential integrity the movie is inserted first
     resolver.insert(MoviesProvider.Movies.CONTENT_URI, movieValues);
-
     // Insert the trailers
     resolver.bulkInsert(MoviesProvider.MovieTrailers.fromMovie(movieId), trailersBulkValues);
 
     // Insert the reviews
     resolver.bulkInsert(MoviesProvider.MovieReviews.fromMovie(movieId), reviewsBulkValues);
-  }
-
-  protected ContentProviderResult[] deleteMovieBatch(final Context context,
-      final ContentResolver resolver, final String movieId)
-      throws RemoteException, OperationApplicationException {
-
-    // Using a batch of ContentProvider operations for better performance
-    final ArrayList<ContentProviderOperation> deleteOperations = new ArrayList<>();
-
-    deleteOperations.add(ContentProviderOperation
-        .newDelete(MoviesProvider.Movies.withId(movieId)) // Delete the movie
-        .withYieldAllowed(true)
-        .build());
-    deleteOperations.add(ContentProviderOperation
-        .newDelete(MoviesProvider.MovieTrailers.fromMovie(movieId)) // Delete its trailers
-        .withYieldAllowed(true)
-        .build());
-    deleteOperations.add(ContentProviderOperation
-        .newDelete(MoviesProvider.MovieReviews.fromMovie(movieId)) // Delete its reviews
-        .withYieldAllowed(true)
-        .build());
-
-    return resolver.applyBatch(MoviesProvider.AUTHORITY, deleteOperations);
   }
 
   private ContentValues buildMovieValues() {
@@ -630,7 +734,7 @@ public class MovieDetailFragment
     return cv;
   }
 
-  // TODO: 7/4/18 Refactor this into more JAVA-8 style
+  // TODO: 7/4/18 Refactor into more JAVA-8 style: buildTrailersBulkValues & buildReviewsBulkValues
   private ContentValues[] buildTrailersBulkValues(final String movieId) {
 
     // Build the Trailer array values
@@ -640,8 +744,11 @@ public class MovieDetailFragment
 
     for (int i = 0; i < trailersCount; ++i) {
       final ContentValues trailerValues = new ContentValues();
+      final MovieTrailerList.MovieTrailer trailer = trailerList.get(i);
+
       trailerValues.put(MovieTrailerColumns.MOVIE_ID, movieId);
-      trailerValues.put(MovieTrailerColumns.TRAILER_KEY, trailerList.get(i).getKey());
+      trailerValues.put(MovieTrailerColumns.KEY, trailer.getKey());
+      trailerValues.put(MovieTrailerColumns.NAME, trailer.getName());
 
       trailerBulkValues[i] = trailerValues;
     }
@@ -657,9 +764,12 @@ public class MovieDetailFragment
 
     for (int j = 0; j < reviewsCount; ++j) {
       final ContentValues reviewValues = new ContentValues();
+      final MovieReviewList.MovieReview review = reviewList.get(j);
+
       reviewValues.put(MovieReviewColumns.MOVIE_ID, movieId);
-      reviewValues.put(MovieReviewColumns.AUTHOR, reviewList.get(j).getAuthor());
-      reviewValues.put(MovieReviewColumns.CONTENT, reviewList.get(j).getContent());
+      reviewValues.put(MovieReviewColumns.REVIEW_ID, review.getId());
+      reviewValues.put(MovieReviewColumns.AUTHOR, review.getAuthor());
+      reviewValues.put(MovieReviewColumns.CONTENT, review.getContent());
 
       reviewBulkValues[j] = reviewValues;
     }
