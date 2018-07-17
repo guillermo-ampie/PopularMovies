@@ -32,7 +32,7 @@ public class VectorAnimationSelectWithPath {
     mEndColor = endColor;
   }
 
-  public void setStrokeColor(int strokeColor) {
+  public void setStrokeColor(final int strokeColor) {
     mOutline.setStrokeColor(strokeColor);
   }
 
