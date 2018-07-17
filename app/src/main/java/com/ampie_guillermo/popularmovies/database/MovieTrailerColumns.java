@@ -21,5 +21,8 @@ public interface MovieTrailerColumns {
   @DataType(DataType.Type.TEXT)
   @NotNull
   @Unique
-  String TRAILER_KEY = "trailer_key";
+  String KEY = "key";
+
+  @DataType(DataType.Type.TEXT)
+  String NAME = "name";
 }
