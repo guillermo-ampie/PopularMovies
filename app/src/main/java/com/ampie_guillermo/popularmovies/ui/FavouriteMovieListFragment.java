@@ -25,6 +25,15 @@ public class FavouriteMovieListFragment
     implements LoaderManager.LoaderCallbacks<Cursor>,
     BaseMovieListFragment.FetchMoviesListener {
 
+  public static final int MOVIE_ID_INDEX = 0;
+  public static final int ORIGINAL_TITLE_INDEX = 1;
+  public static final int RELEASE_YEAR_INDEX = 2;
+  public static final int OVERVIEW_INDEX = 3;
+  public static final int POSTER_URI_INDEX = 4;
+  public static final int BACKDROP_URI_INDEX = 5;
+  public static final int VOTE_AVERAGE_INDEX = 6;
+  public static final int VOTE_COUNT_INDEX = 7;
+  public static final int FAVOURITE_MOVIE_LIST_LOADER_ID = 1100;
   private static final String[] MOVIE_COLUMNS_PROJECTION = {
       MovieColumns.MOVIE_ID,
       MovieColumns.ORIGINAL_TITLE,
@@ -35,18 +44,6 @@ public class FavouriteMovieListFragment
       MovieColumns.VOTE_AVERAGE,
       MovieColumns.VOTE_COUNT
   };
-
-  public static final int MOVIE_ID_INDEX = 0;
-  public static final int ORIGINAL_TITLE_INDEX = 1;
-  public static final int RELEASE_YEAR_INDEX = 2;
-  public static final int OVERVIEW_INDEX = 3;
-  public static final int POSTER_URI_INDEX = 4;
-  public static final int BACKDROP_URI_INDEX = 5;
-  public static final int VOTE_AVERAGE_INDEX = 6;
-  public static final int VOTE_COUNT_INDEX = 7;
-
-  public static final int FAVOURITE_MOVIE_LIST_LOADER_ID = 1100;
-
   private static final String LOG_TAG = FavouriteMovieListFragment.class.getSimpleName();
 
   private FavouriteMovieAdapter favouriteMovieAdapter;
@@ -67,13 +64,13 @@ public class FavouriteMovieListFragment
 
   @Override
   public Movie getSelectedMovie(final int clickedItemIndex) {
-  // Get Movie from Cursor
+    // Get Movie from Cursor
     return favouriteMovieAdapter.getItem(clickedItemIndex);
   }
 
   @Override
   public int movieListSize() {
-     // Get size from Cursor
+    // Get size from Cursor
     return favouriteMovieAdapter.getItemCount();
   }
 
