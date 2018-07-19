@@ -68,7 +68,8 @@ public class MovieDetailFragment
     MovieTrailerAdapter.MovieTrailerItemClickListener,
     VectorAnimationSelectWithPath.OnSelectedEventListener {
 
-  static final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
+  protected static final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
+  // Ids for CursorLoaders
   private static final int SELECTED_MOVIE_LOADER_ID = 1200;
   private static final int TRAILERS_LOADER_ID = 1300;
   private static final int REVIEWS_LOADER_ID = 1400;
@@ -91,12 +92,11 @@ public class MovieDetailFragment
           .baseUrl(MOVIE_DB_BASE_URL)
           .addConverterFactory(GsonConverterFactory.create())
           .build();
+  protected Movie selectedMovie;
   boolean isFavourite;
-  boolean isMovieInDb;
   MovieTrailerList mTrailers;
   MovieReviewList mReviews;
   FragmentMovieDetailBinding binding;
-  private Movie selectedMovie;
   private MovieTrailerAdapter mMovieTrailerAdapter;
   private MovieReviewAdapter mMovieReviewAdapter;
   private Call<MovieTrailerList> mCallTrailers;
@@ -106,6 +106,36 @@ public class MovieDetailFragment
   public MovieDetailFragment() {
     mTrailers = new MovieTrailerList();
     mReviews = new MovieReviewList();
+  }
+
+  protected static ContentProviderResult[] deleteMovieBatch(final ContentResolver resolver,
+      final String movieId)
+      throws RemoteException, OperationApplicationException {
+
+    // Using a batch of ContentProvider operations for better performance
+    final ArrayList<ContentProviderOperation> deleteOperations = new ArrayList<>();
+
+    // Setup operation to delete the trailers
+    deleteOperations.add(ContentProviderOperation
+        .newDelete(MoviesProvider.MovieTrailers.fromMovie(movieId))
+        .withYieldAllowed(true)
+        .build());
+
+    // Setup operation to delete the reviews
+    deleteOperations.add(ContentProviderOperation
+        .newDelete(MoviesProvider.MovieReviews.fromMovie(movieId))
+        .withYieldAllowed(true)
+        .build());
+
+    // Setup operation to delete the movie: because of referential integrity we must delete the
+    // movie at the last
+    deleteOperations.add(ContentProviderOperation
+        .newDelete(MoviesProvider.Movies.withId(movieId))
+        .withYieldAllowed(true)
+        .build());
+
+    // Execute the operations
+    return resolver.applyBatch(MoviesProvider.AUTHORITY, deleteOperations);
   }
 
   private static ArrayList<MovieTrailerList.MovieTrailer> buildTrailerList(
@@ -140,33 +170,6 @@ public class MovieDetailFragment
       reviewList.add(new MovieReviewList.MovieReview(reviewId, reviewAuthor, reviewContent));
     }
     return reviewList;
-  }
-
-  static ContentProviderResult[] deleteMovieBatch(final ContentResolver resolver,
-      final String movieId)
-      throws RemoteException, OperationApplicationException {
-
-    // Using a batch of ContentProvider operations for better performance
-    final ArrayList<ContentProviderOperation> deleteOperations = new ArrayList<>();
-
-    // Delete the trailers
-    deleteOperations.add(ContentProviderOperation
-        .newDelete(MoviesProvider.MovieTrailers.fromMovie(movieId))
-        .withYieldAllowed(true)
-        .build());
-
-    // Delete the reviews
-    deleteOperations.add(ContentProviderOperation
-        .newDelete(MoviesProvider.MovieReviews.fromMovie(movieId))
-        .withYieldAllowed(true)
-        .build());
-    // Delete the movie: because of referential integrity we must delete the movie at the last
-    deleteOperations.add(ContentProviderOperation
-        .newDelete(MoviesProvider.Movies.withId(movieId))
-        .withYieldAllowed(true)
-        .build());
-
-    return resolver.applyBatch(MoviesProvider.AUTHORITY, deleteOperations);
   }
 
   @Override
@@ -292,7 +295,6 @@ public class MovieDetailFragment
 
         mTrailers = savedInstanceState.getParcelable(BUNDLE_MOVIE_TRAILER_LIST);
         mReviews = savedInstanceState.getParcelable(BUNDLE_MOVIE_REVIEW_LIST);
-        isMovieInDb = savedInstanceState.getBoolean(BUNDLE_IS_MOVIE_IN_DB);
         isFavourite = savedInstanceState.getBoolean(BUNDLE_IS_MOVIE_FAVOURITE);
 
         // Initialize the favourite button's state
@@ -311,7 +313,7 @@ public class MovieDetailFragment
 
   private void completeMovieData() {
 
-    // Check whether the selected movie is in the DB and fetch the remaining data
+    // Get the trailers and reviews
     getLoaderManager().initLoader(SELECTED_MOVIE_LOADER_ID, null, this);
   }
 
@@ -338,7 +340,13 @@ public class MovieDetailFragment
     new Thread(new Runnable() {
       @Override
       public void run() {
-        try {
+        try (Cursor cursor = resolver
+            .query(MoviesProvider.Movies.withId(movieId),
+                new String[]{MovieColumns.MOVIE_ID},
+                null,
+                null,
+                null)) {
+          final boolean isMovieInDb = (cursor != null) && (cursor.getCount() > 0);
           // TODO: 7/4/18 The following DB operations are kind of inefficient, -all- the movies
           //       (popular / best rated / favourites) should be inserted into the DB and not only
           //       the favourite ones: Migrate to the complete scheme!!
@@ -346,19 +354,13 @@ public class MovieDetailFragment
             if (!isMovieInDb) {
               // The movie finished selected as favourite and is not present in the DB --> insert it
               // into DB
-              Log.v(LOG_TAG, "++++++++++onStop(): BEGIN --> movie INSERTED");
-              isMovieInDb = true;
               insertMovieBatch(resolver, movieId);
-              Log.v(LOG_TAG, "++++++++++onStop():      END --> movie INSERTED");
             }
             // Movie is selected as favourite and is already present in the DB --> do nothing
           } else {
             if (isMovieInDb) {
               // Movie finished as -not selected as Favourite- and is in the DB --> delete it
-              Log.v(LOG_TAG, "++++++++++onStop(): BEGIN --> MOVIE DELETED");
-              isMovieInDb = false;
               deleteMovieBatch(resolver, movieId);
-              Log.v(LOG_TAG, "++++++++++onStop():      END --> MOVIE DELETED");
             }
             // Movie finished as -not selected as Favourite- and -is not in the DB- --> do nothing
           }
@@ -415,7 +417,6 @@ public class MovieDetailFragment
     outState.putParcelable(BUNDLE_MOVIE_TRAILER_LIST, mTrailers);
     outState.putParcelable(BUNDLE_MOVIE_REVIEW_LIST, mReviews);
     outState.putBoolean(BUNDLE_IS_MOVIE_FAVOURITE, isFavourite);
-    outState.putBoolean(BUNDLE_IS_MOVIE_IN_DB, isMovieInDb);
   }
 
   @Override
@@ -479,7 +480,7 @@ public class MovieDetailFragment
 
       case SELECTED_MOVIE_LOADER_ID:
         // If the Movie is in the DB --> it is a Favourite one
-        isMovieInDb = (data != null) && data.moveToFirst();
+        final boolean isMovieInDb = (data != null) && (data.getCount() > 0);
         isFavourite = isMovieInDb;
 
         // Initialize the favourite button's state
@@ -487,21 +488,31 @@ public class MovieDetailFragment
 
         // Get movie trailers & reviews
         if (isMovieInDb) {
-          // Get them from DB
           final Bundle bundle = new Bundle();
+
           bundle.putString(EXTRA_MOVIE_ID, selectedMovie.getId());
-          getLoaderManager().initLoader(TRAILERS_LOADER_ID, bundle, this);
-          getLoaderManager().initLoader(REVIEWS_LOADER_ID, bundle, this);
+          fetchTrailersFromDb(bundle);
+          fetchReviewsFromDb(bundle);
         } else {
-          // Get them from network
-          fetchTrailersFromNetwork();
-          fetchReviewsFromNetwork();
+          fetchTrailersFromNetwork(false);
+          fetchReviewsFromNetwork(false);
         }
         break;
 
       case TRAILERS_LOADER_ID:
         // Set up the trailer list from DB
         mTrailers.setTrailerList(buildTrailerList(data));
+        // Border case: It is possible that when the user selected the movie as Favourite,
+        // there were no trailers and reviews (because of a network error) to save into the
+        // database, so try now to get them from the network and save them into DB
+        if (mTrailers.getTrailerList().isEmpty()) {
+          Log.v(LOG_TAG, "++++++++++ Now trying to get the trailers");
+          fetchTrailersFromNetwork(true);
+
+          // showTrailersView() is called inside fetchTrailersFromNetwork() because it must be
+          // called when the network operations finishes
+          break;
+        }
         // Show the movie trailers
         showTrailersView();
         break;
@@ -509,6 +520,16 @@ public class MovieDetailFragment
       case REVIEWS_LOADER_ID:
         // Set the reviews from the DB
         mReviews.setReviewList(buildReviewList(data));
+        // Border case: It is possible that when the user selected the movie as Favourite,
+        // there were no trailers and reviews (because of a network error) to save into the
+        // database, so try now to get them from the network and save them into DB
+        if (mReviews.getReviewList().isEmpty()) {
+          Log.v(LOG_TAG, "++++++++++ Now trying to get the reviews");
+          fetchReviewsFromNetwork(true);
+          // showTrailersView() is called inside fetchReviewsFromNetwork() because it must be
+          // called when the network operations finishes
+          break;
+        }
         // Show the movie reviews
         showReviewsView();
         break;
@@ -583,6 +604,15 @@ public class MovieDetailFragment
     // Nothing to do in this case
   }
 
+
+  private void fetchTrailersFromDb(final Bundle bundle) {
+    getLoaderManager().initLoader(TRAILERS_LOADER_ID, bundle, this);
+  }
+
+  private void fetchReviewsFromDb(final Bundle bundle) {
+    getLoaderManager().initLoader(REVIEWS_LOADER_ID, bundle, this);
+  }
+
   private void setupFavouriteButtonAnimation(final Resources resources) {
     // Setup animation for favourite button
     final int startColor = resources.getColor(R.color.white);
@@ -598,7 +628,7 @@ public class MovieDetailFragment
     vectorAnimation.startAnimation(ANIMATION_DURATION);
   }
 
-  private void fetchTrailersFromNetwork() {
+  private void fetchTrailersFromNetwork(boolean shouldWriteIntoDb) {
     final MovieTrailerService movieTrailerService = RETROFIT.create(MovieTrailerService.class);
 
     // Create a call instance for looking up the movie's list of trailers
@@ -612,6 +642,9 @@ public class MovieDetailFragment
           // Here we get the movie trailer list!
           mTrailers = response.body();
           showTrailersView();
+          if (!mTrailers.getTrailerList().isEmpty()) {
+            saveTrailersIntoDb();
+          }
         } else {
           MyPMErrorUtils.showErrorMessage(LOG_TAG,
               Objects.requireNonNull(getActivity()),
@@ -648,7 +681,7 @@ public class MovieDetailFragment
     }
   }
 
-  private void fetchReviewsFromNetwork() {
+  private void fetchReviewsFromNetwork(boolean shouldWriteIntoDb) {
     final MovieReviewService movieReviewService = RETROFIT.create(MovieReviewService.class);
 
     // Create a call instance for looking up the movie's list of reviews
@@ -662,6 +695,9 @@ public class MovieDetailFragment
           // Here we get the movie review list!
           mReviews = response.body();
           showReviewsView();
+          if (!mReviews.getReviewList().isEmpty()) {
+            saveReviewsIntoDb();
+          }
         } else {
           MyPMErrorUtils.showErrorMessage(LOG_TAG,
               Objects.requireNonNull(getActivity()),
@@ -704,19 +740,81 @@ public class MovieDetailFragment
     }
   }
 
-  void insertMovieBatch(final ContentResolver resolver, final String movieId) {
+  protected void saveTrailersIntoDb() {
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        final Context context =
+            Objects.requireNonNull(getActivity()).getApplicationContext();
+        try {
+          // Using a batch of ContentProvider operations for better performance
+          final ArrayList<ContentProviderOperation> operations = new ArrayList<>();
 
-    final ContentValues movieValues = buildMovieValues();
-    final ContentValues[] trailersBulkValues = buildTrailersBulkValues(movieId);
-    final ContentValues[] reviewsBulkValues = buildReviewsBulkValues(movieId);
+          // Setup operations to insert the trailers
+          buildTrailerInsertOperations(selectedMovie.getId(), operations);
 
-    // Insert the movie: because of referential integrity the movie is inserted first
-    resolver.insert(MoviesProvider.Movies.CONTENT_URI, movieValues);
-    // Insert the trailers
-    resolver.bulkInsert(MoviesProvider.MovieTrailers.fromMovie(movieId), trailersBulkValues);
+          // Execute the operations
+          getActivity().getContentResolver()
+              .applyBatch(MoviesProvider.AUTHORITY, operations);
+          Log.v(LOG_TAG, "++++++++++Trailers SAVED");
 
-    // Insert the reviews
-    resolver.bulkInsert(MoviesProvider.MovieReviews.fromMovie(movieId), reviewsBulkValues);
+        } catch (RemoteException | OperationApplicationException e) {
+          MyPMErrorUtils
+              .logErrorMessage(LOG_TAG, context, R.string.error_accessing_sqlite_db,
+                  e.getMessage());
+        }
+      }
+    }).start();
+  }
+
+  protected void saveReviewsIntoDb() {
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        final Context context =
+            Objects.requireNonNull(getActivity()).getApplicationContext();
+        try {
+          // Using a batch of ContentProvider operations for better performance
+          final ArrayList<ContentProviderOperation> operations = new ArrayList<>();
+
+          // Setup operations to insert the trailers
+          buildReviewInsertOperations(selectedMovie.getId(), operations);
+
+          // Execute the operations
+          getActivity().getContentResolver()
+              .applyBatch(MoviesProvider.AUTHORITY, operations);
+          Log.v(LOG_TAG, "++++++++++Reviews SAVED");
+
+        } catch (RemoteException | OperationApplicationException e) {
+          MyPMErrorUtils
+              .logErrorMessage(LOG_TAG, context, R.string.error_accessing_sqlite_db,
+                  e.getMessage());
+        }
+      }
+    }).start();
+  }
+
+
+  protected ContentProviderResult[] insertMovieBatch(final ContentResolver resolver,
+      final String movieId)
+      throws RemoteException, OperationApplicationException {
+
+    // Using a batch of ContentProvider operations for better performance
+    final ArrayList<ContentProviderOperation> operations = new ArrayList<>();
+
+    // Setup operation to insert the movie: because of referential integrity the movie
+    // is inserted first than its trailers and movies
+    operations.add(ContentProviderOperation.newInsert(MoviesProvider.Movies.CONTENT_URI)
+        .withValues(buildMovieValues()).build());
+
+    // Setup operations to insert the trailers
+    buildTrailerInsertOperations(movieId, operations);
+
+    // Setup operations to insert the reviews
+    buildReviewInsertOperations(movieId, operations);
+
+    // Execute the operations
+    return resolver.applyBatch(MoviesProvider.AUTHORITY, operations);
   }
 
   private ContentValues buildMovieValues() {
@@ -735,45 +833,42 @@ public class MovieDetailFragment
   }
 
   // TODO: 7/4/18 Refactor into more JAVA-8 style: buildTrailersBulkValues & buildReviewsBulkValues
-  private ContentValues[] buildTrailersBulkValues(final String movieId) {
-
-    // Build the Trailer array values
+  private void buildTrailerInsertOperations(final String movieId,
+      final ArrayList<ContentProviderOperation> insertOperations) {
     final List<MovieTrailerList.MovieTrailer> trailerList = mTrailers.getTrailerList();
-    final int trailersCount = trailerList.size();
-    final ContentValues[] trailerBulkValues = new ContentValues[trailersCount];
+    for (final MovieTrailerList.MovieTrailer trailer : trailerList) {
 
-    for (int i = 0; i < trailersCount; ++i) {
+      // Setup the trailer's ContentValues
       final ContentValues trailerValues = new ContentValues();
-      final MovieTrailerList.MovieTrailer trailer = trailerList.get(i);
-
       trailerValues.put(MovieTrailerColumns.MOVIE_ID, movieId);
       trailerValues.put(MovieTrailerColumns.KEY, trailer.getKey());
       trailerValues.put(MovieTrailerColumns.NAME, trailer.getName());
 
-      trailerBulkValues[i] = trailerValues;
+      insertOperations.add(
+          ContentProviderOperation.newInsert(MoviesProvider.MovieTrailers.fromMovie(movieId))
+              .withValues(trailerValues)
+              .build());
     }
-    return trailerBulkValues;
   }
 
-  private ContentValues[] buildReviewsBulkValues(final String movieId) {
-
-    // Build the Review array values
+  private void buildReviewInsertOperations(final String movieId,
+      final ArrayList<ContentProviderOperation> insertOperations) {
     final List<MovieReviewList.MovieReview> reviewList = mReviews.getReviewList();
-    final int reviewsCount = reviewList.size();
-    final ContentValues[] reviewBulkValues = new ContentValues[reviewsCount];
+    for (final MovieReviewList.MovieReview review : reviewList) {
 
-    for (int j = 0; j < reviewsCount; ++j) {
+      // Setup the review's ContentValues
       final ContentValues reviewValues = new ContentValues();
-      final MovieReviewList.MovieReview review = reviewList.get(j);
-
       reviewValues.put(MovieReviewColumns.MOVIE_ID, movieId);
       reviewValues.put(MovieReviewColumns.REVIEW_ID, review.getId());
       reviewValues.put(MovieReviewColumns.AUTHOR, review.getAuthor());
       reviewValues.put(MovieReviewColumns.CONTENT, review.getContent());
 
-      reviewBulkValues[j] = reviewValues;
+      insertOperations.add(
+          ContentProviderOperation.newInsert(MoviesProvider.MovieReviews.fromMovie(movieId))
+              .withValues(reviewValues)
+              .build());
     }
-    return reviewBulkValues;
   }
 }
+
 
