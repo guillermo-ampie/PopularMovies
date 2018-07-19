@@ -504,7 +504,7 @@ public class MovieDetailFragment
         mTrailers.setTrailerList(buildTrailerList(data));
         // Border case: It is possible that when the user selected the movie as Favourite,
         // there were no trailers and reviews (because of a network error) to save into the
-        // database, so try now to get them from the network and save them into DB
+        // database, so try now to get them from the network and save them into the DB
         if (mTrailers.getTrailerList().isEmpty()) {
           Log.v(LOG_TAG, "++++++++++ Now trying to get the trailers");
           fetchTrailersFromNetwork(true);
@@ -522,7 +522,7 @@ public class MovieDetailFragment
         mReviews.setReviewList(buildReviewList(data));
         // Border case: It is possible that when the user selected the movie as Favourite,
         // there were no trailers and reviews (because of a network error) to save into the
-        // database, so try now to get them from the network and save them into DB
+        // database, so try now to get them from the network and save them into the DB
         if (mReviews.getReviewList().isEmpty()) {
           Log.v(LOG_TAG, "++++++++++ Now trying to get the reviews");
           fetchReviewsFromNetwork(true);
@@ -628,7 +628,7 @@ public class MovieDetailFragment
     vectorAnimation.startAnimation(ANIMATION_DURATION);
   }
 
-  private void fetchTrailersFromNetwork(boolean shouldWriteIntoDb) {
+  private void fetchTrailersFromNetwork(final boolean shouldWriteIntoDb) {
     final MovieTrailerService movieTrailerService = RETROFIT.create(MovieTrailerService.class);
 
     // Create a call instance for looking up the movie's list of trailers
@@ -642,7 +642,7 @@ public class MovieDetailFragment
           // Here we get the movie trailer list!
           mTrailers = response.body();
           showTrailersView();
-          if (!mTrailers.getTrailerList().isEmpty()) {
+          if (shouldWriteIntoDb && !mTrailers.getTrailerList().isEmpty()) {
             saveTrailersIntoDb();
           }
         } else {
@@ -681,7 +681,7 @@ public class MovieDetailFragment
     }
   }
 
-  private void fetchReviewsFromNetwork(boolean shouldWriteIntoDb) {
+  private void fetchReviewsFromNetwork(final boolean shouldWriteIntoDb) {
     final MovieReviewService movieReviewService = RETROFIT.create(MovieReviewService.class);
 
     // Create a call instance for looking up the movie's list of reviews
@@ -695,7 +695,7 @@ public class MovieDetailFragment
           // Here we get the movie review list!
           mReviews = response.body();
           showReviewsView();
-          if (!mReviews.getReviewList().isEmpty()) {
+          if (shouldWriteIntoDb && !mReviews.getReviewList().isEmpty()) {
             saveReviewsIntoDb();
           }
         } else {
