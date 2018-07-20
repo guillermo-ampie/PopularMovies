@@ -31,14 +31,14 @@ public class Movie implements Parcelable {
   private final float mVoteAverage;
   private final int mVoteCount;
 
-  Movie(String id,
-      String originalTitle,
-      String releaseDate,
-      String overview,
-      Uri posterUri,
-      Uri backdropUri,
-      float voteAverage,
-      int voteCount) {
+  Movie(final String id,
+      final String originalTitle,
+      final String releaseDate,
+      final String overview,
+      final Uri posterUri,
+      final Uri backdropUri,
+      final float voteAverage,
+      final int voteCount) {
     mId = id;
     mOriginalTitle = originalTitle;
     mReleaseDate = releaseDate;
@@ -49,7 +49,7 @@ public class Movie implements Parcelable {
     mVoteCount = voteCount;
   }
 
-  Movie(Parcel in) {
+  Movie(final Parcel in) {
     mId = in.readString();
     mOriginalTitle = in.readString();
     mReleaseDate = in.readString();
@@ -134,42 +134,42 @@ public class Movie implements Parcelable {
     private float mVoteAverage;
     private int mVoteCount;
 
-    public Movie.MovieBuilder setId(String id) {
+    public Movie.MovieBuilder setId(final String id) {
       mId = id;
       return this;
     }
 
-    public Movie.MovieBuilder setOriginalTitle(String originalTitle) {
+    public Movie.MovieBuilder setOriginalTitle(final String originalTitle) {
       mOriginalTitle = originalTitle;
       return this;
     }
 
-    public Movie.MovieBuilder setReleaseDate(String releaseDate) {
+    public Movie.MovieBuilder setReleaseDate(final String releaseDate) {
       mReleaseDate = releaseDate;
       return this;
     }
 
-    public Movie.MovieBuilder setOverview(String overview) {
+    public Movie.MovieBuilder setOverview(final String overview) {
       mOverview = overview;
       return this;
     }
 
-    public Movie.MovieBuilder setPosterUri(Uri posterUri) {
+    public Movie.MovieBuilder setPosterUri(final Uri posterUri) {
       mPosterUri = posterUri;
       return this;
     }
 
-    public Movie.MovieBuilder setBackdropUri(Uri backdropUri) {
+    public Movie.MovieBuilder setBackdropUri(final Uri backdropUri) {
       mBackdropUri = backdropUri;
       return this;
     }
 
-    public Movie.MovieBuilder setVoteAverage(float voteAverage) {
+    public Movie.MovieBuilder setVoteAverage(final float voteAverage) {
       mVoteAverage = voteAverage;
       return this;
     }
 
-    public Movie.MovieBuilder setVoteCount(int voteCount) {
+    public Movie.MovieBuilder setVoteCount(final int voteCount) {
       mVoteCount = voteCount;
       return this;
     }

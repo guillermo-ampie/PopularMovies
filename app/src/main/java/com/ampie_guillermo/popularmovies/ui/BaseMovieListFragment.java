@@ -36,7 +36,9 @@ public class BaseMovieListFragment
   private ProgressBar mLoadingIndicator;
   private String mSortingMethodParam;
 
+
   public BaseMovieListFragment() {
+    // Required empty constructor for class Fragment
   }
 
   @Override

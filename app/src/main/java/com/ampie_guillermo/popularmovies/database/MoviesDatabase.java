@@ -34,7 +34,7 @@ public final class MoviesDatabase {
   @ExecOnCreate
   public static final String EXEC_ON_CREATE = "PRAGMA foreign_keys = ON";
 
-  static final int VERSION = 1;
+  /* package */ static final int VERSION = 1;
 
   private static final String LOG_TAG = MoviesDatabase.class.getSimpleName();
 

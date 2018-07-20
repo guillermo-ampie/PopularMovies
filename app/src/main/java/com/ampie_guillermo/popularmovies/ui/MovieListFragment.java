@@ -206,14 +206,14 @@ public class MovieListFragment
     private final UIErrorHelper mUiError;
     private ArrayList<Movie> mCachedMovieList;
 
-    MovieListLoader(final Context context, final Bundle args) {
+    public MovieListLoader(final Context context, final Bundle args) {
       super(context);
       mArgs = args;
       mCachedMovieList = new ArrayList<>(MovieListFragment.MOVIES_RESULT_SIZE);
       mUiError = new UIErrorHelper();
     }
 
-    UIErrorHelper getUiError() {
+    public UIErrorHelper getUiError() {
       return mUiError;
     }
 
@@ -228,8 +228,6 @@ public class MovieListFragment
         return null;
       }
 
-      // These two need to be declared outside the try/catch
-      // so that they can be closed in the finally block.
       HttpURLConnection urlConnection = null;
 //      BufferedReader reader = null;
 
@@ -385,7 +383,7 @@ public class MovieListFragment
       final int moviePosterWidth =
           getContext().getResources().getInteger(R.integer.movie_poster_width);
       final Uri movieImagesBaseUri =
-          Uri.parse(MOVIE_IMAGES_BASE_URI + String.valueOf(moviePosterWidth));
+          Uri.parse(MOVIE_IMAGES_BASE_URI + moviePosterWidth);
 
       final int moviesCount = moviesArray.length();
       for (int i = 0; i < moviesCount; ++i) {

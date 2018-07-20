@@ -78,7 +78,6 @@ public class MovieDetailFragment
   // Keys for Bundle args
   private static final String EXTRA_MOVIE_ID = "EXTRA_MOVIE_ID";
   // Keys for bundles
-  private static final String BUNDLE_IS_MOVIE_IN_DB = "BUNDLE_IS_MOVIE_IN_DB";
   private static final String BUNDLE_IS_MOVIE_FAVOURITE = "BUNDLE_IS_MOVIE_FAVOURITE";
   private static final String BUNDLE_MOVIE_TRAILER_LIST = "BUNDLE_MOVIE_TRAILER_LIST";
   private static final String BUNDLE_MOVIE_REVIEW_LIST = "BUNDLE_MOVIE_REVIEW_LIST";
@@ -93,10 +92,10 @@ public class MovieDetailFragment
           .addConverterFactory(GsonConverterFactory.create())
           .build();
   protected Movie selectedMovie;
-  boolean isFavourite;
-  MovieTrailerList mTrailers;
-  MovieReviewList mReviews;
-  FragmentMovieDetailBinding binding;
+  protected boolean isFavourite;
+  protected MovieTrailerList mTrailers;
+  protected MovieReviewList mReviews;
+  protected FragmentMovieDetailBinding binding;
   private MovieTrailerAdapter mMovieTrailerAdapter;
   private MovieReviewAdapter mMovieReviewAdapter;
   private Call<MovieTrailerList> mCallTrailers;
@@ -289,7 +288,11 @@ public class MovieDetailFragment
       binding.recyclerMovieDetailReviews.addItemDecoration(dividerLine);
       // Set Reviews view: end
 
-      if (savedInstanceState != null) {
+      if (savedInstanceState == null) {
+        // From the Intent we have almost all the movie data but is missing: Favourite state,
+        // trailers and reviews
+        completeMovieData();
+      } else {
         // There is a prior instance of the Fragment where we saved the selected movie's state,
         // its trailers and reviews, retrieve and show them
 
@@ -302,10 +305,6 @@ public class MovieDetailFragment
 
         showTrailersView();
         showReviewsView();
-      } else {
-        // From the Intent we have almost all the movie data but is missing: Favourite state,
-        // trailers and reviews
-        completeMovieData();
       }
     }
     return binding.getRoot();
@@ -526,7 +525,7 @@ public class MovieDetailFragment
         if (mReviews.getReviewList().isEmpty()) {
           Log.v(LOG_TAG, "++++++++++ Now trying to get the reviews");
           fetchReviewsFromNetwork(true);
-          // showTrailersView() is called inside fetchReviewsFromNetwork() because it must be
+          // showReviewsView() is called inside fetchReviewsFromNetwork() because it must be
           // called when the network operations finishes
           break;
         }
@@ -668,7 +667,7 @@ public class MovieDetailFragment
     });
   }
 
-  void showTrailersView() {
+  protected void showTrailersView() {
     if (mTrailers.getTrailerList().isEmpty()) {
       // We got no trailers, show "No trailers" text
       binding.textMovieDetailNoTrailers.setVisibility(View.VISIBLE);
@@ -720,7 +719,7 @@ public class MovieDetailFragment
     });
   }
 
-  void showReviewsView() {
+  protected void showReviewsView() {
     final List<MovieReviewList.MovieReview> reviewList = mReviews.getReviewList();
 
     if (reviewList.isEmpty()) {
@@ -835,11 +834,13 @@ public class MovieDetailFragment
   // TODO: 7/4/18 Refactor into more JAVA-8 style: buildTrailersBulkValues & buildReviewsBulkValues
   private void buildTrailerInsertOperations(final String movieId,
       final ArrayList<ContentProviderOperation> insertOperations) {
+
     final List<MovieTrailerList.MovieTrailer> trailerList = mTrailers.getTrailerList();
+    final ContentValues trailerValues = new ContentValues();
+
     for (final MovieTrailerList.MovieTrailer trailer : trailerList) {
 
       // Setup the trailer's ContentValues
-      final ContentValues trailerValues = new ContentValues();
       trailerValues.put(MovieTrailerColumns.MOVIE_ID, movieId);
       trailerValues.put(MovieTrailerColumns.KEY, trailer.getKey());
       trailerValues.put(MovieTrailerColumns.NAME, trailer.getName());
@@ -851,13 +852,15 @@ public class MovieDetailFragment
     }
   }
 
-  private void buildReviewInsertOperations(final String movieId,
+  protected void buildReviewInsertOperations(final String movieId,
       final ArrayList<ContentProviderOperation> insertOperations) {
+
     final List<MovieReviewList.MovieReview> reviewList = mReviews.getReviewList();
+    final ContentValues reviewValues = new ContentValues();
+
     for (final MovieReviewList.MovieReview review : reviewList) {
 
       // Setup the review's ContentValues
-      final ContentValues reviewValues = new ContentValues();
       reviewValues.put(MovieReviewColumns.MOVIE_ID, movieId);
       reviewValues.put(MovieReviewColumns.REVIEW_ID, review.getId());
       reviewValues.put(MovieReviewColumns.AUTHOR, review.getAuthor());

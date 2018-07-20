@@ -86,7 +86,7 @@ public class MovieReviewAdapter
     return (mMoviewReviewList != null) ? mMoviewReviewList.getReviewList().size() : 0;
   }
 
-  public void setMovieReviewList(MovieReviewList reviews) {
+  public void setMovieReviewList(final MovieReviewList reviews) {
     // set the new data & update the UI
     mMoviewReviewList = reviews;
     notifyDataSetChanged();
@@ -97,13 +97,13 @@ public class MovieReviewAdapter
     private final TextView mAuthorView;
     private final TextView mReviewContentView;
 
-    MovieReviewViewHolder(View view) {
+    /* package */ MovieReviewViewHolder(View view) {
       super(view);
       mAuthorView = view.findViewById(R.id.text_movie_review_review_author);
       mReviewContentView = view.findViewById(R.id.text_movie_review_review_content);
     }
 
-    void setupItemView(MovieReview movieReview) {
+    /* package */ void setupItemView(final MovieReview movieReview) {
       mAuthorView.setText(movieReview.getAuthor());
       mReviewContentView.setText(movieReview.getContent());
     }

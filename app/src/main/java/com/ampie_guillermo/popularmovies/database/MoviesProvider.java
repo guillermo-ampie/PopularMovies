@@ -16,20 +16,20 @@ import net.simonvt.schematic.annotation.TableEndpoint;
 public final class MoviesProvider {
 
   public static final String AUTHORITY = "com.ampie_guillermo.popularmovies.MoviesProvider";
-  static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
+  private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
   private MoviesProvider() {
   }
 
-  static Uri buildUri(final String... paths) {
+  private static Uri buildUri(final String... paths) {
     final Uri.Builder builder = BASE_CONTENT_URI.buildUpon();
-    for (String path : paths) {
+    for (final String path : paths) {
       builder.appendPath(path);
     }
     return builder.build();
   }
 
-  interface Path {
+  private interface Path {
 
     String MOVIES = "movies";
     String FROM_MOVIE = "frommovie";

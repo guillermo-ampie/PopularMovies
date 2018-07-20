@@ -35,7 +35,7 @@ public class MovieReviewList implements Parcelable {
     mReviewList = new ArrayList<>();
   }
 
-  protected MovieReviewList(Parcel in) {
+  protected MovieReviewList(final Parcel in) {
     mMovieId = in.readString();
     mReviewList = in.createTypedArrayList(MovieReview.CREATOR);
   }
@@ -84,13 +84,13 @@ public class MovieReviewList implements Parcelable {
     @SerializedName("content")
     private final String mContent;
 
-    public MovieReview(String reviewId, String author, String content) {
+    public MovieReview(final String reviewId, final String author, final String content) {
       mReviewId = reviewId;
       mAuthor = author;
       mContent = content;
     }
 
-    protected MovieReview(Parcel in) {
+    protected MovieReview(final Parcel in) {
       mReviewId = in.readString();
       mAuthor = in.readString();
       mContent = in.readString();

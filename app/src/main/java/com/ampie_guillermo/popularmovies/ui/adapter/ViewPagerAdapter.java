@@ -4,11 +4,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
-  private final ArrayList<Fragment> mFragmentPageList;
-  private final ArrayList<String> mPageTitleList;
+  private final List<Fragment> mFragmentPageList;
+  private final List<String> mPageTitleList;
 
   public ViewPagerAdapter(FragmentManager fm) {
     super(fm);

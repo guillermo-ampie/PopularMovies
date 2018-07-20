@@ -34,7 +34,7 @@ public class MovieTrailerList implements Parcelable {
     mTrailerList = new ArrayList<>();
   }
 
-  protected MovieTrailerList(Parcel in) {
+  protected MovieTrailerList(final Parcel in) {
     mMovieId = in.readString();
     mTrailerList = in.createTypedArrayList(MovieTrailer.CREATOR);
   }
@@ -80,12 +80,12 @@ public class MovieTrailerList implements Parcelable {
     @SerializedName("name")
     private final String mName;
 
-    public MovieTrailer(String key, String name) {
+    public MovieTrailer(final String key, final String name) {
       mKey = key;
       mName = name;
     }
 
-    protected MovieTrailer(Parcel in) {
+    protected MovieTrailer(final Parcel in) {
       mKey = in.readString();
       mName = in.readString();
     }
