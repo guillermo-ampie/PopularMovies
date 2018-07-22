@@ -51,15 +51,6 @@ public class MovieListFragment
     registerFetchMoviesListener(this);
   }
 
-  public void onClickRetry(View view) {
-    if (mMovieList.isEmpty()) {
-      final Bundle bundle = new Bundle();
-      bundle.putString(EXTRA_MOVIE_SORTING_METHOD, getSortingMethodParam());
-      Log.v(LOG_TAG, "++++++++++onResume(): restarting LOADER");
-      getLoaderManager().restartLoader(MOVIE_LIST_LOADER_ID, bundle, this);
-    }
-  }
-
   /**
    * Instantiate and return a new Loader for the given ID.
    *
@@ -199,6 +190,16 @@ public class MovieListFragment
     mRvMovieGrid.setAdapter(mMovieAdapter);
   }
 
+  @Override
+  public void onClickRetry(View view) {
+    if (mMovieList.isEmpty()) {
+      final Bundle bundle = new Bundle();
+      bundle.putString(EXTRA_MOVIE_SORTING_METHOD, getSortingMethodParam());
+      Log.v(LOG_TAG, "++++++++++onResume(): restarting LOADER");
+      getLoaderManager().restartLoader(MOVIE_LIST_LOADER_ID, bundle, this);
+    }
+  }
+
   private static class MovieListLoader extends AsyncTaskLoader<ArrayList<Movie>> {
 
     private static final String LOG_TAG = MovieListLoader.class.getSimpleName();
@@ -206,7 +207,7 @@ public class MovieListFragment
     private final UIErrorHelper mUiError;
     private ArrayList<Movie> mCachedMovieList;
 
-    public MovieListLoader(final Context context, final Bundle args) {
+    private MovieListLoader(final Context context, final Bundle args) {
       super(context);
       mArgs = args;
       mCachedMovieList = new ArrayList<>(MovieListFragment.MOVIES_RESULT_SIZE);
