@@ -130,7 +130,8 @@ public class MovieTrailerAdapter extends
       mTrailerThumbnailView =
           view.findViewById(R.id.image_movie_trailer_thumbnail_trailer_thumbnail);
       onClickListener = listener;
-      mTrailerThumbnailView.setOnClickListener(this);
+      view.setOnClickListener(this);
+//      mTrailerThumbnailView.setOnClickListener(this);
     }
 
     @Override
