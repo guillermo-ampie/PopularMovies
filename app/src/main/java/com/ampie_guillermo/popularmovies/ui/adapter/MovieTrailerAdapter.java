@@ -51,7 +51,7 @@ public class MovieTrailerAdapter extends
     final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
     final View view = inflater.inflate(R.layout.item_movie_trailer_thumbnail, parent, false);
 
-    return new MovieTrailerAdapter.TrailerViewHolder(view, onClickListener);
+    return new TrailerViewHolder(view, onClickListener);
   }
 
   /**
@@ -119,7 +119,7 @@ public class MovieTrailerAdapter extends
     // MovieViewHolder
     private final ImageView mTrailerThumbnailView;
 
-    TrailerViewHolder(final View view, final MovieTrailerItemClickListener listener) {
+    /* package */ TrailerViewHolder(final View view, final MovieTrailerItemClickListener listener) {
       super(view);
 
       final DrawablePlaceholderSingleton placeholders =
