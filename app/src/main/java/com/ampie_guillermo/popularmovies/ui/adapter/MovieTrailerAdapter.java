@@ -140,7 +140,7 @@ public class MovieTrailerAdapter extends
       onClickListener.onMovieTrailerItemClick(getAdapterPosition());
     }
 
-    void setupItemView(final Uri trailerThumbnailUri) {
+    /* package */ void setupItemView(final Uri trailerThumbnailUri) {
       // See comment in DrawablePlaceholderSingleton() to allow vector drawables in
       // API level < 21 (Lollipop)
       Picasso.get()
