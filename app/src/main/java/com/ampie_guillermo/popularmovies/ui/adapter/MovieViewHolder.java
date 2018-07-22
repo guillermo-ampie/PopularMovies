@@ -11,9 +11,9 @@ import com.squareup.picasso.Picasso;
 
 // The View Holder used for each movie poster
 public class MovieViewHolder extends RecyclerView.ViewHolder {
+
   private final Drawable drawablePlaceholder;
   private final Drawable drawableErrorPlaceHolder;
-  private final MovieItemOnClickListener onClickListener;
   private final ImageView movieThumbnailView;
 
   MovieViewHolder(final View view, final MovieItemOnClickListener onItemClickListener) {
@@ -25,10 +25,8 @@ public class MovieViewHolder extends RecyclerView.ViewHolder {
     drawablePlaceholder = placeholders.getDrawablePlaceHolder();
     drawableErrorPlaceHolder = placeholders.getDrawablePlaceHolder();
     movieThumbnailView = view.findViewById(R.id.image_movie_poster_movie_poster);
-
-    onClickListener = onItemClickListener;
     movieThumbnailView.setOnClickListener(
-        v -> onClickListener.onMovieItemClick(getAdapterPosition()));
+        v -> onItemClickListener.onMovieItemClick(getAdapterPosition()));
   }
 
   void setupItemView(final Movie currentMovie) {
