@@ -83,7 +83,7 @@ public class MovieReviewAdapter
   @Override
   public int getItemCount() {
 
-    return (mMoviewReviewList != null) ? mMoviewReviewList.getReviewList().size() : 0;
+    return (mMoviewReviewList == null) ? 0 : mMoviewReviewList.getReviewList().size();
   }
 
   public void setMovieReviewList(final MovieReviewList reviews) {
