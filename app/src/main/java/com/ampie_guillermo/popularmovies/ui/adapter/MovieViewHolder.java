@@ -16,7 +16,7 @@ public class MovieViewHolder extends RecyclerView.ViewHolder {
   private final Drawable drawableErrorPlaceHolder;
   private final ImageView movieThumbnailView;
 
-  MovieViewHolder(final View view, final MovieItemOnClickListener onItemClickListener) {
+  /* package */ MovieViewHolder(final View view, final MovieItemOnClickListener onItemClickListener) {
     super(view);
 
     final DrawablePlaceholderSingleton placeholders =
@@ -29,7 +29,7 @@ public class MovieViewHolder extends RecyclerView.ViewHolder {
         v -> onItemClickListener.onMovieItemClick(getAdapterPosition()));
   }
 
-  void setupItemView(final Movie currentMovie) {
+  /* package */ void setupItemView(final Movie currentMovie) {
     // See comment in DrawablePlaceholderSingleton() to allow vector drawables in
     // API level < 21 (Lollipop)
     Picasso.get()
