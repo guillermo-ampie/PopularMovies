@@ -20,12 +20,11 @@ public class MovieTrailerAdapter extends
   private static final String LOG_TAG = MovieTrailerAdapter.class.getSimpleName();
   private static final String THUMBNAIL_BASE_URL = "https://img.youtube.com/vi/";
   private static final String THUMBNAIL_IMAGE_TYPE = "/hqdefault.jpg";
-  static MovieTrailerItemClickListener sOnClickListener;
+  private final MovieTrailerItemClickListener onClickListener;
   private MovieTrailerList mMovieTrailerList;
 
-  public MovieTrailerAdapter(final MovieTrailerItemClickListener onClickListener) {
-    // TODO: Check the assignment to "sOnClickListener": can this cause a memory leak?
-    sOnClickListener = onClickListener;
+  public MovieTrailerAdapter(final MovieTrailerItemClickListener listener) {
+    onClickListener = listener;
   }
 
   /**
@@ -52,7 +51,7 @@ public class MovieTrailerAdapter extends
     final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
     final View view = inflater.inflate(R.layout.item_movie_trailer_thumbnail, parent, false);
 
-    return new MovieTrailerAdapter.TrailerViewHolder(view);
+    return new MovieTrailerAdapter.TrailerViewHolder(view, onClickListener);
   }
 
   /**
@@ -93,7 +92,7 @@ public class MovieTrailerAdapter extends
    */
   @Override
   public int getItemCount() {
-    return (mMovieTrailerList != null) ? mMovieTrailerList.getTrailerList().size() : 0;
+    return (mMovieTrailerList == null) ? 0 : mMovieTrailerList.getTrailerList().size();
   }
 
   public void setMovieTrailerList(final MovieTrailerList trailerList) {
@@ -109,17 +108,18 @@ public class MovieTrailerAdapter extends
   }
 
   // The viewHolder used for each movie trailer
-  static class TrailerViewHolder extends RecyclerView.ViewHolder
+  /* package */ static class TrailerViewHolder extends RecyclerView.ViewHolder
       implements View.OnClickListener {
 
     private final Drawable drawablePlaceholder;
     private final Drawable drawableErrorPlaceHolder;
+    private final MovieTrailerItemClickListener onClickListener;
 
-    // This class uses "implements View.OnClickListener" instead of member variables as in
-    // MovieAdapter.MovieViewHolder
+    // This class uses "implements View.OnClickListener" instead of using a member variable as in
+    // MovieViewHolder
     private final ImageView mTrailerThumbnailView;
 
-    TrailerViewHolder(View view) {
+    TrailerViewHolder(final View view, final MovieTrailerItemClickListener listener) {
       super(view);
 
       final DrawablePlaceholderSingleton placeholders =
@@ -129,13 +129,14 @@ public class MovieTrailerAdapter extends
       drawableErrorPlaceHolder = placeholders.getDrawablePlaceHolder();
       mTrailerThumbnailView =
           view.findViewById(R.id.image_movie_trailer_thumbnail_trailer_thumbnail);
-      view.setOnClickListener(this);
+      onClickListener = listener;
+      mTrailerThumbnailView.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
       // getAdapterPosition() gives us the the item that was clicked
-      sOnClickListener.onMovieTrailerItemClick(getAdapterPosition());
+      onClickListener.onMovieTrailerItemClick(getAdapterPosition());
     }
 
     void setupItemView(final Uri trailerThumbnailUri) {
