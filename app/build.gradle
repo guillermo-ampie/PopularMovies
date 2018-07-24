@@ -1,45 +1,73 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "com.ampie_guillermo.popularmovies"
-        minSdkVersion 16
-        targetSdkVersion 23
+        minSdkVersion 19
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
+
+        // For vector drawables (it requires the Support Library 23.2 or higher)
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
+            // Remove unused resources
+            //minifyEnabled true
+            //shrinkResources true
+
             minifyEnabled false
+
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    // Enable Data Binding
+    dataBinding.enabled = true
+
     buildTypes.each {
         it.buildConfigField 'String', 'MOVIE_DB_API_KEY', MyTheMovieDBApiKey
     }
     repositories {
         mavenCentral()
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.2.1'
-    compile 'com.android.support:design:23.2.1'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.android.support:support-v4:23.2.1'
-    compile 'com.facebook.stetho:stetho:1.3.1'
-    apt 'net.simonvt.schematic:schematic-compiler:0.6.4'
-    compile 'net.simonvt.schematic:schematic:0.6.4'
-    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
-    compile('com.mikepenz:fastadapter:1.2.4@aar') {
-        transitive = true
-    }
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    testImplementation 'junit:junit:4.12'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+//    Added com.android.support:exifinterface:27.1.1 to avoid the error that there is a mix with
+//    com.android.support libraries versions, specifically with com.android.support:exifinterface:27.1.0 and
+//    the other ones with version 27.1.1. This happened when updated Picasso to v.2.71828
+    implementation 'com.android.support:exifinterface:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.android.support:support-v4:27.1.1'
+
+    annotationProcessor 'net.simonvt.schematic:schematic-compiler:0.7.0'
+    implementation 'net.simonvt.schematic:schematic:0.7.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:support-annotations:28.0.0-alpha3'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation 'com.sdsmdg.harjot:vectormaster:1.1.3'
+
+    //
+    // Debugging support libraries
+    //
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.1'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
+    // Optional, if you use support library fragments:
+    debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.1'
+    implementation 'com.facebook.stetho:stetho:1.5.0'
 }
 

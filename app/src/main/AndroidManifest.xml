@@ -1,39 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.ampie_guillermo.popularmovies"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.ampie_guillermo.popularmovies">
 
-    <!-- This permission is necessary in order to perform network access. -->
-    <uses-permission android:name="android.permission.INTERNET"/>
+  <!-- This permission is necessary in order to perform network access. -->
+  <uses-permission android:name="android.permission.INTERNET"/>
 
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_movie_black_24dp"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity
-            android:name=".ui.MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+  <application
+    android:allowBackup="true"
+    android:icon="@mipmap/ic_launcher"
+    android:label="@string/app_name"
+    android:name=".PopularMoviesApp"
+    android:supportsRtl="true"
+    android:theme="@style/AppTheme">
+    <activity
+      android:label="@string/app_name"
+      android:launchMode="singleTop"
+      android:name=".ui.MainActivity"
+      android:theme="@style/AppTheme.NoActionBar">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.MovieDetailActivity"
-            android:label="@string/title_activity_movie_detail"
-            android:parentActivityName=".ui.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.MainActivity"/>
-        </activity>
-        <provider
-            android:authorities="com.ampie_guillermo.popularmovies.MoviesProvider"
-            android:name="com.ampie_guillermo.popularmovies.database.generated.MoviesProvider">
-         </provider>
-    </application>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
+    <activity
+      android:label="@string/movie_detail_title"
+      android:name=".ui.MovieDetailActivity"
+      android:parentActivityName=".ui.MainActivity"
+      android:theme="@style/AppTheme.NoActionBar">
+      <meta-data
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value=".ui.MainActivity"/>
+    </activity>
+
+    <provider
+      android:authorities="com.ampie_guillermo.popularmovies.MoviesProvider"
+      android:exported="false"
+      android:name="com.ampie_guillermo.popularmovies.database.generated.MoviesProvider">
+    </provider>
+  </application>
 
 </manifest>

@@ -3,8 +3,8 @@ package com.ampie_guillermo.popularmovies.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-
 import net.simonvt.schematic.annotation.Database;
+import net.simonvt.schematic.annotation.ExecOnCreate;
 import net.simonvt.schematic.annotation.IfNotExists;
 import net.simonvt.schematic.annotation.OnCreate;
 import net.simonvt.schematic.annotation.OnUpgrade;
@@ -18,36 +18,52 @@ import net.simonvt.schematic.annotation.Table;
 
 @Database(version = MoviesDatabase.VERSION)
 public final class MoviesDatabase {
-    public static final String LOG_TAG = MoviesDatabase.class.getSimpleName();
 
-    public static final int VERSION = 1;
+  @Table(MovieColumns.class)
+  @IfNotExists
+  public static final String MOVIES_TABLE = "MOVIES_TABLE";
 
-    private MoviesDatabase() {
-    }
+  @Table(MovieReviewColumns.class)
+  @IfNotExists
+  public static final String MOVIE_REVIEWS_TABLE = "MOVIE_REVIEWS_TABLE";
 
-    @Table(MovieColumns.class) @IfNotExists
-    public static final String MOVIES_TABLE = "movies_tbl";
+  @Table(MovieTrailerColumns.class)
+  @IfNotExists
+  public static final String MOVIE_TRAILERS_TABLE = "MOVIE_TRAILERS_TABLE";
 
-    @OnCreate
-    public static void onCreate(Context context, SQLiteDatabase db) {
-    }
+  @ExecOnCreate
+  public static final String EXEC_ON_CREATE = "PRAGMA foreign_keys = ON";
 
-    @OnUpgrade
-    public static void onUpgrade(Context context,
-                                 SQLiteDatabase db,
-                                 int oldVersion,
-                                 int newVersion) {
-        Log.w(LOG_TAG,
-              "Upgrading database: current version: [" + oldVersion + "], new version: ["
-              + newVersion + "]");
+  /* package */ static final int VERSION = 1;
 
-        // Drop the table
-        db.execSQL("DROP TABLE IF EXISTS " + MOVIES_TABLE);
+  private static final String LOG_TAG = MoviesDatabase.class.getSimpleName();
 
-        // Reset the primary key field (SQLITE autoincrement)
-        db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + MOVIES_TABLE + "'");
+  private MoviesDatabase() {
+  }
 
-        // Re-build the database
-        onCreate(context, db);
-    }
+  @OnCreate
+  public static void onCreate(Context context, SQLiteDatabase db) {
+  }
+
+  @OnUpgrade
+  public static void onUpgrade(Context context, SQLiteDatabase db, int oldVersion, int newVersion) {
+    Log.i(LOG_TAG,
+        "Upgrading database: current version: ["
+            + oldVersion
+            + "], new version: ["
+            + newVersion + ']');
+
+    // Drop the tables
+    db.execSQL("DROP TABLE IF EXISTS " + MOVIE_REVIEWS_TABLE);
+    db.execSQL("DROP TABLE IF EXISTS " + MOVIE_TRAILERS_TABLE);
+    db.execSQL("DROP TABLE IF EXISTS " + MOVIES_TABLE);
+
+    // Reset the primary key field (SQLITE autoincrement)
+    db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + MOVIES_TABLE + '\'');
+    db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + MOVIE_REVIEWS_TABLE + '\'');
+    db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + MOVIE_TRAILERS_TABLE + '\'');
+
+    // Re-build the database
+    onCreate(context, db);
+  }
 }
