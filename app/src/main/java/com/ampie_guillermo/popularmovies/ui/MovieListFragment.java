@@ -210,7 +210,7 @@ public class MovieListFragment
     private final UIErrorHelper mUiError;
     private ArrayList<Movie> mCachedMovieList;
 
-    private MovieListLoader(final Context context, final Bundle args) {
+    protected MovieListLoader(final Context context, final Bundle args) {
       super(context);
       mArgs = args;
       mCachedMovieList = new ArrayList<>(MovieListFragment.MOVIES_RESULT_SIZE);
