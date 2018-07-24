@@ -8,7 +8,7 @@ public class PopularMoviesApp extends Application {
   @Override
   public void onCreate() {
     super.onCreate();
-    setupLeakCanary();
+//    setupLeakCanary();
   }
 
   protected void setupLeakCanary() {
