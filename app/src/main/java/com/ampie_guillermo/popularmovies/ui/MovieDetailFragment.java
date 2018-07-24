@@ -324,14 +324,14 @@ public class MovieDetailFragment
   @Override
   public void onStop() {
     super.onStop();
-    // Cancel the request if the HTTP scheduler has not executed it already...
-    if (mCallTrailers != null) {
-      mCallTrailers.cancel();
-    }
-
-    if (mCallReviews != null) {
-      mCallReviews.cancel();
-    }
+//    // Cancel the request if the HTTP scheduler has not executed it already...
+//    if (mCallTrailers != null) {
+//      mCallTrailers.cancel();
+//    }
+//
+//    if (mCallReviews != null) {
+//      mCallReviews.cancel();
+//    }
 
     final Context context = Objects.requireNonNull(getActivity()).getApplicationContext();
     final ContentResolver resolver = context.getContentResolver();
@@ -370,6 +370,23 @@ public class MovieDetailFragment
         }
       }
     }).start();
+  }
+
+  /**
+   * Called when the fragment is no longer in use.  This is called
+   * after {@link #onStop()} and before {@link #onDetach()}.
+   */
+  @Override
+  public void onDestroy() {
+    // Cancel the request if the HTTP scheduler has not executed it already...
+    if (mCallTrailers != null) {
+      mCallTrailers.cancel();
+    }
+    if (mCallReviews != null) {
+      mCallReviews.cancel();
+    }
+
+    super.onDestroy();
   }
 
   @Override
