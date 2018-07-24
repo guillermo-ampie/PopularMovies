@@ -41,7 +41,8 @@ public enum MyPMErrorUtils {
   }
 
   @UiThread
-  public static void showErrorMessage(final String logTag, final Context context, final int errorResId) {
+  public static void showErrorMessage(final String logTag, final Context context,
+      final int errorResId) {
     final String errorMessage = MessageFormat.format("{0}",
         context.getString(errorResId));
 

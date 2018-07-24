@@ -2,6 +2,7 @@ package com.ampie_guillermo.popularmovies.ui.adapter;
 
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,8 +47,9 @@ public class MovieTrailerAdapter extends
    * @return A new ViewHolder that holds a View of the given divider_view_1 type.
    * @see #getItemViewType(int) see onBindViewHolder(ViewHolder, int)
    */
+  @NonNull
   @Override
-  public MovieTrailerAdapter.TrailerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+  public MovieTrailerAdapter.TrailerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
     final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
     final View view = inflater.inflate(R.layout.item_movie_trailer_thumbnail, parent, false);
 
@@ -75,7 +77,7 @@ public class MovieTrailerAdapter extends
    * @param position The position of the item within the adapter's data set.
    */
   @Override
-  public void onBindViewHolder(MovieTrailerAdapter.TrailerViewHolder holder, int position) {
+  public void onBindViewHolder(@NonNull MovieTrailerAdapter.TrailerViewHolder holder, int position) {
     final Uri thumbnailUri = Uri.withAppendedPath(Uri.parse(THUMBNAIL_BASE_URL),
         mMovieTrailerList.getTrailerList().get(position).getKey()
             + THUMBNAIL_IMAGE_TYPE);

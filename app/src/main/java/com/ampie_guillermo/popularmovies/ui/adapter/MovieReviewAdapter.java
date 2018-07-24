@@ -1,6 +1,7 @@
 package com.ampie_guillermo.popularmovies.ui.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,11 +39,12 @@ public class MovieReviewAdapter
    * @return A new ViewHolder that holds a View of the given divider_view_1 type.
    * @see #getItemViewType(int) see #onBindViewHolder(ViewHolder, int)
    */
+  @NonNull
   @Override
-  public MovieReviewViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    Context context = parent.getContext();
-    LayoutInflater inflater = LayoutInflater.from(context);
-    View view = inflater.inflate(R.layout.item_movie_review, parent, false);
+  public MovieReviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    final Context context = parent.getContext();
+    final LayoutInflater inflater = LayoutInflater.from(context);
+    final View view = inflater.inflate(R.layout.item_movie_review, parent, false);
 
     return new MovieReviewViewHolder(view);
 
@@ -69,9 +71,9 @@ public class MovieReviewAdapter
    * @param position The position of the item within the adapter's data set.
    */
   @Override
-  public void onBindViewHolder(MovieReviewViewHolder holder, int position) {
+  public void onBindViewHolder(@NonNull MovieReviewViewHolder holder, int position) {
 
-    MovieReview movieReview = mMoviewReviewList.getReviewList().get(position);
+    final MovieReview movieReview = mMoviewReviewList.getReviewList().get(position);
     holder.setupItemView(movieReview);
   }
 

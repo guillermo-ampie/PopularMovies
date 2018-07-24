@@ -16,7 +16,8 @@ public class MovieViewHolder extends RecyclerView.ViewHolder {
   private final Drawable drawableErrorPlaceHolder;
   private final ImageView movieThumbnailView;
 
-  /* package */ MovieViewHolder(final View view, final MovieItemOnClickListener onItemClickListener) {
+  /* package */ MovieViewHolder(final View view,
+      final MovieItemOnClickListener onItemClickListener) {
     super(view);
 
     final DrawablePlaceholderSingleton placeholders =

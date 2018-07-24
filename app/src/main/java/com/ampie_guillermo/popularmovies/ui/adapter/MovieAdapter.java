@@ -1,5 +1,6 @@
 package com.ampie_guillermo.popularmovies.ui.adapter;
 
+import android.support.annotation.NonNull;
 import android.support.v7.recyclerview.extensions.ListAdapter;
 import android.support.v7.util.DiffUtil;
 import android.view.LayoutInflater;
@@ -30,7 +31,7 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
   //  private ArrayList<Movie> mMovieList;
   private final MovieItemOnClickListener mOnClickListener;
 
-  public MovieAdapter(MovieItemOnClickListener onClickListener) {
+  public MovieAdapter(final MovieItemOnClickListener onClickListener) {
     super(DIFF_CALLBACK);
     mOnClickListener = onClickListener;
   }
@@ -54,8 +55,9 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
    * @return A new ViewHolder that holds a View of the given divider_view_1 type.
    * @see #getItemViewType(int) see #onBindViewHolder(ViewHolder, int)
    */
+  @NonNull
   @Override
-  public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+  public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
     final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
     final View view = inflater.inflate(R.layout.item_movie_poster, parent, false);
 
@@ -83,7 +85,7 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
    * @param position The position of the item within the adapter's data set.
    */
   @Override
-  public void onBindViewHolder(MovieViewHolder holder, int position) {
+  public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
 
 //    Movie currentMovie = get(position);
     final Movie currentMovie = getItem(position);
@@ -100,7 +102,7 @@ public class MovieAdapter extends ListAdapter<Movie, MovieViewHolder> {
 //    return (mMovieList != null) ? mMovieList.size() : 0;
 //  }
 
-  public void setMovieList(ArrayList<Movie> movieList) {
+  public void setMovieList(final ArrayList<Movie> movieList) {
     //Set the new data & update the UI
 //    mMovieList = new ArrayList<>(movieList);
 //    notifyDataSetChanged();

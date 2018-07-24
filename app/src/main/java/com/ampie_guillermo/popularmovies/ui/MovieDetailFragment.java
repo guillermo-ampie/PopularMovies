@@ -172,7 +172,7 @@ public class MovieDetailFragment
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater,
+  public View onCreateView(@NonNull LayoutInflater inflater,
       ViewGroup container,
       Bundle savedInstanceState) {
 
@@ -849,7 +849,7 @@ public class MovieDetailFragment
   }
 
   // TODO: 7/4/18 Refactor into more JAVA-8 style: buildTrailersBulkValues & buildReviewsBulkValues
-  private void buildTrailerInsertOperations(final String movieId,
+  protected void buildTrailerInsertOperations(final String movieId,
       final ArrayList<ContentProviderOperation> insertOperations) {
 
     final List<MovieTrailerList.MovieTrailer> trailerList = mTrailers.getTrailerList();

@@ -92,7 +92,6 @@ public class FavouriteMovieAdapter extends RecyclerView.Adapter<MovieViewHolder>
 
   /**
    * swapCursor sets a new cursor to be used in the RecyclerView's adapter.
-   *
    * @param newCursor: the new cursor to use in the RecyclerView's adapter
    */
   public void swapCursor(final Cursor newCursor) {

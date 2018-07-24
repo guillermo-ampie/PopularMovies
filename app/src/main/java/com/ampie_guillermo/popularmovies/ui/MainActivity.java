@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
        */
 
       // Detect for memory leaks
-      StrictMode.VmPolicy.Builder policyBuilder = new StrictMode.VmPolicy.Builder();
+      final StrictMode.VmPolicy.Builder policyBuilder = new StrictMode.VmPolicy.Builder();
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
         policyBuilder.detectAll();
       } else {

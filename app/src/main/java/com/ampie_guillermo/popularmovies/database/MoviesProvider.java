@@ -21,7 +21,7 @@ public final class MoviesProvider {
   private MoviesProvider() {
   }
 
-  private static Uri buildUri(final String... paths) {
+  protected static Uri buildUri(final String... paths) {
     final Uri.Builder builder = BASE_CONTENT_URI.buildUpon();
     for (final String path : paths) {
       builder.appendPath(path);
@@ -67,7 +67,7 @@ public final class MoviesProvider {
 
     @InexactContentUri(
         name = "REVIEWS_FROM_MOVIE",
-        path = Path.REVIEWS + "/" + Path.FROM_MOVIE + "/#",
+        path = Path.REVIEWS + '/' + Path.FROM_MOVIE + "/#",
         type = "vnd.android.cursor.dir/review",
         whereColumn = MovieReviewColumns.MOVIE_ID,
         pathSegment = 2)
@@ -84,7 +84,7 @@ public final class MoviesProvider {
 
     @InexactContentUri(
         name = "TRAILERS_FROM_MOVIE",
-        path = Path.TRAILERS + "/" + Path.FROM_MOVIE + "/#",
+        path = Path.TRAILERS + '/' + Path.FROM_MOVIE + "/#",
         type = "vnd.android.cursor.dir/trailer",
         whereColumn = MovieReviewColumns.MOVIE_ID,
         pathSegment = 2)
