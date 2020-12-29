@@ -14,7 +14,8 @@ An Android app(Java) that shows info about popular and top rated movies using
 	- Movie info: overview, release year, rating, etc.
   
 ## License
-```MIT License
+```
+MIT License
 
 Copyright (c) [2018] [Guillermo Ampie]
 
@@ -34,4 +35,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.```
+SOFTWARE.
+```
+
+
